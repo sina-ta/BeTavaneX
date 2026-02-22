@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,17 +16,20 @@ export default function Login() {
         </h1>
 
         <form
-          className="flex flex-col gap-4 w-full"
+          className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log("Email:", email);
-            console.log("Password:", password);
+
+            if (email && password) {
+              localStorage.setItem("isLoggedIn", "true");
+              router.push("/dashboard");
+            }
           }}
         >
           <input
             type="email"
             placeholder="Email"
-            className="border p-2 rounded w-full"
+            className="border p-2 rounded"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -32,7 +37,7 @@ export default function Login() {
           <input
             type="password"
             placeholder="Password"
-            className="border p-2 rounded w-full"
+            className="border p-2 rounded"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
