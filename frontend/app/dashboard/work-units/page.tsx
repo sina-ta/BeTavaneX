@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import data from "@/app/data/dashboard.json";
 
 type WorkUnit = {
   id: number;
@@ -17,6 +18,11 @@ export default function WorkUnitsPage() {
   const [workUnits, setWorkUnits] = useState<WorkUnit[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
 
+  // 🔥 SORT + FILTER
+  const [sortKey, setSortKey] = useState("final_score");
+  const [sortAsc, setSortAsc] = useState(true);
+  const [showCritical, setShowCritical] = useState(false);
+
   const resetForm = () => {
     setTitle("");
     setBaseline("");
@@ -30,7 +36,6 @@ export default function WorkUnitsPage() {
     if (!title || baseline === "" || !unit) return;
 
     if (editingId !== null) {
-      // UPDATE
       setWorkUnits(
         workUnits.map((wu) =>
           wu.id === editingId
@@ -39,7 +44,6 @@ export default function WorkUnitsPage() {
         )
       );
     } else {
-      // CREATE
       setWorkUnits([
         ...workUnits,
         {
@@ -54,16 +58,19 @@ export default function WorkUnitsPage() {
     resetForm();
   };
 
-  const handleEdit = (wu: WorkUnit) => {
-    setTitle(wu.title);
-    setBaseline(wu.baseline);
-    setUnit(wu.unit);
-    setEditingId(wu.id);
-  };
+  // 🔥 FILTER
+  const filteredData = showCritical
+    ? data.filter((d: any) => d.alert === "🔴 Critical")
+    : data;
 
-  const handleDelete = (id: number) => {
-    setWorkUnits(workUnits.filter((wu) => wu.id !== id));
-  };
+  // 🔥 SORT
+  const sortedData = [...filteredData].sort((a: any, b: any) => {
+    if (sortAsc) {
+      return a[sortKey] > b[sortKey] ? 1 : -1;
+    } else {
+      return a[sortKey] < b[sortKey] ? 1 : -1;
+    }
+  });
 
   return (
     <div className="max-w-xl space-y-6">
@@ -96,69 +103,73 @@ export default function WorkUnitsPage() {
           onChange={(e) => setUnit(e.target.value)}
         >
           <option value="">Select unit</option>
-          <option value="m2">Square Meter (m²)</option>
-          <option value="m3">Cubic Meter (m³)</option>
+          <option value="m2">m²</option>
+          <option value="m3">m³</option>
           <option value="ton">Ton</option>
-          <option value="item">Item (Count)</option>
+          <option value="item">Item</option>
           <option value="hour">Hour</option>
           <option value="day">Day</option>
         </select>
 
-        <button
-          type="submit"
-          className="bg-black text-white px-4 py-2 rounded"
-        >
-          {editingId ? "Update Work Unit" : "Save Work Unit"}
+        <button className="bg-black text-white px-4 py-2 rounded">
+          {editingId ? "Update" : "Save"}
         </button>
-
-        {editingId && (
-          <button
-            type="button"
-            onClick={resetForm}
-            className="ml-3 px-4 py-2 border rounded"
-          >
-            Cancel
-          </button>
-        )}
       </form>
 
-      <div className="space-y-3">
-        <h2 className="text-xl font-semibold">Work Units List</h2>
+      {/* Dashboard */}
+      <hr className="my-8" />
 
-        {workUnits.map((wu) => (
-          <div
-            key={wu.id}
-            className="p-3 bg-white rounded shadow flex justify-between items-center"
-          >
-            <div>
-              <div className="font-bold">{wu.title}</div>
-              <div>
-                Baseline: {wu.baseline} {wu.unit}
-              </div>
-            </div>
+      <h2 className="text-xl font-bold">BetavanX Dashboard</h2>
 
-            <div className="space-x-2">
-              <button
-                onClick={() => handleEdit(wu)}
-                className="px-3 py-1 bg-blue-500 text-white rounded"
-              >
-                Edit
-              </button>
+      {/* 🔥 FILTER BUTTON */}
+      <button
+        onClick={() => setShowCritical(!showCritical)}
+        className="mb-2 px-3 py-1 border rounded"
+      >
+        {showCritical ? "Show All" : "Show Critical Only"}
+      </button>
 
-              <button
-                onClick={() => handleDelete(wu.id)}
-                className="px-3 py-1 bg-red-500 text-white rounded"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+      <table className="w-full border mt-2">
+        <thead>
+          <tr className="bg-gray-200 text-left">
+            <th className="p-2">Task</th>
+            <th className="p-2">Progress</th>
 
-        {workUnits.length === 0 && (
-          <div className="text-gray-500">No work units yet.</div>
-        )}
-      </div>
+            {/* 🔥 SORT CLICK */}
+            <th
+              className="p-2 cursor-pointer"
+              onClick={() => {
+                setSortKey("final_score");
+                setSortAsc(!sortAsc);
+              }}
+            >
+              Score
+            </th>
+
+            <th className="p-2">Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {sortedData.map((item: any) => (
+            <tr
+              key={item.task_id}
+              className={
+                item.alert === "🔴 Critical"
+                  ? "bg-red-100"
+                  : item.alert === "🟡 Warning"
+                  ? "bg-yellow-100"
+                  : "bg-green-100"
+              }
+            >
+              <td className="p-2 font-bold">Task {item.task_id}</td>
+              <td className="p-2">{item.progress_percent}%</td>
+              <td className="p-2">{item.final_score}</td>
+              <td className="p-2">{item.alert}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -1,0 +1,1 @@
+[{"task_id":1,"progress_percent":40,"planned_progress":60.0,"cost_variance":250000.0,"schedule_variance":-20.0,"final_score":26.7,"alert":"\ud83d\udd34 Critical"},{"task_id":2,"progress_percent":20,"planned_progress":20.0,"cost_variance":190000.0,"schedule_variance":0.0,"final_score":40.0,"alert":"\ud83d\udd34 Critical"}]
