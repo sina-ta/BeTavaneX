@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import data from "@/app/data/dashboard.json";
+import { useState, useEffect } from "react";
+
 
 type WorkUnit = {
   id: number;
@@ -14,10 +14,14 @@ export default function WorkUnitsPage() {
   const [title, setTitle] = useState("");
   const [baseline, setBaseline] = useState<number | "">("");
   const [unit, setUnit] = useState("");
-
+  const [data, setData] = useState<any[]>([]);
   const [workUnits, setWorkUnits] = useState<WorkUnit[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
-
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/dashboard")
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, []);
   // 🔥 SORT + FILTER
   const [sortKey, setSortKey] = useState("final_score");
   const [sortAsc, setSortAsc] = useState(true);
@@ -71,7 +75,7 @@ export default function WorkUnitsPage() {
       return a[sortKey] < b[sortKey] ? 1 : -1;
     }
   });
-
+  
   return (
     <div className="max-w-xl space-y-6">
       <h1 className="text-2xl font-bold">
