@@ -1,8 +1,30 @@
 from fastapi import FastAPI
+
+from pydantic import BaseModel
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../db")
+    )
+)
+
+from models import DailyWorkOrder, DailyReport
+
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 
 app = FastAPI()
+
+DATABASE_URL = "postgresql://postgres:Mahshid88@localhost:5433/betavanx_db"
+
+engine = create_engine(DATABASE_URL)
+
+SessionLocal = sessionmaker(bind=engine)
 
 # ✅ CORS (برای اتصال React)
 app.add_middleware(
@@ -12,6 +34,48 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class WorkOrderCreate(BaseModel):
+
+    project_id: int
+
+    task_id: int
+
+    assigned_to: str
+
+    planned_qty: float
+
+    unit: str
+
+    priority: str
+
+    status: str
+
+    created_by: str
+
+class DailyReportCreate(BaseModel):
+
+    work_order_id: int
+
+    reported_by: str
+
+    actual_qty: float
+
+    manpower_count: int
+
+    equipment_hours: float
+
+    material_consumption: float
+
+    delay_reason: str
+
+    weather_status: str
+
+    photo_count: int
+
+    report_status: str
+
+    approved_by: str
 
 @app.get("/dashboard")
 def get_dashboard():
@@ -116,3 +180,102 @@ def get_dashboard():
 
     # 🔹 7. تبدیل به JSON
     return result.to_dict(orient="records")
+
+
+@app.post("/daily-work-order")
+
+def create_work_order(work_order: WorkOrderCreate):
+
+    session = SessionLocal()
+
+    new_work_order = DailyWorkOrder(
+
+        project_id=work_order.project_id,
+
+        task_id=work_order.task_id,
+
+        assigned_to=work_order.assigned_to,
+
+        planned_qty=work_order.planned_qty,
+
+        unit=work_order.unit,
+
+        priority=work_order.priority,
+
+        status=work_order.status,
+
+        created_by=work_order.created_by
+    )
+
+    session.add(new_work_order)
+
+    session.commit()
+
+    return {
+        "message": "✅ Work Order Created"
+    }
+@app.get("/daily-work-orders")
+
+def get_daily_work_orders():
+
+    session = SessionLocal()
+
+    work_orders = session.query(DailyWorkOrder).all()
+
+    result = []
+
+    for wo in work_orders:
+
+        result.append({
+            "id": wo.id,
+            "project_id": wo.project_id,
+            "task_id": wo.task_id,
+            "assigned_to": wo.assigned_to,
+            "planned_qty": wo.planned_qty,
+            "unit": wo.unit,
+            "priority": wo.priority,
+            "status": wo.status,
+            "created_by": wo.created_by
+        })
+
+    return result
+    
+
+@app.post("/daily-report")
+
+def create_daily_report(report: DailyReportCreate):
+
+    session = SessionLocal()
+
+    new_report = DailyReport(
+
+        work_order_id=report.work_order_id,
+
+        reported_by=report.reported_by,
+
+        actual_qty=report.actual_qty,
+
+        manpower_count=report.manpower_count,
+
+        equipment_hours=report.equipment_hours,
+
+        material_consumption=report.material_consumption,
+
+        delay_reason=report.delay_reason,
+
+        weather_status=report.weather_status,
+
+        photo_count=report.photo_count,
+
+        report_status=report.report_status,
+
+        approved_by=report.approved_by
+    )
+
+    session.add(new_report)
+
+    session.commit()
+
+    return {
+        "message": "✅ Daily Report Created"
+    }

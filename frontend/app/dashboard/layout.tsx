@@ -17,6 +17,19 @@ export default function DashboardLayout({
           >
             Work Units
          </Link>
+
+          <Link 
+            href="/dashboard/daily-work-orders"
+            className="block hover:text-gray-300"
+          >
+            Daily Work Orders
+          </Link>
+
+          <Link href="/dashboard/daily-reports"
+          className="block hover:text-gray-300"
+          >
+            Daily Reports
+          </Link>
           <div>Overview</div>
           
           <div>Workers</div>
