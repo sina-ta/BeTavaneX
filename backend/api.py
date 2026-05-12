@@ -247,6 +247,46 @@ def create_daily_report(report: DailyReportCreate):
 
     session = SessionLocal()
 
+     # =========================
+    # Validation Engine v1
+    # =========================
+
+    validation_warnings = []
+
+    # 🔹 Find related work order
+    work_order = session.query(DailyWorkOrder).filter(
+        DailyWorkOrder.id == report.work_order_id
+    ).first()
+
+    # 🔹 Rule 1
+    if not work_order:
+
+        validation_warnings.append(
+            "⚠️ Invalid Work Order ID"
+        )
+
+    else:
+
+        if report.actual_qty > work_order.planned_qty:
+
+            validation_warnings.append(
+                "⚠️ Actual quantity exceeds planned quantity"
+            )
+
+    # 🔹 Rule 2
+    if report.manpower_count > 20:
+
+        validation_warnings.append(
+            "⚠️ Suspicious manpower allocation"
+        )
+
+    # 🔹 Rule 3
+    if report.actual_qty < 5 and report.delay_reason == "None":
+
+        validation_warnings.append(
+            "⚠️ Low progress without delay reason"
+        )
+
     new_report = DailyReport(
 
         work_order_id=report.work_order_id,
@@ -277,5 +317,8 @@ def create_daily_report(report: DailyReportCreate):
     session.commit()
 
     return {
-        "message": "✅ Daily Report Created"
+
+        "message": "✅ Daily Report Created",
+
+        "validation_warnings": validation_warnings
     }

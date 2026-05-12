@@ -26,6 +26,7 @@ export default function DailyReportsPage() {
 
   const [approvedBy, setApprovedBy] = useState("");
 
+  const [validationWarnings, setValidationWarnings] = useState<string[]>([]);
 
 
   const handleSubmit = async (e: any) => {
@@ -80,10 +81,23 @@ export default function DailyReportsPage() {
 
 
     const data = await res.json();
-
+    console.log("BACKEND RESPONSE:", data);
     console.log(data);
 
-    alert("✅ Daily Report Submitted");
+    if (data.validation_warnings.length > 0) {
+
+      setValidationWarnings(data.validation_warnings);
+
+      alert(
+        "⚠️ Validation Warnings:\n\n" +
+        data.validation_warnings.join("\n")
+      );
+
+    } else {
+
+      alert("✅ Daily Report Submitted");
+
+    }
 
   };
 
@@ -226,6 +240,35 @@ export default function DailyReportsPage() {
         </button>
 
       </form>
+      {/* Validation Results */}
+
+      {validationWarnings.length > 0 && (
+
+        <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mt-6">
+
+          <h2 className="text-lg font-bold text-yellow-800 mb-2">
+            Validation Results
+          </h2>
+
+          <ul className="space-y-2">
+
+            {validationWarnings.map((warning, index) => (
+
+              <li
+                key={index}
+                className="text-yellow-700 font-medium"
+              >
+                {warning}
+              </li>
+
+            ))}
+
+          </ul>
+
+        </div>
+
+      )}
+    
 
     </div>
 
