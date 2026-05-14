@@ -20,7 +20,7 @@ export default function WorkUnitsPage() {
   useEffect(() => {
     fetch("http://127.0.0.1:8000/dashboard")
       .then((res) => res.json())
-      .then((data) => setData(data));
+      .then((data) => setData(data.tasks));
   }, []);
   // 🔥 SORT + FILTER
   const [sortKey, setSortKey] = useState("final_score");
@@ -77,16 +77,19 @@ export default function WorkUnitsPage() {
   });
   
   return (
-    <div className="max-w-xl space-y-6">
-      <h1 className="text-2xl font-bold">
+    <div className="max-w-2xl space-y-6">
+      <h1 className="text-3xl font-bold text-gray-800">
         {editingId ? "Edit Work Unit" : "Create Work Unit"}
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 bg-white p-6 rounded-2xl shadow-md border"
+      >
         <input
           type="text"
           placeholder="Work Title"
-          className="w-full border p-2 rounded"
+          className="w-full border border-gray-300 p-3 rounded text-black placeholder-gray-500 bg-white"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
@@ -94,7 +97,7 @@ export default function WorkUnitsPage() {
         <input
           type="number"
           placeholder="Baseline Quantity"
-          className="w-full border p-2 rounded"
+          className="w-full border border-gray-300 p-3 rounded text-black placeholder-gray-500 bg-white"
           value={baseline}
           onChange={(e) =>
             setBaseline(e.target.value === "" ? "" : Number(e.target.value))
@@ -102,7 +105,7 @@ export default function WorkUnitsPage() {
         />
 
         <select
-          className="w-full border p-2 rounded bg-white"
+          className="w-full border border-gray-300 p-3 rounded text-black placeholder-gray-500 bg-white"        
           value={unit}
           onChange={(e) => setUnit(e.target.value)}
         >
@@ -115,65 +118,10 @@ export default function WorkUnitsPage() {
           <option value="day">Day</option>
         </select>
 
-        <button className="bg-black text-white px-4 py-2 rounded">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold transition">
           {editingId ? "Update" : "Save"}
         </button>
-      </form>
-
-      {/* Dashboard */}
-      <hr className="my-8" />
-
-      <h2 className="text-xl font-bold">BetavanX Dashboard</h2>
-
-      {/* 🔥 FILTER BUTTON */}
-      <button
-        onClick={() => setShowCritical(!showCritical)}
-        className="mb-2 px-3 py-1 border rounded"
-      >
-        {showCritical ? "Show All" : "Show Critical Only"}
-      </button>
-
-      <table className="w-full border mt-2">
-        <thead>
-          <tr className="bg-gray-200 text-left">
-            <th className="p-2">Task</th>
-            <th className="p-2">Progress</th>
-
-            {/* 🔥 SORT CLICK */}
-            <th
-              className="p-2 cursor-pointer"
-              onClick={() => {
-                setSortKey("final_score");
-                setSortAsc(!sortAsc);
-              }}
-            >
-              Score
-            </th>
-
-            <th className="p-2">Status</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {sortedData.map((item: any) => (
-            <tr
-              key={item.task_id}
-              className={
-                item.alert === "🔴 Critical"
-                  ? "bg-red-100"
-                  : item.alert === "🟡 Warning"
-                  ? "bg-yellow-100"
-                  : "bg-green-100"
-              }
-            >
-              <td className="p-2 font-bold">Task {item.task_id}</td>
-              <td className="p-2">{item.progress_percent}%</td>
-              <td className="p-2">{item.final_score}</td>
-              <td className="p-2">{item.alert}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      </form>   
     </div>
   );
 }

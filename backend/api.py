@@ -77,110 +77,135 @@ class DailyReportCreate(BaseModel):
 
     approved_by: str
 
+
 @app.get("/dashboard")
 def get_dashboard():
 
-     # 🔹 1. خواندن task data
-    tasks_df = pd.read_excel("../data/raw/betavanx_mvp_v1.xlsx")
+    session = SessionLocal()
 
-    # 🔹 2. خواندن گزارش کار
-    reports_df = pd.read_excel("../data/raw/work_report.xlsx")
-    
-    # 🔹 3. خواندن گزارش هزینه
-    cost_df = pd.read_excel("../data/raw/cost_report.xlsx")
+    work_orders = session.query(DailyWorkOrder).all()
 
-    # 🔹 3. merge
-    df = tasks_df.merge(
-        reports_df,
-        left_on="id",
-        right_on="task_id",
-        how="left"
-    )
-    df = df.merge(
-        cost_df,
-        left_on="id",
-        right_on="task_id",
-        how="left"
-    )
-    print(df.columns)
-    # 🔹 2. ساخت دیتا تستی شبیه چیزی که قبلاً داشتی
-    df["progress_percent"] = (
-        df["executed_qty"] / df["baseline_qty"]
-    ) * 100
+    reports = session.query(DailyReport).all()
 
-    # 🔹 planned progress
-    df["planned_progress"] = 50
+    dashboard_data = []
 
-    df["planned_cost"] = df["budget"]
+    # =========================
+    # KPI Engine from DB
+    # =========================
 
-    # 🔹 3. محاسبه expected cost
-    df["expected_cost"] = df["planned_cost"] * (df["progress_percent"] / 100)
-    # 🔹 CPI
-    df["cpi"] = df["expected_cost"] / df["actual_cost"]
+    for wo in work_orders:
 
-    # 🔹 SPI
-    df["spi"] = df["progress_percent"] / df["planned_progress"]
+        related_reports = [
+            r for r in reports
+            if r.work_order_id == wo.id
+        ]
 
-    # 🔹 Decision Score
-    df["final_score"] = (
-        (df["cpi"] * 40) +
-        (df["spi"] * 40) +
-        (df["progress_percent"] * 0.2)
-    )
-    print(df[[
-        "progress_percent",
-        "cpi",
-        "spi",
-        "final_score"
-    ]])
-    # 🔹 Risk Score
-    df["risk_score"] = 100 - df["final_score"]
+        actual_qty = sum(
+            r.actual_qty for r in related_reports
+        )
 
-    # 🔹 5. alert
-    def get_alert(score):
+        raw_progress = (
+            actual_qty / wo.planned_qty
+        ) * 100
 
-        if score < 60:
-            return "🔴 Critical"
+        progress_percent = min(raw_progress, 100)
 
-        elif score < 80:
-            return "🟡 Warning"
+        planned_progress = 50
+
+        cpi = progress_percent / 100
+
+        spi = progress_percent / planned_progress
+
+        raw_score = (
+            (cpi * 40) +
+            (spi * 40) +
+            (progress_percent * 0.2)
+        )
+
+        final_score = min(raw_score, 100)
+
+        risk_score = 100 - final_score
+
+        # =========================
+        # Alert Engine
+        # =========================
+
+        if final_score < 60:
+            alert = "🔴 Critical"
+
+        elif final_score < 80:
+            alert = "🟡 Warning"
 
         else:
-            return "🟢 Good"
+            alert = "🟢 Good"
 
-    def get_risk_level(risk):
+        # =========================
+        # Risk Level
+        # =========================
 
-        if risk > 60:
-            return "🔴 High Risk"
+        if risk_score > 60:
+            risk_level = "🔴 High Risk"
 
-        elif risk > 30:
-            return "🟡 Medium Risk"
+        elif risk_score > 30:
+            risk_level = "🟡 Medium Risk"
 
         else:
-            return "🟢 Low Risk"
+            risk_level = "🟢 Low Risk"
 
-    df["alert"] = df["final_score"].apply(get_alert)
+        dashboard_data.append({
 
-    df["risk_level"] = df["risk_score"].apply(get_risk_level)
+            "task_id": wo.task_id,
 
-    # 🔹 6. انتخاب ستون‌ها
-    result = df.rename(columns={"id": "task_id"})[
-    [
-        "task_id",
-        "progress_percent",
-        "planned_progress",
-        "final_score",
-        "cpi",
-        "spi",
-        "alert",
-        "risk_score",
-        "risk_level",
-    ]
-]
+            "progress_percent": progress_percent,
 
-    # 🔹 7. تبدیل به JSON
-    return result.to_dict(orient="records")
+            "planned_progress": planned_progress,
 
+            "final_score": final_score,
+
+            "cpi": cpi,
+
+            "spi": spi,
+
+            "alert": alert,
+
+            "risk_score": risk_score,
+
+            "risk_level": risk_level
+        })
+
+        summary = {
+
+        "total_work_orders": len(work_orders),
+
+        "total_reports": len(reports),
+
+        "avg_cpi": round(
+            sum(item["cpi"] for item in dashboard_data)
+            / len(dashboard_data),
+            2
+        ),
+
+        "avg_spi": round(
+            sum(item["spi"] for item in dashboard_data)
+            / len(dashboard_data),
+            2
+        ),
+
+        "critical_alerts": len([
+            item for item in dashboard_data
+            if item["alert"] == "🔴 Critical"
+        ]),
+
+        "warning_alerts": len([
+            item for item in dashboard_data
+            if item["alert"] == "🟡 Warning"
+        ])
+        }
+
+    return {
+    "summary": summary,
+    "tasks": dashboard_data
+    }
 
 @app.post("/daily-work-order")
 

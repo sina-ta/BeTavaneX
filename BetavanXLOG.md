@@ -315,3 +315,66 @@ Decision intelligence depends on truthful realtime operational data.
 - KPI automation
 - CPI/SPI realtime calculations
 - Delay analysis
+
+--------------------------------
+# BetavanX Development Log
+
+## Date
+2026-05-11
+
+---
+
+## Completed Today
+
+### Backend
+- Implemented PostgreSQL integration
+- Added SQLAlchemy ORM layer
+- Created Daily Work Order API
+- Created Daily Report API
+- Added validation engine v1
+- Added relational integrity between reports and work orders
+
+### Frontend
+- Created Daily Work Orders page
+- Created Daily Reports form
+- Connected frontend to FastAPI backend
+- Implemented validation warning UI
+
+### System Logic
+- Enforced work-order-based reporting workflow
+- Prevented reports without valid work orders
+- Added operational validation rules
+
+### Key Insight
+BetavanX is evolving from a dashboard system into a structured operational data platform.
+
+# 2026-05-14
+
+## Dashboard Architecture Upgrade
+
+### Completed
+- Created Project Overview page
+- Connected overview page to backend dashboard API
+- Added KPI cards:
+  - Total Work Orders
+  - Total Reports
+  - Average CPI
+  - Average SPI
+- Added project tasks table
+- Created reusable dashboard UI structure
+- Added fixed sidebar layout
+- Implemented collapsible sidebar
+- Added dynamic sidebar width transition
+- Added icon mode for collapsed sidebar
+- Improved dashboard styling consistency
+- Removed duplicated dashboard section from Work Units page
+- Fixed validation warning issue caused by invalid work_order_id
+- Fixed sidebar overlay issue with main content
+
+### Notes
+- Sidebar architecture is now scalable for:
+  - Active routes
+  - Tooltips
+  - Mobile drawer
+  - Animated transitions
+- Dashboard is evolving from prototype UI into a scalable SaaS structure.
