@@ -4,6 +4,10 @@ from pydantic import BaseModel
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from services.kpi_engine import calculate_kpis
+
+from services.interpretation_engine import interpret_project
+
 import sys
 import os
 
@@ -100,107 +104,54 @@ def get_dashboard():
             if r.work_order_id == wo.id
         ]
 
-        actual_qty = sum(
-            r.actual_qty for r in related_reports
+        kpis = calculate_kpis(wo, reports)
+
+        interpretation = interpret_project(
+            kpis["cpi"],
+            kpis["spi"],
+            kpis["final_score"],
+            kpis["risk_score"]
         )
 
-        raw_progress = (
-            actual_qty / wo.planned_qty
-        ) * 100
-
-        progress_percent = min(raw_progress, 100)
-
-        planned_progress = 50
-
-        cpi = progress_percent / 100
-
-        spi = progress_percent / planned_progress
-
-        raw_score = (
-            (cpi * 40) +
-            (spi * 40) +
-            (progress_percent * 0.2)
-        )
-
-        final_score = min(raw_score, 100)
-
-        risk_score = 100 - final_score
-
-        # =========================
-        # Alert Engine
-        # =========================
-
-        if final_score < 60:
-            alert = "🔴 Critical"
-
-        elif final_score < 80:
-            alert = "🟡 Warning"
-
-        else:
-            alert = "🟢 Good"
-
-        # =========================
-        # Risk Level
-        # =========================
-
-        if risk_score > 60:
-            risk_level = "🔴 High Risk"
-
-        elif risk_score > 30:
-            risk_level = "🟡 Medium Risk"
-
-        else:
-            risk_level = "🟢 Low Risk"
 
         dashboard_data.append({
 
             "task_id": wo.task_id,
 
-            "progress_percent": progress_percent,
+             **kpis,
 
-            "planned_progress": planned_progress,
-
-            "final_score": final_score,
-
-            "cpi": cpi,
-
-            "spi": spi,
-
-            "alert": alert,
-
-            "risk_score": risk_score,
-
-            "risk_level": risk_level
-        })
+            **interpretation
+         })
 
         summary = {
 
-        "total_work_orders": len(work_orders),
+            "total_work_orders": len(work_orders),
 
-        "total_reports": len(reports),
+            "total_reports": len(reports),
 
-        "avg_cpi": round(
-            sum(item["cpi"] for item in dashboard_data)
-            / len(dashboard_data),
-            2
-        ),
+            "avg_cpi": round(
+                sum(item["cpi"] for item in dashboard_data)
+                / len(dashboard_data),
+                2
+            ),
 
-        "avg_spi": round(
-            sum(item["spi"] for item in dashboard_data)
-            / len(dashboard_data),
-            2
-        ),
+            "avg_spi": round(
+                sum(item["spi"] for item in dashboard_data)
+                / len(dashboard_data),
+                2
+            ),
 
-        "critical_alerts": len([
-            item for item in dashboard_data
-            if item["alert"] == "🔴 Critical"
-        ]),
+            "critical_alerts": len([
+                item for item in dashboard_data
+                if item["alert"] == "🔴 Critical"
+            ]),
 
-        "warning_alerts": len([
-            item for item in dashboard_data
-            if item["alert"] == "🟡 Warning"
-        ])
+            "warning_alerts": len([
+                item for item in dashboard_data
+                if item["alert"] == "🟡 Warning"
+            ])
         }
+                
 
     return {
     "summary": summary,

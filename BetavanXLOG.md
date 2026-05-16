@@ -378,3 +378,62 @@ BetavanX is evolving from a dashboard system into a structured operational data 
   - Mobile drawer
   - Animated transitions
 - Dashboard is evolving from prototype UI into a scalable SaaS structure.
+# BetavanX Development Log
+
+## 2026-05-16
+
+### Major Progress
+- Improved Overview Dashboard UI
+- Added human-friendly KPI presentation
+- Replaced technical PMBOK terminology with understandable business language
+- Added schedule progress bars
+- Added Budget Health and Project Speed indicators
+- Added collapsible sidebar navigation
+- Fixed sidebar fixed-position layout issues
+- Standardized dashboard card and table styling
+
+---
+
+### Backend Architecture Improvements
+- Refactored KPI logic into modular service architecture
+- Created:
+  - `backend/services/kpi_engine.py`
+  - `backend/services/interpretation_engine.py`
+- Added reusable KPI calculation layer
+- Added human-readable interpretation layer
+
+---
+
+### Product Vision Clarification
+Today the core identity of BetavanX became clearer:
+
+PMBOK + Construction Management logic
+presented in simple human language.
+
+BetavanX is NOT a simple dashboard app.
+
+The system goal is:
+- assist decision-making
+- simplify project management
+- provide guided recommendations
+- help non-PM users understand project health
+
+---
+
+### Strategic Design Direction
+Future recommendation engine will revolve around protecting:
+1. Time
+2. Cost
+3. Manpower
+
+Users will choose project priority dynamically,
+and the system will generate intelligent recommendations
+based on those priorities.
+
+---
+
+### Next Steps
+- Build Recommendation Engine v1
+- Add intelligent decision suggestions
+- Improve dashboard visualization
+- Prepare architecture for MSP/Navis integration

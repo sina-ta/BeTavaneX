@@ -81,9 +81,9 @@ export default function OverviewPage() {
             <tr className="border-b text-left table-header">
 
               <th className="p-3">Task</th>
-              <th className="p-3">Progress</th>
-              <th className="p-3">CPI</th>
-              <th className="p-3">SPI</th>
+              <th className="p-3">Schedule Progress</th>
+              <th className="p-3">Budget Health</th>
+              <th className="p-3">Project Speed</th>
               <th className="p-3">Alert</th>
 
             </tr>
@@ -103,17 +103,66 @@ export default function OverviewPage() {
                   {task.task_id}
                 </td>
 
-                <td className="p-3">
-                  {task.progress_percent}%
+                <td className="p-3 w-72">
+
+                  <div className="flex items-center gap-3">
+
+                    <div className="w-full bg-gray-200 rounded-full h-3">
+
+                      <div
+                        className={`
+                          h-3 rounded-full
+                          ${
+                            task.schedule_percent >= 80
+                              ? "bg-green-500"
+                              : task.schedule_percent >= 50
+                              ? "bg-yellow-500"
+                              : "bg-red-500"
+                          }
+                        `}
+                        style={{
+                          width: `${task.schedule_percent}%`,
+                        }}
+                      ></div>
+
+                    </div>
+
+                    <span className="text-sm font-semibold">
+                      {task.schedule_percent}%
+                    </span>
+
+                  </div>
+
                 </td>
 
                 <td className="p-3">
-                  {task.cpi}
+
+                  <div className="font-semibold">
+
+                    {
+                      task.cpi >= 1
+                        ? "🟢 Under Budget"
+                        : "🟡 Over Budget"
+                    }
+
+                  </div>
+
                 </td>
 
                 <td className="p-3">
-                  {task.spi}
+
+                  <div className="font-semibold">
+
+                    {
+                      task.spi >= 1
+                        ? "⚡ Fast"
+                        : "🐢 Delayed"
+                    }
+
+                  </div>
+
                 </td>
+                
 
                 <td className="p-3">
 
