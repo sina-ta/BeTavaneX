@@ -57,7 +57,7 @@ def interpret_project(cpi, spi, final_score, risk_score):
         )
 
     # =========================
-    # Alert
+    # Alert Engine
     # =========================
 
     if final_score < 60:
@@ -97,8 +97,39 @@ def interpret_project(cpi, spi, final_score, risk_score):
         "alert": alert,
 
         "risk_level": risk_level,
-
-        "schedule_percent": min(round(spi * 100), 100),
-
-        "cost_percent": round(cpi * 100)
     }
+
+
+def generate_recommendation(cpi, spi):
+
+    if spi < 1 and cpi >= 1:
+
+        return {
+            "title": "Schedule Delay",
+            "action": "Increase manpower",
+            "severity": "warning"
+        }
+
+    elif spi < 1 and cpi < 1:
+
+        return {
+            "title": "Critical Risk",
+            "action": "Review workforce and costs",
+            "severity": "critical"
+        }
+
+    elif spi >= 1 and cpi < 1:
+
+        return {
+            "title": "Cost Overrun",
+            "action": "Reduce unnecessary costs",
+            "severity": "warning"
+        }
+
+    else:
+
+        return {
+            "title": "Project Stable",
+            "action": "Maintain current performance",
+            "severity": "good"
+        }

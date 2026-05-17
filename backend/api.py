@@ -1,34 +1,27 @@
 from fastapi import FastAPI
-
 from pydantic import BaseModel
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
-from services.kpi_engine import calculate_kpis
+from backend.database import SessionLocal, engine
 
-from services.interpretation_engine import interpret_project
-
-import sys
-import os
-
-sys.path.append(
-    os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "../db")
-    )
+from backend.models import (
+    Base,
+    DailyWorkOrder,
+    DailyReport
 )
 
-from models import DailyWorkOrder, DailyReport
+from backend.services.kpi_engine import calculate_kpis
+
+from backend.services.interpretation_engine import (
+    interpret_project,
+    generate_recommendation
+)
 
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 
 app = FastAPI()
 
-DATABASE_URL = "postgresql://postgres:Mahshid88@localhost:5433/betavanx_db"
-
-engine = create_engine(DATABASE_URL)
-
-SessionLocal = sessionmaker(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 # ✅ CORS (برای اتصال React)
 app.add_middleware(
@@ -112,6 +105,10 @@ def get_dashboard():
             kpis["final_score"],
             kpis["risk_score"]
         )
+        recommendation = generate_recommendation(
+            kpis["cpi"],
+            kpis["spi"]
+        )
 
 
         dashboard_data.append({
@@ -120,7 +117,9 @@ def get_dashboard():
 
              **kpis,
 
-            **interpretation
+            **interpretation,
+
+            "recommendation": recommendation,
          })
 
         summary = {

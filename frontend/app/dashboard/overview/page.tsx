@@ -2,6 +2,14 @@
 
 import { useEffect, useState } from "react";
 
+import KpiCard from "@/components/KpiCard";
+
+import ProgressBar from "@/components/ProgressBar";
+
+import StatusBadge from "@/components/StatusBadge";
+
+import RecommendationCard from "@/components/RecommendationCard";
+
 export default function OverviewPage() {
 
   const [dashboardData, setDashboardData] = useState<any>(null);
@@ -29,41 +37,34 @@ export default function OverviewPage() {
       <h1 className="page-title">
         Project Overview
       </h1>
+     
+      <RecommendationCard
+        title={dashboardData.tasks[0].recommendation.title}
+        message={dashboardData.tasks[0].recommendation.action}
+      />
 
       {/* KPI CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-        <div className="card p-6">
-          <p className="card-title">Total Work Orders</p>
+        <KpiCard
+          title="Total Work Orders"
+          value={dashboardData.summary.total_work_orders}
+        />
 
-          <h2 className="card-value mt-2">
-            {dashboardData.summary.total_work_orders}
-          </h2>
-        </div>
+        <KpiCard
+          title="Total Reports"
+          value={dashboardData.summary.total_reports}
+        />
 
-        <div className="card p-6">
-          <p className="card-title">Total Reports</p>
+        <KpiCard
+          title="Budget Health"
+          value={dashboardData.summary.avg_cpi}
+        />
 
-          <h2 className="card-value mt-2">
-            {dashboardData.summary.total_reports}
-          </h2>
-        </div>
-
-        <div className="card p-6">
-          <p className="card-title">Average CPI</p>
-
-          <h2 className="card-value mt-2">
-            {dashboardData.summary.avg_cpi}
-          </h2>
-        </div>
-
-        <div className="card p-6">
-          <p className="card-title">Average SPI</p>
-
-          <h2 className="card-value mt-2">
-            {dashboardData.summary.avg_spi}
-          </h2>
-        </div>
+        <KpiCard
+          title="Project Speed"
+          value={dashboardData.summary.avg_spi}
+        />
 
       </div>
 
@@ -85,6 +86,7 @@ export default function OverviewPage() {
               <th className="p-3">Budget Health</th>
               <th className="p-3">Project Speed</th>
               <th className="p-3">Alert</th>
+              <th className="p-3">Recommendation</th>
 
             </tr>
 
@@ -105,36 +107,11 @@ export default function OverviewPage() {
 
                 <td className="p-3 w-72">
 
-                  <div className="flex items-center gap-3">
-
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-
-                      <div
-                        className={`
-                          h-3 rounded-full
-                          ${
-                            task.schedule_percent >= 80
-                              ? "bg-green-500"
-                              : task.schedule_percent >= 50
-                              ? "bg-yellow-500"
-                              : "bg-red-500"
-                          }
-                        `}
-                        style={{
-                          width: `${task.schedule_percent}%`,
-                        }}
-                      ></div>
-
-                    </div>
-
-                    <span className="text-sm font-semibold">
-                      {task.schedule_percent}%
-                    </span>
-
-                  </div>
+                  <ProgressBar
+                    value={task.progress_percent}
+                  />
 
                 </td>
-
                 <td className="p-3">
 
                   <div className="font-semibold">
@@ -166,17 +143,20 @@ export default function OverviewPage() {
 
                 <td className="p-3">
 
-                  <span
-                    className={
-                      task.alert.includes("Critical")
-                        ? "critical"
-                        : task.alert.includes("Warning")
-                        ? "warning"
-                        : "good"
-                    } 
-                  >
-                    {task.alert}
-                  </span>
+                   <StatusBadge
+                    status={task.alert}
+                  />
+
+                </td>
+                <td className="p-3">
+
+                  <div className="font-semibold text-gray-800">
+                    {task.recommendation.title}
+                  </div>
+
+                  <div className="text-sm text-gray-500">
+                    {task.recommendation.action}
+                  </div>
 
                 </td>
 
