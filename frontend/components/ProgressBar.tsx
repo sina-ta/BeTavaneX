@@ -22,14 +22,14 @@ export default function ProgressBar({
         <div
           className={`${color} h-3 rounded-full`}
           style={{
-            width: `${value}%`,
+            width: `${Math.min(value, 100)}%`
           }}
         />
 
       </div>
 
       <span className="text-sm font-semibold text-gray-700 min-w-[45px]">
-        {value}%
+        {Number(value).toFixed(1)}%
       </span>
 
     </div>
