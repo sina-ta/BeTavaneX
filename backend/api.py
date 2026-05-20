@@ -10,6 +10,9 @@ from backend.routers.dashboard_router import router as dashboard_router
 from backend.routers.work_order_router import router as work_order_router
 from backend.routers.report_router import router as report_router
 
+from backend.routers.task_detail_router import (
+    router as task_detail_router
+)
 
 app = FastAPI()
 
@@ -29,3 +32,5 @@ app.include_router(dashboard_router)
 app.include_router(work_order_router)
 
 app.include_router(report_router)
+
+app.include_router(task_detail_router)

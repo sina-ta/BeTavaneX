@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
 export default function DailyWorkOrdersPage() {
 
   const [workOrders, setWorkOrders] = useState<any[]>([]);
@@ -63,7 +65,12 @@ export default function DailyWorkOrdersPage() {
 
               <td className="p-2">
 
-                {item.task_id}
+                <Link
+                  href={`/task/${item.task_id}`}
+                  className="text-blue-600 font-semibold hover:underline"
+                >
+                  {item.task_id}
+                </Link>
 
               </td>
 

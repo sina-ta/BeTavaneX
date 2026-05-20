@@ -1,0 +1,47 @@
+.page-title {
+  @apply text-6xl font-bold text-gray-900;
+}
+
+.section-title {
+  @apply text-3xl font-bold text-gray-800;
+}
+
+.metric-label {
+  @apply text-gray-500 text-sm;
+}
+
+.metric-value {
+  @apply text-5xl font-bold text-gray-800;
+}
+
+.card {
+  @apply bg-white rounded-3xl shadow-sm p-6;
+}
+
+.table-container {
+  @apply bg-white rounded-3xl shadow-sm overflow-hidden;
+}
+
+.table-title {
+  @apply text-2xl font-bold text-gray-800 mb-6;
+}
+
+.table-base {
+  @apply w-full text-gray-700 border-collapse;
+}
+
+.table-head {
+  @apply bg-black text-white;
+}
+
+.table-head-cell {
+  @apply p-4 text-left font-semibold;
+}
+
+.table-row {
+  @apply border-b hover:bg-gray-50;
+}
+
+.table-cell {
+  @apply p-4;
+}

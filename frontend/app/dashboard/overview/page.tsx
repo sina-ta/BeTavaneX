@@ -10,6 +10,8 @@ import StatusBadge from "@/components/StatusBadge";
 
 import RecommendationCard from "@/components/RecommendationCard";
 
+import Link from "next/link";
+
 export default function OverviewPage() {
 
   const [dashboardData, setDashboardData] = useState<any>(null);
@@ -102,7 +104,12 @@ export default function OverviewPage() {
               >
 
                 <td className="p-3 font-semibold">
-                  {task.task_id}
+                  <Link
+                    href={`/task/${task.task_id}`}
+                    className="text-blue-600 font-semibold hover:underline"
+                  >
+                    {task.task_id}
+                  </Link>
                 </td>
 
                 <td className="p-3 w-72">

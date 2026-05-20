@@ -1,12 +1,7 @@
 def calculate_kpis(work_order, reports):
 
-    related_reports = [
-        r for r in reports
-        if r.work_order_id == work_order.id
-    ]
-
     actual_qty = sum(
-        r.actual_qty for r in related_reports
+        r.actual_qty for r in reports
     )
 
     raw_progress = (

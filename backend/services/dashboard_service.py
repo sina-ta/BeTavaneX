@@ -33,7 +33,10 @@ def build_dashboard():
             if r.work_order_id == wo.id
         ]
 
-        kpis = calculate_kpis(wo, related_reports)
+        kpis = calculate_kpis(
+            wo,
+            related_reports
+        )
 
         interpretation = interpret_project(
             kpis["cpi"],
