@@ -1,3 +1,5 @@
+import StatusBadge from "./StatusBadge";
+
 import Link from "next/link";
 
 export default function WorkersTable({
@@ -55,7 +57,11 @@ export default function WorkersTable({
 
                 <Link
                   href={`/hr/workers/${worker.id}`}
-                  className="text-blue-600 font-semibold hover:underline"
+                  className="
+                    text-blue-400
+                    font-semibold
+                    hover:underline
+                  "
                 >
                   {worker.full_name}
                 </Link>
@@ -79,7 +85,11 @@ export default function WorkersTable({
               </td>
 
               <td className="table-cell">
-                {worker.status}
+
+                <StatusBadge
+                  status={worker.status}
+                />
+
               </td>
 
             </tr>

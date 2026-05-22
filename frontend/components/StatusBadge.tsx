@@ -1,51 +1,44 @@
-type StatusBadgeProps = {
-
-  status: string;
-};
-
 export default function StatusBadge({
-
   status,
+}: any) {
 
-}: StatusBadgeProps) {
+  let color = "";
 
-  let styles = "";
+  if (status === "Good") {
 
-  if (status.includes("Critical")) {
+    color =
+      "bg-green-500/20 text-green-400";
 
-    styles = `
-      bg-red-100
-      text-red-700
-    `;
+  }
 
-  } else if (status.includes("Warning")) {
+  else if (status === "Warning") {
 
-    styles = `
-      bg-yellow-100
-      text-yellow-700
-    `;
+    color =
+      "bg-yellow-500/20 text-yellow-400";
 
-  } else {
+  }
 
-    styles = `
-      bg-green-100
-      text-green-700
-    `;
+  else {
+
+    color =
+      "bg-red-500/20 text-red-400";
   }
 
   return (
 
-    <span
+    <div
       className={`
-        px-3
-        py-1
+        inline-flex
+        px-4
+        py-2
         rounded-full
-        text-sm
         font-semibold
-        ${styles}
+        ${color}
       `}
     >
+
       {status}
-    </span>
+
+    </div>
   );
 }

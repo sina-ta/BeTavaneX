@@ -1,47 +1,89 @@
-.page-title {
-  @apply text-6xl font-bold text-gray-900;
-}
+.card-base {
 
-.section-title {
-  @apply text-3xl font-bold text-gray-800;
-}
+  background: var(--bg-card);
 
-.metric-label {
-  @apply text-gray-500 text-sm;
-}
+  border-radius: var(--card-radius);
 
-.metric-value {
-  @apply text-5xl font-bold text-gray-800;
-}
+  box-shadow: var(--shadow-card);
 
-.card {
-  @apply bg-white rounded-3xl shadow-sm p-6;
+  border: 1px solid var(--border-color);
+
+  padding: 24px;
 }
 
 .table-container {
-  @apply bg-white rounded-3xl shadow-sm overflow-hidden;
-}
 
-.table-title {
-  @apply text-2xl font-bold text-gray-800 mb-6;
+  background: var(--bg-card);
+
+  border-radius: var(--card-radius);
+
+  border: 1px solid var(--border-color);
+
+  overflow: hidden;
 }
 
 .table-base {
-  @apply w-full text-gray-700 border-collapse;
+
+  width: 100%;
+
+  border-collapse: collapse;
 }
 
 .table-head {
-  @apply bg-black text-white;
+
+  background: #0b1220;
 }
 
 .table-head-cell {
-  @apply p-4 text-left font-semibold;
+
+  padding: 18px;
+
+  text-align: left;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table-row {
-  @apply border-b hover:bg-gray-50;
+
+  transition: var(--transition-fast);
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-row:hover {
+
+  background: var(--bg-hover);
 }
 
 .table-cell {
-  @apply p-4;
+
+  padding: 18px;
+
+  color: var(--text-primary);
+}
+
+.button-primary {
+
+  background: var(--blue-primary);
+
+  border-radius: var(--button-radius);
+
+  color: white;
+
+  padding: 12px 18px;
+
+  font-weight: 600;
+
+  transition: var(--transition-fast);
+}
+
+.button-primary:hover {
+
+  opacity: 0.9;
 }

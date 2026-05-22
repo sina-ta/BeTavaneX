@@ -2,93 +2,161 @@
 
 import { useEffect, useState } from "react";
 
+import Link from "next/link";
+
 import KpiCard from "@/components/KpiCard";
-
-import ProgressBar from "@/components/ProgressBar";
-
-import StatusBadge from "@/components/StatusBadge";
 
 import RecommendationCard from "@/components/RecommendationCard";
 
-import Link from "next/link";
-
 export default function OverviewPage() {
 
-  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [dashboardData, setDashboardData] =
+    useState<any>(null);
 
   useEffect(() => {
 
     fetch("http://127.0.0.1:8000/dashboard")
       .then((res) => res.json())
       .then((data) => {
+
+        console.log(data);
+
         setDashboardData(data);
+      })
+      .catch((err) => {
+
+        console.log(err);
       });
 
   }, []);
 
   if (!dashboardData) {
 
-    return <div>Loading...</div>;
+    return (
+
+      <div className="p-10">
+
+        Loading...
+
+      </div>
+    );
   }
 
   return (
 
     <div className="space-y-8">
 
-      {/* TITLE */}
-      <h1 className="page-title">
-        Project Overview
-      </h1>
-     
-      <RecommendationCard
-        title={dashboardData.tasks[0].recommendation.title}
-        message={dashboardData.tasks[0].recommendation.action}
-      />
+      {/* PAGE TITLE */}
 
-      {/* KPI CARDS */}
-       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <h1 className="page-title">
+
+        Project Overview
+
+      </h1>
+
+      {/* RECOMMENDATION */}
+
+      {
+        dashboardData.tasks?.[0]
+          ?.recommendation && (
+
+          <RecommendationCard
+            title={
+              dashboardData.tasks[0]
+                .recommendation.title
+            }
+            message={
+              dashboardData.tasks[0]
+                .recommendation.action
+            }
+          />
+        )
+      }
+
+      {/* KPI SECTION */}
+
+      <div
+        className="
+          grid
+          grid-cols-1
+          md:grid-cols-4
+          gap-6
+        "
+      >
 
         <KpiCard
           title="Total Work Orders"
-          value={dashboardData.summary.total_work_orders}
+          value={
+            dashboardData.summary
+              .total_work_orders
+          }
         />
 
         <KpiCard
           title="Total Reports"
-          value={dashboardData.summary.total_reports}
+          value={
+            dashboardData.summary
+              .total_reports
+          }
         />
 
         <KpiCard
           title="Budget Health"
-          value={dashboardData.summary.avg_cpi}
+          value={
+            dashboardData.summary
+              .avg_cpi
+          }
         />
 
         <KpiCard
           title="Project Speed"
-          value={dashboardData.summary.avg_spi}
+          value={
+            dashboardData.summary
+              .avg_spi
+          }
         />
 
       </div>
 
       {/* TASK TABLE */}
+
       <div className="table-container">
 
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          Project Tasks
-        </h2>
+        <div className="p-6">
 
-        <table className="w-full">
+          <h2 className="section-title">
 
-          <thead>
+            Project Tasks
 
-            <tr className="border-b text-left table-header">
+          </h2>
 
-              <th className="p-3">Task</th>
-              <th className="p-3">Schedule Progress</th>
-              <th className="p-3">Budget Health</th>
-              <th className="p-3">Project Speed</th>
-              <th className="p-3">Alert</th>
-              <th className="p-3">Recommendation</th>
+        </div>
+
+        <table className="table-base">
+
+          <thead className="table-head">
+
+            <tr>
+
+              <th className="table-head-cell">
+                Task
+              </th>
+
+              <th className="table-head-cell">
+                Progress
+              </th>
+
+              <th className="table-head-cell">
+                CPI
+              </th>
+
+              <th className="table-head-cell">
+                SPI
+              </th>
+
+              <th className="table-head-cell">
+                Alert
+              </th>
 
             </tr>
 
@@ -96,80 +164,68 @@ export default function OverviewPage() {
 
           <tbody>
 
-            {dashboardData.tasks.map((task: any) => (
+            {dashboardData.tasks.map(
+              (task: any) => (
 
-              <tr
-                key={task.task_id}
-                className="border-b hover:bg-gray-50 text-gray-700"
-              >
+                <tr
+                  key={task.task_id}
+                  className="table-row"
+                >
 
-                <td className="p-3 font-semibold">
-                  <Link
-                    href={`/task/${task.task_id}`}
-                    className="text-blue-600 font-semibold hover:underline"
-                  >
-                    {task.task_id}
-                  </Link>
-                </td>
+                  <td className="table-cell">
 
-                <td className="p-3 w-72">
+                    <Link
+                      href={`/task/${task.task_id}`}
+                      className="
+                        text-blue-600
+                        font-semibold
+                        hover:underline
+                      "
+                    >
 
-                  <ProgressBar
-                    value={task.progress_percent}
-                  />
+                      {task.task_id}
 
-                </td>
-                <td className="p-3">
+                    </Link>
 
-                  <div className="font-semibold">
+                  </td>
 
-                    {
-                      task.cpi >= 1
-                        ? "🟢 Under Budget"
-                        : "🟡 Over Budget"
-                    }
-
-                  </div>
-
-                </td>
-
-                <td className="p-3">
-
-                  <div className="font-semibold">
+                  <td className="table-cell">
 
                     {
-                      task.spi >= 1
-                        ? "⚡ Fast"
-                        : "🐢 Delayed"
+                      Number(
+                        task.progress_percent
+                      ).toFixed(2)
+                    }%
+
+                  </td>
+
+                  <td className="table-cell">
+
+                    {
+                      Number(task.cpi)
+                        .toFixed(2)
                     }
 
-                  </div>
+                  </td>
 
-                </td>
-                
+                  <td className="table-cell">
 
-                <td className="p-3">
+                    {
+                      Number(task.spi)
+                        .toFixed(2)
+                    }
 
-                   <StatusBadge
-                    status={task.alert}
-                  />
+                  </td>
 
-                </td>
-                <td className="p-3">
+                  <td className="table-cell">
 
-                  <div className="font-semibold text-gray-800">
-                    {task.recommendation.title}
-                  </div>
+                    {task.alert}
 
-                  <div className="text-sm text-gray-500">
-                    {task.recommendation.action}
-                  </div>
+                  </td>
 
-                </td>
-
-              </tr>
-
-            ))}
+                </tr>
+              )
+            )}
 
           </tbody>
 
@@ -178,6 +234,5 @@ export default function OverviewPage() {
       </div>
 
     </div>
-
   );
 }

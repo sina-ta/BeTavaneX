@@ -1,26 +1,24 @@
-type KpiCardProps = {
-  title: string;
-  value: string | number;
-};
-
 export default function KpiCard({
   title,
   value,
-}: KpiCardProps) {
+}: any) {
 
   return (
 
-    <div className="bg-white p-6 rounded-2xl shadow">
+    <div className="card-base">
 
-      <p className="text-gray-500 text-sm font-medium">
+      <div className="card-title">
+
         {title}
-      </p>
 
-      <h2 className="text-3xl font-bold mt-2 text-gray-800">
+      </div>
+
+      <div className="card-value">
+
         {value}
-      </h2>
+
+      </div>
 
     </div>
-
   );
 }

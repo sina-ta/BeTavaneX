@@ -1,17 +1,37 @@
-type Props = {
-  reports: any[];
-};
-
-export default function ReportsListTable({
+export default function ReportsTable({
   reports,
-}: Props) {
+}: any) {
+
+  if (!reports || reports.length === 0) {
+
+    return (
+
+      <div className="table-container">
+
+        <h2 className="section-title mb-6">
+
+          Daily Reports
+
+        </h2>
+
+        <div className="text-gray-400">
+
+          No reports found.
+
+        </div>
+
+      </div>
+    );
+  }
 
   return (
 
     <div className="table-container">
 
-      <h2 className="table-title">
-        Reports History
+      <h2 className="section-title mb-6">
+
+        Daily Reports
+
       </h2>
 
       <table className="table-base">
@@ -19,10 +39,6 @@ export default function ReportsListTable({
         <thead className="table-head">
 
           <tr>
-
-            <th className="table-head-cell">
-              WO ID
-            </th>
 
             <th className="table-head-cell">
               Reporter
@@ -44,26 +60,18 @@ export default function ReportsListTable({
               Weather
             </th>
 
-            <th className="table-head-cell">
-              Status
-            </th>
-
           </tr>
 
         </thead>
 
         <tbody>
 
-          {reports.map((report) => (
+          {reports.map((report: any) => (
 
             <tr
               key={report.id}
               className="table-row"
             >
-
-              <td className="table-cell">
-                {report.work_order_id}
-              </td>
 
               <td className="table-cell">
                 {report.reported_by}
@@ -83,10 +91,6 @@ export default function ReportsListTable({
 
               <td className="table-cell">
                 {report.weather_status}
-              </td>
-
-              <td className="table-cell">
-                {report.report_status}
               </td>
 
             </tr>
