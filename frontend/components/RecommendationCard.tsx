@@ -1,21 +1,52 @@
+type Props = {
+  title: string;
+  message: string;
+};
+
 export default function RecommendationCard({
   title,
   message,
-}: any) {
+}: Props) {
 
   return (
 
-    <div className="card-base border-l-4 border-blue-500">
+    <div className="section-card">
 
-      <div className="text-xl font-bold mb-3">
+      <div
+        className="
+          flex
+          items-start
+          gap-4
+        "
+      >
 
-        ⚡ {title}
+        <div className="text-2xl">
+          ⚡
+        </div>
 
-      </div>
+        <div>
 
-      <div className="text-gray-400">
+          <div
+            className="
+              text-2xl
+              font-bold
+              text-white
+              mb-2
+            "
+          >
+            {title}
+          </div>
 
-        {message}
+          <div
+            className="
+              text-gray-400
+              text-lg
+            "
+          >
+            {message}
+          </div>
+
+        </div>
 
       </div>
 

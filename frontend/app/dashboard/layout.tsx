@@ -1,4 +1,8 @@
-import Sidebar from "@/components/Sidebar";
+"use client";
+
+import { useState } from "react";
+
+import Sidebar from "@/components/layout/Sidebar";
 
 export default function DashboardLayout({
   children,
@@ -6,23 +10,31 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
 
+  const [collapsed, setCollapsed] =
+    useState(true);
+
   return (
 
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        background: "var(--bg-primary)",
-      }}
-    >
+    <div className="bg-[#020617] min-h-screen">
 
-      <Sidebar />
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
 
       <main
-        style={{
-          flex: 1,
-          padding: "32px",
-        }}
+        className={`
+          min-h-screen
+          px-10
+          py-8
+          transition-all
+          duration-300
+          ${
+            collapsed
+              ? "ml-[92px]"
+              : "ml-[280px]"
+          }
+        `}
       >
 
         {children}

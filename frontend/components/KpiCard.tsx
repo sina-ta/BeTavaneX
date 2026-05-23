@@ -1,23 +1,32 @@
+type Props = {
+  title: string;
+  value: string | number;
+  footer?: string;
+};
+
 export default function KpiCard({
   title,
   value,
-}: any) {
+  footer,
+}: Props) {
 
   return (
 
-    <div className="card-base">
+    <div className="kpi-card">
 
-      <div className="card-title">
-
+      <div className="kpi-title">
         {title}
-
       </div>
 
-      <div className="card-value">
-
+      <div className="kpi-value">
         {value}
-
       </div>
+
+      {footer && (
+        <div className="kpi-footer">
+          {footer}
+        </div>
+      )}
 
     </div>
   );

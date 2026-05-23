@@ -8,24 +8,57 @@ import KpiCard from "@/components/KpiCard";
 
 import RecommendationCard from "@/components/RecommendationCard";
 
+import Badge from "@/components/ui/Badge";
+
+import PageHeader from "@/components/ui/PageHeader";
+
+import SectionCard from "@/components/ui/SectionCard";
+
+import TasksTable from "@/components/tables/TasksTable";
+
+type DashboardData = {
+  summary: {
+    total_work_orders: number;
+    total_reports: number;
+    avg_cpi: number;
+    avg_spi: number;
+  };
+
+  tasks: {
+    task_id: number;
+    progress_percent: number;
+    cpi: number;
+    spi: number;
+    alert: string;
+
+    recommendation?: {
+      title: string;
+      action: string;
+    };
+  }[];
+};
+
 export default function OverviewPage() {
 
   const [dashboardData, setDashboardData] =
-    useState<any>(null);
+    useState<DashboardData | null>(null);
 
   useEffect(() => {
 
     fetch("http://127.0.0.1:8000/dashboard")
+
       .then((res) => res.json())
+
       .then((data) => {
 
-        console.log(data);
-
         setDashboardData(data);
+
       })
+
       .catch((err) => {
 
         console.log(err);
+
       });
 
   }, []);
@@ -34,9 +67,29 @@ export default function OverviewPage() {
 
     return (
 
-      <div className="p-10">
+      <div className="page-wrapper">
 
-        Loading...
+        <PageHeader
+          title="Project Overview"
+          subtitle="
+            Loading dashboard analytics
+            and project intelligence...
+          "
+        />
+
+        <SectionCard>
+
+          <div className="loading-state">
+
+            <div className="loading-spinner" />
+
+            <div>
+              Loading dashboard...
+            </div>
+
+          </div>
+
+        </SectionCard>
 
       </div>
     );
@@ -44,45 +97,39 @@ export default function OverviewPage() {
 
   return (
 
-    <div className="space-y-8">
+    <div className="page-wrapper">
 
-      {/* PAGE TITLE */}
+      {/* PAGE HEADER */}
 
-      <h1 className="page-title">
-
-        Project Overview
-
-      </h1>
+      <PageHeader
+        title="Project Overview"
+        subtitle="
+          Real-time construction
+          performance and project
+          intelligence dashboard
+        "
+      />
 
       {/* RECOMMENDATION */}
 
-      {
-        dashboardData.tasks?.[0]
-          ?.recommendation && (
+      {dashboardData.tasks?.[0]
+        ?.recommendation && (
 
-          <RecommendationCard
-            title={
-              dashboardData.tasks[0]
-                .recommendation.title
-            }
-            message={
-              dashboardData.tasks[0]
-                .recommendation.action
-            }
-          />
-        )
-      }
+        <RecommendationCard
+          title={
+            dashboardData.tasks[0]
+              .recommendation!.title
+          }
+          message={
+            dashboardData.tasks[0]
+              .recommendation!.action
+          }
+        />
+      )}
 
-      {/* KPI SECTION */}
+      {/* KPI GRID */}
 
-      <div
-        className="
-          grid
-          grid-cols-1
-          md:grid-cols-4
-          gap-6
-        "
-      >
+      <div className="kpi-grid">
 
         <KpiCard
           title="Total Work Orders"
@@ -90,6 +137,7 @@ export default function OverviewPage() {
             dashboardData.summary
               .total_work_orders
           }
+          footer="+12%"
         />
 
         <KpiCard
@@ -98,141 +146,38 @@ export default function OverviewPage() {
             dashboardData.summary
               .total_reports
           }
+          footer="+8%"
         />
 
         <KpiCard
           title="Budget Health"
           value={
-            dashboardData.summary
-              .avg_cpi
+            Number(
+              dashboardData.summary
+                .avg_cpi
+            ).toFixed(2)
           }
+          footer="Healthy"
         />
 
         <KpiCard
           title="Project Speed"
           value={
-            dashboardData.summary
-              .avg_spi
+            Number(
+              dashboardData.summary
+                .avg_spi
+            ).toFixed(2)
           }
+          footer="On Track"
         />
 
       </div>
 
       {/* TASK TABLE */}
 
-      <div className="table-container">
-
-        <div className="p-6">
-
-          <h2 className="section-title">
-
-            Project Tasks
-
-          </h2>
-
-        </div>
-
-        <table className="table-base">
-
-          <thead className="table-head">
-
-            <tr>
-
-              <th className="table-head-cell">
-                Task
-              </th>
-
-              <th className="table-head-cell">
-                Progress
-              </th>
-
-              <th className="table-head-cell">
-                CPI
-              </th>
-
-              <th className="table-head-cell">
-                SPI
-              </th>
-
-              <th className="table-head-cell">
-                Alert
-              </th>
-
-            </tr>
-
-          </thead>
-
-          <tbody>
-
-            {dashboardData.tasks.map(
-              (task: any) => (
-
-                <tr
-                  key={task.task_id}
-                  className="table-row"
-                >
-
-                  <td className="table-cell">
-
-                    <Link
-                      href={`/task/${task.task_id}`}
-                      className="
-                        text-blue-600
-                        font-semibold
-                        hover:underline
-                      "
-                    >
-
-                      {task.task_id}
-
-                    </Link>
-
-                  </td>
-
-                  <td className="table-cell">
-
-                    {
-                      Number(
-                        task.progress_percent
-                      ).toFixed(2)
-                    }%
-
-                  </td>
-
-                  <td className="table-cell">
-
-                    {
-                      Number(task.cpi)
-                        .toFixed(2)
-                    }
-
-                  </td>
-
-                  <td className="table-cell">
-
-                    {
-                      Number(task.spi)
-                        .toFixed(2)
-                    }
-
-                  </td>
-
-                  <td className="table-cell">
-
-                    {task.alert}
-
-                  </td>
-
-                </tr>
-              )
-            )}
-
-          </tbody>
-
-        </table>
-
-      </div>
-
+      <TasksTable
+        tasks={dashboardData.tasks}
+      />
     </div>
   );
 }

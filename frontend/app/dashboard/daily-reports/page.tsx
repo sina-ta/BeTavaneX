@@ -2,13 +2,18 @@
 
 import { useEffect, useState } from "react";
 
-import CreateReportForm from "@/components/CreateReportForm";
+import CreateReportForm from "@/components/forms/CreateReportForm";
 
-import ReportsListTable from "@/components/ReportsListTable";
+import ReportsTable from "@/components/tables/ReportsTable";
+
+import PageHeader from "@/components/ui/PageHeader";
+
+import SectionCard from "@/components/ui/SectionCard";
 
 export default function DailyReportsPage() {
 
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] =
+    useState([]);
 
   async function fetchReports() {
 
@@ -29,19 +34,26 @@ export default function DailyReportsPage() {
 
   return (
 
-    <div className="space-y-8">
+    <div className="page-wrapper">
 
-      <h1 className="page-title">
-
-        Daily Reports
-
-      </h1>
-
-      <CreateReportForm
-        onReportCreated={fetchReports}
+      <PageHeader
+        title="Daily Reports"
+        subtitle="
+          Create, review and
+          monitor daily operational
+          construction reports
+        "
       />
 
-      <ReportsListTable reports={reports} />
+      <CreateReportForm />
+
+      <SectionCard
+        title="Reports List"
+      >
+
+        <ReportsTable reports={reports} />
+
+      </SectionCard>
 
     </div>
   );

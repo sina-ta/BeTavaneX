@@ -4,9 +4,16 @@ import { useEffect, useState } from "react";
 
 import Link from "next/link";
 
+import PageHeader from "@/components/ui/PageHeader";
+
+import SectionCard from "@/components/ui/SectionCard";
+
+import Badge from "@/components/ui/Badge";
+
 export default function DailyWorkOrdersPage() {
 
-  const [workOrders, setWorkOrders] = useState<any[]>([]);
+  const [workOrders, setWorkOrders] =
+    useState<any[]>([]);
 
   useEffect(() => {
 
@@ -18,99 +25,135 @@ export default function DailyWorkOrdersPage() {
 
         setWorkOrders(data);
 
+      })
+
+      .catch((err) => {
+
+        console.log(err);
+
       });
 
   }, []);
 
   return (
 
-    <div className="space-y-6">
+    <div className="page-wrapper">
 
-      <h1 className="text-3xl font-bold text-black">
+      <PageHeader
+        title="Daily Work Orders"
+        subtitle="
+          Track all active
+          construction tasks
+        "
+      />
 
-        Daily Work Orders
+      <SectionCard
+        title="Active Work Orders"
+      >
 
-      </h1>
+        <table className="table-base">
 
-      <table className="w-full border border-gray-300 bg-white text-black shadow rounded-lg overflow-hidden">
+          <thead className="table-head">
 
-        <thead>
+            <tr>
 
-          <tr className="bg-black text-white">
+              <th className="table-head-cell">
+                Task
+              </th>
 
-            <th className="p-2">Task</th>
+              <th className="table-head-cell">
+                Assigned To
+              </th>
 
-            <th className="p-2">Assigned To</th>
+              <th className="table-head-cell">
+                Planned Qty
+              </th>
 
-            <th className="p-2">Planned Qty</th>
+              <th className="table-head-cell">
+                Unit
+              </th>
 
-            <th className="p-2">Unit</th>
+              <th className="table-head-cell">
+                Priority
+              </th>
 
-            <th className="p-2">Priority</th>
-
-            <th className="p-2">Status</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {workOrders.map((item: any) => (
-
-            <tr
-                key={item.id}
-                className="border-b hover:bg-gray-100 transition"
-            >
-
-              <td className="p-2">
-
-                <Link
-                  href={`/task/${item.task_id}`}
-                  className="text-blue-600 font-semibold hover:underline"
-                >
-                  {item.task_id}
-                </Link>
-
-              </td>
-
-              <td className="p-2">
-
-                {item.assigned_to}
-
-              </td>
-
-              <td className="p-2">
-
-                {item.planned_qty}
-
-              </td>
-
-              <td className="p-2">
-
-                {item.unit}
-
-              </td>
-
-              <td className="p-2">
-
-                {item.priority}
-
-              </td>
-
-              <td className="p-2">
-
-                {item.status}
-
-              </td>
+              <th className="table-head-cell">
+                Status
+              </th>
 
             </tr>
 
-          ))}
+          </thead>
 
-        </tbody>
+          <tbody>
 
-      </table>
+            {workOrders.map((item: any) => (
+
+              <tr
+                key={item.id}
+                className="table-row"
+              >
+
+                <td className="table-cell">
+
+                  <Link
+                    href={`/task/${item.task_id}`}
+                    className="
+                      text-blue-400
+                      font-semibold
+                      hover:underline
+                    "
+                  >
+
+                    {item.task_id}
+
+                  </Link>
+
+                </td>
+
+                <td className="table-cell">
+
+                  {item.assigned_to}
+
+                </td>
+
+                <td className="table-cell">
+
+                  {item.planned_qty}
+
+                </td>
+
+                <td className="table-cell">
+
+                  {item.unit}
+
+                </td>
+
+                <td className="table-cell">
+
+                  <Badge
+                    status={item.priority}
+                  />
+
+                </td>
+
+                <td className="table-cell">
+
+                  <Badge
+                    status={item.status}
+                  />
+
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
+
+      </SectionCard>
 
     </div>
 
