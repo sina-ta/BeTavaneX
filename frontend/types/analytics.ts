@@ -27,34 +27,3 @@ export interface TaskKpiTrends {
   points: KpiTrendPoint[];
   trends: TrendSummary;
 }
-
-export interface WorkforceAnalytics {
-  total_workers: number;
-  avg_operational_score: number;
-  avg_attendance_rate: number;
-  trend: TrendDirection;
-  workers: WorkerIntelligence[];
-}
-
-export interface WorkerIntelligence {
-  worker_id: number;
-  full_name: string;
-  role: string;
-  crew: string;
-  attendance_rate: number;
-  productivity_score: number;
-  crew_efficiency: number;
-  operational_score: number;
-  skill_performance: {
-    productivity: number;
-    quality: number;
-    safety: number;
-    discipline: number;
-  };
-  assignment_count: number;
-  factors: Array<{
-    factor: string;
-    status: string;
-    message: string;
-  }>;
-}

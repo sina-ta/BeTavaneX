@@ -13,13 +13,15 @@ export default function RecommendationCard({
   recommendation,
 }: Props) {
   return (
-    <section className="section-card">
-      <section className="flex items-start gap-4">
-        <section className="text-2xl">⚡</section>
+    <section className="ai-insight-panel">
+      <div className="ai-insight-badge">AI Operational Insight</div>
+
+      <section className="flex items-start gap-3">
+        <section className="text-base">⚡</section>
 
         <section>
-          <section className="mb-2 flex items-center gap-3">
-            <span className="text-2xl font-bold text-white">
+          <section className="mb-1 flex items-center gap-2 flex-wrap">
+            <span className="text-sm font-semibold text-white">
               {title}
             </span>
 
@@ -30,12 +32,12 @@ export default function RecommendationCard({
             )}
           </section>
 
-          <section className="text-lg text-gray-400">
+          <section className="text-sm text-gray-300 leading-snug">
             {message}
           </section>
 
           {recommendation?.explanation && (
-            <section className="mt-2 text-sm text-gray-500">
+            <section className="mt-2 text-xs text-gray-500">
               {recommendation.explanation}
             </section>
           )}

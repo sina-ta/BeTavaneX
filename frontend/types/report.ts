@@ -1,3 +1,5 @@
+import type { ValidationPipelineResult } from "./validation";
+
 export interface DailyReport {
   id: number;
   work_order_id: number;
@@ -29,5 +31,9 @@ export interface CreateReportPayload {
 
 export interface CreateReportResponse {
   message: string;
+  report_id: number;
   validation_warnings: string[];
+  trusted: boolean;
+  trust_score: number;
+  validation?: ValidationPipelineResult;
 }

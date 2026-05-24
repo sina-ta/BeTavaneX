@@ -1,3 +1,5 @@
+import CompactCard from "@/components/layout/primitives/CompactCard";
+
 type Props = {
   title?: string;
   children: React.ReactNode;
@@ -7,25 +9,11 @@ export default function FormLayout({
   title,
   children,
 }: Props) {
-
   return (
-
-    <div className="section-card">
-
-      {title && (
-
-        <h2 className="section-title">
-          {title}
-        </h2>
-
-      )}
-
-      <div className="space-y-6">
-
+    <CompactCard title={title}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
         {children}
-
       </div>
-
-    </div>
+    </CompactCard>
   );
 }

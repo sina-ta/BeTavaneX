@@ -1,206 +1,115 @@
 "use client";
 
 import Link from "next/link";
-
 import { usePathname } from "next/navigation";
+
+import EngineStatusPanel from "@/components/layout/EngineStatusPanel";
+import { mainNavItems } from "@/lib/navigation";
 
 type Props = {
   collapsed: boolean;
-  setCollapsed: (
-    value: boolean
-  ) => void;
+  setCollapsed: (value: boolean) => void;
 };
-
-const menuItems = [
-
-  {
-    title: "Overview",
-    href: "/dashboard/overview",
-    icon: "◫",
-  },
-
-  {
-    title: "Daily Reports",
-    href: "/dashboard/daily-reports",
-    icon: "📄",
-  },
-
-  {
-    title: "Work Orders",
-    href: "/dashboard/daily-work-orders",
-    icon: "📋",
-  },
-
-  {
-    title: "Workers",
-    href: "/dashboard/workers",
-    icon: "👷",
-  },
-
-  {
-    title: "Performance",
-    href: "/dashboard/performance",
-    icon: "📈",
-  },
-
-];
 
 export default function Sidebar({
   collapsed,
   setCollapsed,
 }: Props) {
-
   const pathname = usePathname();
 
-  return (
+  const mainItems = mainNavItems.filter(
+    (item) => item.section === "main"
+  );
+  const opsItems = mainNavItems.filter(
+    (item) => item.section === "operations"
+  );
 
-    <aside
-      className={`
-        fixed
-        top-0
-        left-0
-        h-screen
-        z-50
-        bg-[#081121]
-        border-r
-        border-slate-800
-        transition-all
-        duration-300
-        overflow-hidden
-        ${
-          collapsed
-            ? "w-[92px]"
-            : "w-[280px]"
-        }
-      `}
-    >
+  function renderNavGroup(
+    label: string,
+    items: typeof mainNavItems
+  ) {
+    return (
+      <>
+        {!collapsed && (
+          <div className="sidebar-section-label">{label}</div>
+        )}
 
-      {/* HEADER */}
-
-      <div
-        className="
-          flex
-          items-center
-          justify-between
-          mb-10
-        "
-      >
-
-        <div
-          className="
-            flex
-            items-center
-            gap-4
-          "
-        >
-
-          <div className="logo-circle">
-            B
-          </div>
-
-          {!collapsed && (
-
-            <div>
-
-              <div className="logo-text">
-                BetavanX
-              </div>
-
-              <div className="logo-subtitle">
-                Construction Intelligence
-              </div>
-
-            </div>
-
-          )}
-
-        </div>
-
-        <button
-          onClick={() =>
-            setCollapsed(
-              !collapsed
-            )
-          }
-          className="
-            text-slate-400
-            hover:text-white
-            text-xl
-          "
-        >
-
-          {collapsed ? "›" : "‹"}
-
-        </button>
-
-      </div>
-
-      {/* MENU */}
-
-      <nav className="sidebar-menu">
-
-        {menuItems.map((item) => {
-
+        {items.map((item) => {
           const active =
-            pathname === item.href;
+            pathname === item.href ||
+            (item.href !== "/dashboard/overview" &&
+              pathname.startsWith(item.href));
 
           return (
-
             <Link
               key={item.href}
               href={item.href}
-              className="
-                sidebar-link
-              "
+              className="sidebar-link"
               style={{
-
-                background: active
-                  ? "#111c31"
-                  : "transparent",
-
+                background: active ? "#111c31" : "transparent",
                 border: active
                   ? "1px solid #1e293b"
                   : "1px solid transparent",
-
-                justifyContent:
-                  collapsed
-                    ? "center"
-                    : "space-between",
-
+                justifyContent: collapsed
+                  ? "center"
+                  : "space-between",
               }}
+              title={collapsed ? item.title : undefined}
             >
-
-              <div
-                className="
-                  sidebar-link-left
-                "
-              >
-
-                <span>
-                  {item.icon}
-                </span>
-
-                {!collapsed && (
-
-                  <span>
-                    {item.title}
-                  </span>
-
-                )}
-
+              <div className="sidebar-link-left">
+                <span className="sidebar-nav-icon">{item.icon}</span>
+                {!collapsed && <span>{item.title}</span>}
               </div>
 
-              {!collapsed && (
-                <span>›</span>
-              )}
-
+              {!collapsed && <span className="sidebar-chevron">›</span>}
             </Link>
-
           );
         })}
+      </>
+    );
+  }
 
-      </nav>
+  return (
+    <aside
+      className={`
+        fixed top-0 left-0 h-screen z-50
+        bg-[#081121] border-r border-slate-800
+        transition-all duration-300 overflow-hidden
+        ${collapsed ? "w-[var(--sidebar-width-collapsed)]" : "w-[var(--sidebar-width)]"}
+      `}
+    >
+      <div className="sidebar-shell">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-4">
+            <div className="logo-circle">B</div>
 
+            {!collapsed && (
+              <div>
+                <div className="logo-text">BetavanX</div>
+                <div className="logo-subtitle">
+                  Construction Intelligence
+                </div>
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setCollapsed(!collapsed)}
+            className="text-slate-400 hover:text-white text-xl"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? "›" : "‹"}
+          </button>
+        </div>
+
+        <nav className="sidebar-menu flex-1">
+          {renderNavGroup("Command", mainItems)}
+          {renderNavGroup("Operations", opsItems)}
+        </nav>
+
+        <EngineStatusPanel collapsed={collapsed} />
+      </div>
     </aside>
   );
 }

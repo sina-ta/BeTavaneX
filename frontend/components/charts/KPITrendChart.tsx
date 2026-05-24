@@ -40,7 +40,7 @@ export default function KPITrendChart({
         <section>
           <svg
             viewBox="0 0 240 64"
-            className="h-16 w-full"
+            className="h-12 w-full"
             aria-hidden="true"
           >
             <path

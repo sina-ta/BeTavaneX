@@ -1,23 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    router.replace("/dashboard/overview");
+  }, [router]);
 
-    if (!isLoggedIn) {
-      router.push("/login");
-    } else {
-      setChecked(true);
-    }
-  }, []);
-
-  if (!checked) return null;
-
-  return <h1>Dashboard</h1>;
+  return (
+    <div className="loading-state">
+      <div className="loading-spinner" />
+      <span>Redirecting to command center...</span>
+    </div>
+  );
 }

@@ -9,23 +9,26 @@ import {
 } from "@/lib/operational/severity";
 
 type HealthIndicatorProps = {
+  label: string;
   value: string | number;
   status: string;
   trend?: TrendDirection;
 };
 
 export default function HealthIndicator({
+  label,
   value,
   status,
   trend,
 }: HealthIndicatorProps) {
   return (
-    <section className="flex flex-col gap-1">
-      <span className="text-lg font-semibold">{value}</span>
+    <section className="kpi-card">
+      <span className="kpi-title">{label}</span>
+      <span className="kpi-value" style={{ fontSize: "var(--font-metric-sm)" }}>
+        {value}
+      </span>
 
-      <span
-        className={`badge-base ${getSeverityClass(status)}`}
-      >
+      <span className={`badge-base ${getSeverityClass(status)}`}>
         {formatSeverityLabel(status)}
       </span>
 

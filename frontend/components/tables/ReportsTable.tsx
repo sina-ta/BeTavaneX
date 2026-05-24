@@ -1,4 +1,4 @@
-import TableWrapper from "./TableWrapper";
+import DenseTableWrapper from "@/components/layout/primitives/DenseTableWrapper";
 
 import TableHead from "./TableHead";
 
@@ -22,20 +22,15 @@ export default function ReportsTable({
 
     return (
 
-      <TableWrapper title="Daily Reports">
-
-        <EmptyState
-          title="No reports found."
-        />
-
-      </TableWrapper>
+      <DenseTableWrapper>
+        <EmptyState title="No reports found." />
+      </DenseTableWrapper>
     );
   }
 
   return (
 
-    <TableWrapper title="Daily Reports">
-
+    <DenseTableWrapper>
       <table className="table-base">
 
         <TableHead>
@@ -103,6 +98,6 @@ export default function ReportsTable({
 
       </table>
 
-    </TableWrapper>
+    </DenseTableWrapper>
   );
 }

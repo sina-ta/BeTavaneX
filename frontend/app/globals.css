@@ -3,6 +3,8 @@
 @import "../styles/theme.css";
 @import "../styles/typography.css";
 @import "../styles/design-system.css";
+@import "../styles/layout-primitives.css";
+@import "../styles/command-center.css";
 
 html,
 body {

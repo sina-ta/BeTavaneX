@@ -1,35 +1,21 @@
 type Props = {
   title: string;
   subtitle?: string;
+  eyebrow?: string;
 };
 
 export default function PageHeader({
   title,
   subtitle,
+  eyebrow = "Operational Intelligence",
 }: Props) {
-
   return (
-
-    <div className="mb-10">
-
-      <h1 className="page-title">
-        {title}
-      </h1>
-
+    <header className="page-header-block">
+      <span className="page-eyebrow">{eyebrow}</span>
+      <h1 className="page-title">{title}</h1>
       {subtitle && (
-
-        <p
-          className="
-            mt-3
-            text-lg
-            text-gray-400
-          "
-        >
-          {subtitle}
-        </p>
-
+        <p className="page-subtitle">{subtitle}</p>
       )}
-
-    </div>
+    </header>
   );
 }

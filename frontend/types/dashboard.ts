@@ -1,5 +1,6 @@
 import type { Recommendation } from "./common";
 import type { ProjectKpiTrends } from "./analytics";
+import type { ValidationSummary } from "./validation";
 
 export interface DashboardSummary {
   total_work_orders: number;
@@ -23,4 +24,5 @@ export interface DashboardData {
   summary: DashboardSummary;
   tasks: DashboardTask[];
   trends?: ProjectKpiTrends;
+  validation_summary?: ValidationSummary;
 }

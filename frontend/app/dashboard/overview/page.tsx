@@ -3,19 +3,23 @@
 import { useCallback } from "react";
 
 import { getDashboardData } from "@/lib/api/dashboard";
+import { getPrimaryRecommendation } from "@/lib/operational/dashboardSummary";
 import { useAsyncData } from "@/lib/hooks/useAsyncData";
 import AsyncPageContent from "@/components/ui/AsyncPageContent";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import KpiSection from "@/components/dashboard/KpiSection";
 import RecommendationSection from "@/components/dashboard/RecommendationSection";
-import AnalyticsSection from "@/components/dashboard/AnalyticsSection";
-import TrendsSection from "@/components/dashboard/TrendsSection";
+import KpiSection from "@/components/dashboard/KpiSection";
 import TasksSection from "@/components/dashboard/TasksSection";
+import TrendsSection from "@/components/dashboard/TrendsSection";
+import AnalyticsSection from "@/components/dashboard/AnalyticsSection";
+import PageHeader from "@/components/ui/PageHeader";
+import CompactCard from "@/components/layout/primitives/CompactCard";
+import DashboardGrid from "@/components/layout/primitives/DashboardGrid";
+import SectionContainer from "@/components/layout/primitives/SectionContainer";
 import type { DashboardData } from "@/types/dashboard";
 
 const PAGE_TITLE = "Project Overview";
 const PAGE_SUBTITLE =
-  "Real-time construction performance and project intelligence dashboard";
+  "Real-time construction operational intelligence";
 
 export default function OverviewPage() {
   const fetchDashboard = useCallback(
@@ -33,21 +37,16 @@ export default function OverviewPage() {
       error={error}
       loadingTitle={PAGE_TITLE}
       loadingSubtitle={PAGE_SUBTITLE}
-      loadingMessage="Loading dashboard..."
+      loadingMessage="Loading operational intelligence..."
       emptyTitle="No dashboard data available"
       onRetry={reload}
     >
       {(dashboardData) => (
-        <section className="page-wrapper">
-          <DashboardHeader
+        <SectionContainer className="dashboard-command-center">
+          <PageHeader
             title={PAGE_TITLE}
             subtitle={PAGE_SUBTITLE}
-          />
-
-          <RecommendationSection
-            recommendation={
-              dashboardData.tasks[0]?.recommendation
-            }
+            eyebrow="Command Center"
           />
 
           <KpiSection
@@ -55,14 +54,33 @@ export default function OverviewPage() {
             trends={dashboardData.trends}
           />
 
-          <TrendsSection trends={dashboardData.trends} />
-
-          <AnalyticsSection
-            summary={dashboardData.summary}
+          <RecommendationSection
+            recommendation={getPrimaryRecommendation(
+              dashboardData.tasks
+            )}
           />
 
-          <TasksSection tasks={dashboardData.tasks} />
-        </section>
+          <DashboardGrid variant="split">
+            <TasksSection tasks={dashboardData.tasks} />
+
+            <div className="dashboard-grid__stack-tight">
+              <CompactCard title="Schedule & Cost Trends">
+                <TrendsSection trends={dashboardData.trends} />
+              </CompactCard>
+
+              <CompactCard title="4D BIM Viewer">
+                <div className="panel-placeholder">
+                  <span className="panel-placeholder-icon">🏗</span>
+                  <span>BIM model overlay — connect viewer</span>
+                </div>
+              </CompactCard>
+            </div>
+          </DashboardGrid>
+
+          <CompactCard title="Analytics Engines">
+            <AnalyticsSection summary={dashboardData.summary} />
+          </CompactCard>
+        </SectionContainer>
       )}
     </AsyncPageContent>
   );

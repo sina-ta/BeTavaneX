@@ -4,7 +4,6 @@ export type {
   DashboardSummary,
   DashboardTask,
 } from "./dashboard";
-export type { Worker } from "./worker";
 export type {
   DailyReport,
   CreateReportPayload,
@@ -16,10 +15,31 @@ export type {
   TaskDetailError,
 } from "./task";
 export type {
+  ValidationFinding,
+  ValidationPipelineResult,
+  ValidationSummary,
+  OperationalAnomaly,
+  ReportValidation,
+} from "./validation";
+export type {
   KpiTrendPoint,
   TrendSummary,
   ProjectKpiTrends,
   TaskKpiTrends,
+} from "./analytics";
+export type {
+  WorkforceWorker,
+  WorkforceWorkerDetail,
+  WorkforceCrew,
   WorkforceAnalytics,
   WorkerIntelligence,
-} from "./analytics";
+  WorkerScores,
+  EligibilitySummary,
+} from "./workforce";
+export type {
+  TaskLifecycleState,
+  ExecutionReadiness,
+  TimelineEvent,
+  LifecycleSummary,
+  LifecycleBlocker,
+} from "./lifecycle";

@@ -1,5 +1,6 @@
 import type { Recommendation } from "./common";
 import type { DailyReport } from "./report";
+import type { TaskLifecycleState } from "./lifecycle";
 
 export interface WorkOrder {
   id: number;
@@ -24,6 +25,7 @@ export interface TaskDetail {
   alert: string;
   recommendation: Recommendation;
   reports: DailyReport[];
+  lifecycle?: TaskLifecycleState | { error: string };
 }
 
 export interface TaskDetailError {

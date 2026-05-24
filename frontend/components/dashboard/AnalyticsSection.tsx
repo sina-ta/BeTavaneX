@@ -1,4 +1,4 @@
-import SectionCard from "@/components/ui/SectionCard";
+import DashboardGrid from "@/components/layout/primitives/DashboardGrid";
 import HealthIndicator from "@/components/ui/HealthIndicator";
 import RiskIndicator from "@/components/ui/RiskIndicator";
 import type { DashboardSummary } from "@/types/dashboard";
@@ -14,33 +14,29 @@ export default function AnalyticsSection({
   const warningCount = summary.warning_alerts ?? 0;
 
   return (
-    <SectionCard title="Project Analytics">
-      <section className="grid grid-cols-2 gap-4 text-sm">
-        <HealthIndicator
-          value={criticalCount}
-          status={
-            criticalCount > 0 ? "critical" : "healthy"
-          }
-        />
+    <DashboardGrid variant="analytics">
+      <HealthIndicator
+        label="Critical Alerts"
+        value={criticalCount}
+        status={criticalCount > 0 ? "critical" : "healthy"}
+      />
 
-        <HealthIndicator
-          value={warningCount}
-          status={
-            warningCount > 0 ? "warning" : "stable"
-          }
-        />
+      <HealthIndicator
+        label="Warnings"
+        value={warningCount}
+        status={warningCount > 0 ? "warning" : "stable"}
+      />
 
-        <RiskIndicator
-          risk={
-            criticalCount > 0
-              ? "critical"
-              : warningCount > 0
-                ? "warning"
-                : "stable"
-          }
-          compact
-        />
-      </section>
-    </SectionCard>
+      <RiskIndicator
+        risk={
+          criticalCount > 0
+            ? "critical"
+            : warningCount > 0
+              ? "warning"
+              : "stable"
+        }
+        compact
+      />
+    </DashboardGrid>
   );
 }

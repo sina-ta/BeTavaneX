@@ -1,5 +1,6 @@
 import CostTrendChart from "@/components/charts/CostTrendChart";
 import ProductivityChart from "@/components/charts/ProductivityChart";
+import DashboardGrid from "@/components/layout/primitives/DashboardGrid";
 import type { ProjectKpiTrends } from "@/types/analytics";
 
 type TrendsSectionProps = {
@@ -10,13 +11,17 @@ export default function TrendsSection({
   trends,
 }: TrendsSectionProps) {
   if (!trends || trends.points.length === 0) {
-    return null;
+    return (
+      <p className="text-xs text-[var(--text-muted)]">
+        No trend data yet
+      </p>
+    );
   }
 
   return (
-    <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+    <DashboardGrid variant="analytics">
       <CostTrendChart trends={trends} />
       <ProductivityChart trends={trends} />
-    </section>
+    </DashboardGrid>
   );
 }
