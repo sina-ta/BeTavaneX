@@ -1,37 +1,25 @@
+import ValidationMessage from "./ValidationMessage";
+
 type Props = {
   label: string;
   children: React.ReactNode;
+  error?: string;
 };
 
 export default function FormField({
   label,
   children,
+  error,
 }: Props) {
-
   return (
-
-    <div
-      className="
-        flex
-        flex-col
-        gap-2
-      "
-    >
-
-      <label
-        className="
-          text-sm
-          font-medium
-          text-gray-400
-        "
-      >
-
+    <section className="flex flex-col gap-2">
+      <label className="text-sm font-medium text-gray-400">
         {label}
-
       </label>
 
       {children}
 
-    </div>
+      <ValidationMessage message={error} />
+    </section>
   );
 }

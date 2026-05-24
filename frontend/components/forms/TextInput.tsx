@@ -1,19 +1,19 @@
-type Props = {
+import type { ComponentProps } from "react";
+
+type Props = ComponentProps<"input"> & {
   placeholder?: string;
-  type?: string;
 };
 
 export default function TextInput({
   placeholder,
-  type = "text",
+  className = "",
+  ...props
 }: Props) {
-
   return (
-
     <input
-      type={type}
+      {...props}
       placeholder={placeholder}
-      className="
+      className={`
         w-full
         rounded-2xl
         border
@@ -24,10 +24,9 @@ export default function TextInput({
         text-white
         outline-none
         transition
-
         focus:border-blue-500
-      "
+        ${className}
+      `}
     />
-
   );
 }

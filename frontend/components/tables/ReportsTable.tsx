@@ -8,8 +8,10 @@ import TableCell from "./TableCell";
 
 import EmptyState from "./EmptyState";
 
+import type { DailyReport } from "@/types/report";
+
 type Props = {
-  reports: any[];
+  reports: DailyReport[];
 };
 
 export default function ReportsTable({
@@ -66,8 +68,7 @@ export default function ReportsTable({
 
         <tbody>
 
-          {reports.map(
-            (report: any) => (
+          {reports.map((report) => (
 
               <TableRow
                 key={report.id}

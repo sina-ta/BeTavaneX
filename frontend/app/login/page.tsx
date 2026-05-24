@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { setSessionActive } from "@/lib/auth/session";
+
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ export default function Login() {
             e.preventDefault();
 
             if (email && password) {
-              localStorage.setItem("isLoggedIn", "true");
+              setSessionActive(true);
               router.push("/dashboard");
             }
           }}

@@ -30,6 +30,10 @@ from backend.routers.hr_router import (
     router as hr_router
 )
 
+from backend.routers.analytics_router import (
+    router as analytics_router
+)
+
 # =========================
 # HR Models
 # =========================
@@ -86,3 +90,5 @@ app.include_router(report_router)
 app.include_router(task_detail_router)
 
 app.include_router(hr_router)
+
+app.include_router(analytics_router)

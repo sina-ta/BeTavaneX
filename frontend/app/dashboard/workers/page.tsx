@@ -1,66 +1,66 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 
-import WorkersTable from "@/components/tables/WorkersTable";
-
+import { getWorkers, getWorkforceAnalytics } from "@/lib/api/workers";
+import { useAsyncData } from "@/lib/hooks/useAsyncData";
+import AsyncPageContent from "@/components/ui/AsyncPageContent";
 import PageHeader from "@/components/ui/PageHeader";
-
 import SectionCard from "@/components/ui/SectionCard";
+import WorkersTable from "@/components/tables/WorkersTable";
+import WorkforceIntelligenceSection from "@/components/dashboard/WorkforceIntelligenceSection";
+import type { Worker } from "@/types/worker";
+import type { WorkforceAnalytics } from "@/types/analytics";
+
+const PAGE_TITLE = "Workforce Management";
+const PAGE_SUBTITLE =
+  "Manage active workers, crews and workforce operational performance";
+
+type WorkersPageData = {
+  workers: Worker[];
+  analytics: WorkforceAnalytics;
+};
 
 export default function WorkersPage() {
+  const fetchPageData = useCallback(async () => {
+    const [workers, analytics] = await Promise.all([
+      getWorkers(),
+      getWorkforceAnalytics(),
+    ]);
 
-  const [workers, setWorkers] =
-    useState([]);
-
-  async function fetchWorkers() {
-
-    try {
-
-      const response = await fetch(
-        "http://127.0.0.1:8000/workers"
-      );
-
-      const data = await response.json();
-
-      setWorkers(data);
-
-    } catch (err) {
-
-      console.log(err);
-
-    }
-  }
-
-  useEffect(() => {
-
-    fetchWorkers();
-
+    return { workers, analytics };
   }, []);
 
+  const { status, data, error, reload } =
+    useAsyncData<WorkersPageData>(fetchPageData);
+
   return (
+    <AsyncPageContent
+      status={status}
+      data={data}
+      error={error}
+      loadingTitle={PAGE_TITLE}
+      loadingSubtitle={PAGE_SUBTITLE}
+      loadingMessage="Loading workers..."
+      emptyTitle="No workers found"
+      onRetry={reload}
+    >
+      {(pageData) => (
+        <section className="page-wrapper">
+          <PageHeader
+            title={PAGE_TITLE}
+            subtitle={PAGE_SUBTITLE}
+          />
 
-    <div className="page-wrapper">
+          <WorkforceIntelligenceSection
+            analytics={pageData.analytics}
+          />
 
-      <PageHeader
-        title="Workforce Management"
-        subtitle="
-          Manage active workers,
-          crews and workforce
-          operational performance
-        "
-      />
-
-      <SectionCard
-        title="Workers Directory"
-      >
-
-        <WorkersTable
-          workers={workers}
-        />
-
-      </SectionCard>
-
-    </div>
+          <SectionCard title="Workers Directory">
+            <WorkersTable workers={pageData.workers} />
+          </SectionCard>
+        </section>
+      )}
+    </AsyncPageContent>
   );
 }

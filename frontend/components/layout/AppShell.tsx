@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import Sidebar from "./Sidebar";
 
 export default function AppShell({
@@ -7,9 +9,9 @@ export default function AppShell({
 }: {
   children: React.ReactNode;
 }) {
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
-
     <div
       className="
         min-h-screen
@@ -17,12 +19,10 @@ export default function AppShell({
         flex
       "
     >
-
-      {/* SIDEBAR */}
-
-      <Sidebar />
-
-      {/* MAIN */}
+      <Sidebar
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
 
       <main
         className="
@@ -32,11 +32,8 @@ export default function AppShell({
           xl:p-10
         "
       >
-
         {children}
-
       </main>
-
     </div>
   );
 }

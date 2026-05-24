@@ -1,183 +1,69 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 
-import Link from "next/link";
+import { getDashboardData } from "@/lib/api/dashboard";
+import { useAsyncData } from "@/lib/hooks/useAsyncData";
+import AsyncPageContent from "@/components/ui/AsyncPageContent";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import KpiSection from "@/components/dashboard/KpiSection";
+import RecommendationSection from "@/components/dashboard/RecommendationSection";
+import AnalyticsSection from "@/components/dashboard/AnalyticsSection";
+import TrendsSection from "@/components/dashboard/TrendsSection";
+import TasksSection from "@/components/dashboard/TasksSection";
+import type { DashboardData } from "@/types/dashboard";
 
-import KpiCard from "@/components/KpiCard";
-
-import RecommendationCard from "@/components/RecommendationCard";
-
-import Badge from "@/components/ui/Badge";
-
-import PageHeader from "@/components/ui/PageHeader";
-
-import SectionCard from "@/components/ui/SectionCard";
-
-import TasksTable from "@/components/tables/TasksTable";
-
-type DashboardData = {
-  summary: {
-    total_work_orders: number;
-    total_reports: number;
-    avg_cpi: number;
-    avg_spi: number;
-  };
-
-  tasks: {
-    task_id: number;
-    progress_percent: number;
-    cpi: number;
-    spi: number;
-    alert: string;
-
-    recommendation?: {
-      title: string;
-      action: string;
-    };
-  }[];
-};
+const PAGE_TITLE = "Project Overview";
+const PAGE_SUBTITLE =
+  "Real-time construction performance and project intelligence dashboard";
 
 export default function OverviewPage() {
+  const fetchDashboard = useCallback(
+    () => getDashboardData(),
+    []
+  );
 
-  const [dashboardData, setDashboardData] =
-    useState<DashboardData | null>(null);
-
-  useEffect(() => {
-
-    fetch("http://127.0.0.1:8000/dashboard")
-
-      .then((res) => res.json())
-
-      .then((data) => {
-
-        setDashboardData(data);
-
-      })
-
-      .catch((err) => {
-
-        console.log(err);
-
-      });
-
-  }, []);
-
-  if (!dashboardData) {
-
-    return (
-
-      <div className="page-wrapper">
-
-        <PageHeader
-          title="Project Overview"
-          subtitle="
-            Loading dashboard analytics
-            and project intelligence...
-          "
-        />
-
-        <SectionCard>
-
-          <div className="loading-state">
-
-            <div className="loading-spinner" />
-
-            <div>
-              Loading dashboard...
-            </div>
-
-          </div>
-
-        </SectionCard>
-
-      </div>
-    );
-  }
+  const { status, data, error, reload } =
+    useAsyncData<DashboardData>(fetchDashboard);
 
   return (
+    <AsyncPageContent
+      status={status}
+      data={data}
+      error={error}
+      loadingTitle={PAGE_TITLE}
+      loadingSubtitle={PAGE_SUBTITLE}
+      loadingMessage="Loading dashboard..."
+      emptyTitle="No dashboard data available"
+      onRetry={reload}
+    >
+      {(dashboardData) => (
+        <section className="page-wrapper">
+          <DashboardHeader
+            title={PAGE_TITLE}
+            subtitle={PAGE_SUBTITLE}
+          />
 
-    <div className="page-wrapper">
+          <RecommendationSection
+            recommendation={
+              dashboardData.tasks[0]?.recommendation
+            }
+          />
 
-      {/* PAGE HEADER */}
+          <KpiSection
+            summary={dashboardData.summary}
+            trends={dashboardData.trends}
+          />
 
-      <PageHeader
-        title="Project Overview"
-        subtitle="
-          Real-time construction
-          performance and project
-          intelligence dashboard
-        "
-      />
+          <TrendsSection trends={dashboardData.trends} />
 
-      {/* RECOMMENDATION */}
+          <AnalyticsSection
+            summary={dashboardData.summary}
+          />
 
-      {dashboardData.tasks?.[0]
-        ?.recommendation && (
-
-        <RecommendationCard
-          title={
-            dashboardData.tasks[0]
-              .recommendation!.title
-          }
-          message={
-            dashboardData.tasks[0]
-              .recommendation!.action
-          }
-        />
+          <TasksSection tasks={dashboardData.tasks} />
+        </section>
       )}
-
-      {/* KPI GRID */}
-
-      <div className="kpi-grid">
-
-        <KpiCard
-          title="Total Work Orders"
-          value={
-            dashboardData.summary
-              .total_work_orders
-          }
-          footer="+12%"
-        />
-
-        <KpiCard
-          title="Total Reports"
-          value={
-            dashboardData.summary
-              .total_reports
-          }
-          footer="+8%"
-        />
-
-        <KpiCard
-          title="Budget Health"
-          value={
-            Number(
-              dashboardData.summary
-                .avg_cpi
-            ).toFixed(2)
-          }
-          footer="Healthy"
-        />
-
-        <KpiCard
-          title="Project Speed"
-          value={
-            Number(
-              dashboardData.summary
-                .avg_spi
-            ).toFixed(2)
-          }
-          footer="On Track"
-        />
-
-      </div>
-
-      {/* TASK TABLE */}
-
-      <TasksTable
-        tasks={dashboardData.tasks}
-      />
-    </div>
+    </AsyncPageContent>
   );
 }

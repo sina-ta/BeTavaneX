@@ -1,17 +1,20 @@
-type Props = {
+import type { ComponentProps } from "react";
+
+type Props = ComponentProps<"textarea"> & {
   placeholder?: string;
 };
 
 export default function TextareaInput({
   placeholder,
+  className = "",
+  ...props
 }: Props) {
-
   return (
-
     <textarea
+      {...props}
       placeholder={placeholder}
-      rows={5}
-      className="
+      rows={props.rows ?? 5}
+      className={`
         w-full
         rounded-2xl
         border
@@ -22,10 +25,9 @@ export default function TextareaInput({
         text-white
         outline-none
         transition
-
         focus:border-blue-500
-      "
+        ${className}
+      `}
     />
-
   );
 }

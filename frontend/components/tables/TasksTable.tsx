@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import StatusBadge from "../StatusBadge";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 import TableWrapper from "./TableWrapper";
 
@@ -12,8 +12,10 @@ import TableCell from "./TableCell";
 
 import EmptyState from "./EmptyState";
 
+import type { DashboardTask } from "@/types/dashboard";
+
 type Props = {
-  tasks: any[];
+  tasks: DashboardTask[];
 };
 
 export default function TasksTable({
@@ -70,8 +72,7 @@ export default function TasksTable({
 
         <tbody>
 
-          {tasks.map(
-            (task: any) => (
+          {tasks.map((task) => (
 
               <TableRow
                 key={task.task_id}

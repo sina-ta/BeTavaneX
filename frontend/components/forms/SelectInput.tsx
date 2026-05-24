@@ -1,15 +1,18 @@
-type Props = {
+import type { ComponentProps } from "react";
+
+type Props = ComponentProps<"select"> & {
   options: string[];
 };
 
 export default function SelectInput({
   options,
+  className = "",
+  ...props
 }: Props) {
-
   return (
-
     <select
-      className="
+      {...props}
+      className={`
         w-full
         rounded-2xl
         border
@@ -20,24 +23,15 @@ export default function SelectInput({
         text-white
         outline-none
         transition
-
         focus:border-blue-500
-      "
+        ${className}
+      `}
     >
-
       {options.map((option) => (
-
-        <option
-          key={option}
-          value={option}
-        >
-
+        <option key={option} value={option}>
           {option}
-
         </option>
-
       ))}
-
     </select>
   );
 }

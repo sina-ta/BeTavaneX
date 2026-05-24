@@ -1,117 +1,93 @@
 from backend.database import SessionLocal
 
-from backend.models import (
-    DailyWorkOrder,
-    DailyReport
+from backend.repositories.task_repository import (
+    TaskRepository,
+)
+
+from backend.repositories.report_repository import (
+    ReportRepository,
 )
 
 from backend.services.kpi_engine import calculate_kpis
 
 from backend.services.interpretation_engine import (
     interpret_project,
-    generate_recommendation
+)
+
+from backend.services.recommendations.generator import (
+    generate_recommendations,
 )
 
 
 def get_task_detail_service(task_id):
-
     session = SessionLocal()
 
-    # =========================
-    # Find Work Order
-    # =========================
+    try:
+        task_repo = TaskRepository(session)
+        report_repo = ReportRepository(session)
 
-    work_order = session.query(
-        DailyWorkOrder
-    ).filter(
-        DailyWorkOrder.task_id == task_id
-    ).first()
+        work_order = task_repo.get_work_order_by_task_id(task_id)
 
-    if not work_order:
+        if not work_order:
+            return {
+                "error": "Task not found",
+            }
+
+        reports = report_repo.get_by_work_order_id(work_order.id)
+
+        kpis = calculate_kpis(
+            work_order,
+            reports,
+        )
+
+        interpretation = interpret_project(
+            kpis["cpi"],
+            kpis["spi"],
+            kpis["final_score"],
+            kpis["risk_score"],
+        )
+
+        workforce_count = sum(
+            report.manpower_count or 0
+            for report in reports
+        )
+
+        recommendation = generate_recommendations(
+            cpi=kpis["cpi"],
+            spi=kpis["spi"],
+            progress_percent=kpis["progress_percent"],
+            final_score=kpis["final_score"],
+            risk_score=kpis["risk_score"],
+            workforce_count=workforce_count,
+        )
+
+        serialized_reports = [
+            {
+                "id": report.id,
+                "reported_by": report.reported_by,
+                "actual_qty": report.actual_qty,
+                "manpower_count": report.manpower_count,
+                "equipment_hours": report.equipment_hours,
+                "material_consumption": report.material_consumption,
+                "delay_reason": report.delay_reason,
+                "weather_status": report.weather_status,
+                "photo_count": report.photo_count,
+                "report_status": report.report_status,
+                "approved_by": report.approved_by,
+            }
+            for report in reports
+        ]
 
         return {
-            "error": "Task not found"
+            "task_id": work_order.task_id,
+            "assigned_to": work_order.assigned_to,
+            "planned_qty": work_order.planned_qty,
+            "status": work_order.status,
+            **kpis,
+            **interpretation,
+            "recommendation": recommendation,
+            "reports": serialized_reports,
         }
 
-    # =========================
-    # Related Reports
-    # =========================
-
-    reports = session.query(
-        DailyReport
-    ).filter(
-        DailyReport.work_order_id == work_order.id
-    ).all()
-
-    # =========================
-    # KPI Calculation
-    # =========================
-
-    kpis = calculate_kpis(
-        work_order,
-        reports
-    )
-
-    interpretation = interpret_project(
-        kpis["cpi"],
-        kpis["spi"],
-        kpis["final_score"],
-        kpis["risk_score"]
-    )
-
-    recommendation = generate_recommendation(
-        kpis["cpi"],
-        kpis["spi"]
-    )
-
-    # =========================
-    # Report Serialization
-    # =========================
-
-    serialized_reports = []
-
-    for report in reports:
-
-        serialized_reports.append({
-
-            "id": report.id,
-
-            "reported_by": report.reported_by,
-
-            "actual_qty": report.actual_qty,
-
-            "manpower_count": report.manpower_count,
-
-            "equipment_hours": report.equipment_hours,
-
-            "material_consumption": report.material_consumption,
-
-            "delay_reason": report.delay_reason,
-
-            "weather_status": report.weather_status,
-
-            "photo_count": report.photo_count,
-
-            "report_status": report.report_status,
-
-            "approved_by": report.approved_by
-        })
-
-    return {
-
-        "task_id": work_order.task_id,
-
-        "assigned_to": work_order.assigned_to,
-
-        "planned_qty": work_order.planned_qty,
-
-        "status": work_order.status,
-
-        **kpis,
-
-        **interpretation,
-
-        "recommendation": recommendation,
-
-        "reports": serialized_reports
-    }
+    finally:
+        session.close()

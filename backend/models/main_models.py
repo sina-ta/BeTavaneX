@@ -1,5 +1,6 @@
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, DateTime
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -54,3 +55,28 @@ class DailyReport(Base):
     report_status = Column(String)
 
     approved_by = Column(String)
+
+
+class KpiHistory(Base):
+
+    __tablename__ = "kpi_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    task_id = Column(Integer, index=True)
+
+    recorded_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+        index=True,
+    )
+
+    cpi = Column(Float)
+
+    spi = Column(Float)
+
+    progress_percent = Column(Float)
+
+    final_score = Column(Float)
+
+    risk_score = Column(Float)

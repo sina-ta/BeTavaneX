@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import StatusBadge from "../StatusBadge";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 import TableWrapper from "./TableWrapper";
 
@@ -12,8 +12,10 @@ import TableCell from "./TableCell";
 
 import EmptyState from "./EmptyState";
 
+import type { Worker } from "@/types/worker";
+
 type Props = {
-  workers: any[];
+  workers: Worker[];
 };
 
 export default function WorkersTable({
@@ -74,8 +76,7 @@ export default function WorkersTable({
 
         <tbody>
 
-          {workers.map(
-            (worker: any) => (
+          {workers.map((worker) => (
 
               <TableRow
                 key={worker.id}
