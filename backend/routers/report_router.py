@@ -8,10 +8,6 @@ from backend.repositories.task_repository import (
     TaskRepository,
 )
 
-from backend.services.validation_engine import (
-    validate_daily_report,
-)
-
 from backend.services.report_service import (
     create_daily_report_service,
     get_reports_service,
@@ -31,14 +27,9 @@ def create_daily_report(report: DailyReportCreate):
             report.work_order_id,
         )
 
-        validation_warnings = validate_daily_report(
-            report,
-            work_order,
-        )
-
         return create_daily_report_service(
             report,
-            validation_warnings,
+            work_order,
         )
 
     finally:

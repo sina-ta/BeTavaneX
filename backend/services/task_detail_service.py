@@ -4,10 +4,6 @@ from backend.repositories.task_repository import (
     TaskRepository,
 )
 
-from backend.repositories.report_repository import (
-    ReportRepository,
-)
-
 from backend.services.kpi_engine import calculate_kpis
 
 from backend.services.interpretation_engine import (
@@ -18,13 +14,20 @@ from backend.services.recommendations.generator import (
     generate_recommendations,
 )
 
+from backend.validation.services.validation_service import (
+    get_trusted_reports,
+)
+
+from backend.lifecycle.services.lifecycle_service import (
+    get_task_lifecycle_service,
+)
+
 
 def get_task_detail_service(task_id):
     session = SessionLocal()
 
     try:
         task_repo = TaskRepository(session)
-        report_repo = ReportRepository(session)
 
         work_order = task_repo.get_work_order_by_task_id(task_id)
 
@@ -33,7 +36,11 @@ def get_task_detail_service(task_id):
                 "error": "Task not found",
             }
 
-        reports = report_repo.get_by_work_order_id(work_order.id)
+        reports = [
+            report
+            for report in get_trusted_reports(session)
+            if report.work_order_id == work_order.id
+        ]
 
         kpis = calculate_kpis(
             work_order,
@@ -87,6 +94,7 @@ def get_task_detail_service(task_id):
             **interpretation,
             "recommendation": recommendation,
             "reports": serialized_reports,
+            "lifecycle": get_task_lifecycle_service(task_id),
         }
 
     finally:

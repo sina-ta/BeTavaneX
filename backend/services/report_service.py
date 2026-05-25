@@ -6,11 +6,12 @@ from backend.repositories.report_repository import (
     ReportRepository,
 )
 
+from backend.validation.services.validation_service import (
+    validate_and_persist_daily_report,
+)
 
-def create_daily_report_service(
-    report,
-    validation_warnings,
-):
+
+def create_daily_report_service(report, work_order):
     session = SessionLocal()
 
     try:
@@ -30,11 +31,21 @@ def create_daily_report_service(
             approved_by=report.approved_by,
         )
 
-        repo.create(new_report)
+        created = repo.create(new_report)
+
+        validation = validate_and_persist_daily_report(
+            report,
+            work_order,
+            created.id,
+        )
 
         return {
             "message": "✅ Daily Report Created",
-            "validation_warnings": validation_warnings,
+            "report_id": created.id,
+            "validation": validation,
+            "validation_warnings": validation["warnings"],
+            "trusted": validation["trusted"],
+            "trust_score": validation["trust_score"],
         }
 
     finally:

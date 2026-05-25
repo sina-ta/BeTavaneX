@@ -19,6 +19,11 @@ from backend.services.analytics_service import (
     get_project_kpi_trends,
 )
 
+from backend.validation.services.validation_service import (
+    get_trusted_reports,
+    get_validation_summary_service,
+)
+
 
 def build_dashboard():
     session = SessionLocal()
@@ -27,7 +32,7 @@ def build_dashboard():
         repo = DashboardRepository(session)
 
         work_orders = repo.get_all_work_orders()
-        reports = repo.get_all_reports()
+        reports = get_trusted_reports(session)
 
         dashboard_data = []
 
@@ -110,6 +115,7 @@ def build_dashboard():
             "summary": summary,
             "tasks": dashboard_data,
             "trends": trends,
+            "validation_summary": get_validation_summary_service(),
         }
 
     finally:

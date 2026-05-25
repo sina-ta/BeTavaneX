@@ -6,68 +6,45 @@ from backend.database import engine
 
 from backend.models.main_models import Base
 
-# =========================
-# Routers
-# =========================
+import backend.workforce.models  # noqa: F401
+import backend.validation.models  # noqa: F401
+import backend.lifecycle.models  # noqa: F401
 
 from backend.routers.dashboard_router import (
-    router as dashboard_router
+    router as dashboard_router,
 )
 
 from backend.routers.work_order_router import (
-    router as work_order_router
+    router as work_order_router,
 )
 
 from backend.routers.report_router import (
-    router as report_router
+    router as report_router,
 )
 
 from backend.routers.task_detail_router import (
-    router as task_detail_router
-)
-
-from backend.routers.hr_router import (
-    router as hr_router
+    router as task_detail_router,
 )
 
 from backend.routers.analytics_router import (
-    router as analytics_router
+    router as analytics_router,
 )
 
-# =========================
-# HR Models
-# =========================
-
-from backend.models.hr_models import (
-    Role,
-    Crew,
-    Worker,
-    Skill,
-    WorkerSkill,
-    WorkerAttendance,
-    WorkerPayment,
-    WorkerScore,
-    TaskAssignment,
-    WorkerTraining,
-    WorkerCertificate,
-    WorkerEquipment
+from backend.workforce.routers.workforce_router import (
+    router as workforce_router,
 )
 
-# =========================
-# Create App
-# =========================
+from backend.validation.routers.validation_router import (
+    router as validation_router,
+)
+
+from backend.lifecycle.routers.lifecycle_router import (
+    router as lifecycle_router,
+)
 
 app = FastAPI()
 
-# =========================
-# Database
-# =========================
-
 Base.metadata.create_all(bind=engine)
-
-# =========================
-# CORS
-# =========================
 
 app.add_middleware(
     CORSMiddleware,
@@ -77,18 +54,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =========================
-# Register Routers
-# =========================
-
 app.include_router(dashboard_router)
-
 app.include_router(work_order_router)
-
 app.include_router(report_router)
-
 app.include_router(task_detail_router)
-
-app.include_router(hr_router)
-
 app.include_router(analytics_router)
+app.include_router(workforce_router)
+app.include_router(validation_router)
+app.include_router(lifecycle_router)

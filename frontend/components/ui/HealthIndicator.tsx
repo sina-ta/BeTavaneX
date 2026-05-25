@@ -24,19 +24,24 @@ export default function HealthIndicator({
   return (
     <section className="kpi-card">
       <span className="kpi-title">{label}</span>
-      <span className="kpi-value" style={{ fontSize: "var(--font-metric-sm)" }}>
+      <span
+        className="kpi-value"
+        style={{ fontSize: "var(--font-metric-sm)" }}
+      >
         {value}
       </span>
 
-      <span className={`badge-base ${getSeverityClass(status)}`}>
-        {formatSeverityLabel(status)}
-      </span>
-
-      {trend && (
-        <span className={`text-xs ${getTrendClass(trend)}`}>
-          {getTrendLabel(trend)}
+      <div className="kpi-card-meta">
+        <span className={`badge-base ${getSeverityClass(status)}`}>
+          {formatSeverityLabel(status)}
         </span>
-      )}
+
+        {trend && (
+          <span className={`kpi-footer ${getTrendClass(trend)}`}>
+            {getTrendLabel(trend)}
+          </span>
+        )}
+      </div>
     </section>
   );
 }

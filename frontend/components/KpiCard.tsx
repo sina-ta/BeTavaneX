@@ -26,36 +26,42 @@ export default function KpiCard({
   progressSeverity,
   operationalLabel,
 }: Props) {
+  const showMeta =
+    progressSeverity !== undefined || footer || trend;
+
   return (
     <section className="kpi-card">
-      <section className="kpi-title">{title}</section>
-
-      <section className="kpi-value">{value}</section>
+      <span className="kpi-title">{title}</span>
+      <span className="kpi-value">{value}</span>
 
       {progress !== undefined && (
-        <section className="kpi-progress">
+        <div className="kpi-progress">
           <ProgressBar
             value={progress}
             severity={progressSeverity}
             label={operationalLabel}
           />
+        </div>
+      )}
 
-          {progressSeverity && (
+      {showMeta && (
+        <div className="kpi-card-meta">
+          {progressSeverity !== undefined && (
             <SeverityBadge severity={progressSeverity} />
           )}
-        </section>
-      )}
 
-      {trend && (
-        <section
-          className={`kpi-footer ${getTrendClass(trend)}`}
-        >
-          Trend: {getTrendLabel(trend)}
-        </section>
-      )}
+          {trend && (
+            <span
+              className={`kpi-footer ${getTrendClass(trend)}`}
+            >
+              Trend: {getTrendLabel(trend)}
+            </span>
+          )}
 
-      {footer && !trend && (
-        <section className="kpi-footer">{footer}</section>
+          {footer && !trend && (
+            <span className="kpi-footer">{footer}</span>
+          )}
+        </div>
       )}
     </section>
   );
