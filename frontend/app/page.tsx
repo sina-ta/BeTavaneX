@@ -9,7 +9,7 @@ export default function Home() {
         <h1 className="landing-title">BetavanX</h1>
         <p className="landing-subtitle">
           Construction operational intelligence platform — monitor
-          KPIs, daily reports, work orders, and workforce from one
+          KPIs, daily reports, work orders, and progress from one
           command center.
         </p>
       </div>

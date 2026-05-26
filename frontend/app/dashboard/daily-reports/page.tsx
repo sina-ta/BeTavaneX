@@ -12,13 +12,11 @@ import CompactCard from "@/components/layout/primitives/CompactCard";
 import DashboardGrid from "@/components/layout/primitives/DashboardGrid";
 import KPIGrid from "@/components/layout/primitives/KPIGrid";
 import SectionContainer from "@/components/layout/primitives/SectionContainer";
+import { useI18n } from "@/i18n/LanguageProvider";
 import type { DailyReport } from "@/types/report";
 
-const PAGE_TITLE = "Daily Reports";
-const PAGE_SUBTITLE =
-  "Create, review, and monitor field operational reports";
-
 export default function DailyReportsPage() {
+  const { t } = useI18n();
   const fetchReports = useCallback(
     () => getReports(),
     []
@@ -32,8 +30,8 @@ export default function DailyReportsPage() {
       status={status}
       data={data}
       error={error}
-      loadingTitle={PAGE_TITLE}
-      loadingSubtitle={PAGE_SUBTITLE}
+      loadingTitle={t("daily_reports_title")}
+      loadingSubtitle={t("daily_reports_subtitle")}
       loadingMessage="Loading reports..."
       emptyTitle="No reports found"
       onRetry={reload}
@@ -41,9 +39,9 @@ export default function DailyReportsPage() {
       {(reports) => (
         <SectionContainer>
           <PageHeader
-            title={PAGE_TITLE}
-            subtitle={PAGE_SUBTITLE}
-            eyebrow="Field Operations"
+            title={t("daily_reports_title")}
+            subtitle={t("daily_reports_subtitle")}
+            eyebrow={t("eyebrow_field_operations")}
           />
 
           <DashboardGrid variant="split">

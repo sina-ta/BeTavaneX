@@ -12,12 +12,11 @@ import DenseTableWrapper from "@/components/layout/primitives/DenseTableWrapper"
 import KPIGrid from "@/components/layout/primitives/KPIGrid";
 import SectionContainer from "@/components/layout/primitives/SectionContainer";
 import Badge from "@/components/ui/Badge";
+import { useI18n } from "@/i18n/LanguageProvider";
 import type { WorkOrder } from "@/types/task";
 
-const PAGE_TITLE = "Daily Work Orders";
-const PAGE_SUBTITLE = "Active construction work orders and execution";
-
 export default function DailyWorkOrdersPage() {
+  const { t } = useI18n();
   const fetchWorkOrders = useCallback(
     () => getDailyWorkOrders(),
     []
@@ -31,8 +30,8 @@ export default function DailyWorkOrdersPage() {
       status={status}
       data={data}
       error={error}
-      loadingTitle={PAGE_TITLE}
-      loadingSubtitle={PAGE_SUBTITLE}
+      loadingTitle={t("work_orders_title")}
+      loadingSubtitle={t("work_orders_subtitle")}
       loadingMessage="Loading work orders..."
       emptyTitle="No work orders found"
       onRetry={reload}
@@ -40,9 +39,9 @@ export default function DailyWorkOrdersPage() {
       {(workOrders) => (
         <SectionContainer>
           <PageHeader
-            title={PAGE_TITLE}
-            subtitle={PAGE_SUBTITLE}
-            eyebrow="Execution"
+            title={t("work_orders_title")}
+            subtitle={t("work_orders_subtitle")}
+            eyebrow={t("eyebrow_execution")}
           />
 
           <KPIGrid columns={3}>

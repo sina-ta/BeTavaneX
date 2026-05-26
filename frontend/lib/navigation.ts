@@ -1,53 +1,66 @@
+import type { CommonMessageKey } from "@/i18n/config";
+
 export type NavItem = {
-  title: string;
+  labelKey: CommonMessageKey;
   href: string;
   icon: string;
   section?: "main" | "operations";
 };
 
+type EngineStatusItem = {
+  nameKey: CommonMessageKey;
+  status: "active";
+};
+
 export const mainNavItems: NavItem[] = [
   {
-    title: "Overview",
+    labelKey: "nav_overview",
     href: "/dashboard/overview",
     icon: "◫",
     section: "main",
   },
   {
-    title: "Daily Reports",
+    labelKey: "nav_daily_reports",
     href: "/dashboard/daily-reports",
     icon: "📄",
     section: "operations",
   },
   {
-    title: "Work Orders",
+    labelKey: "nav_planning",
+    href: "/dashboard/planning",
+    icon: "▦",
+    section: "operations",
+  },
+  {
+    labelKey: "nav_work_orders",
     href: "/dashboard/daily-work-orders",
     icon: "📋",
     section: "operations",
   },
   {
-    title: "Workforce",
-    href: "/dashboard/workforce",
-    icon: "👷",
-    section: "operations",
-  },
-  {
-    title: "Performance",
+    labelKey: "nav_performance",
     href: "/dashboard/performance",
     icon: "📈",
     section: "operations",
   },
 ];
 
-export const engineStatusItems = [
-  { name: "Validation Engine", status: "active" as const },
-  { name: "Workforce Intelligence", status: "active" as const },
-  { name: "Lifecycle Engine", status: "active" as const },
-  { name: "KPI Analytics", status: "active" as const },
+export const engineStatusItems: EngineStatusItem[] = [
+  { nameKey: "engine_validation", status: "active" as const },
+  { nameKey: "engine_lifecycle", status: "active" as const },
+  { nameKey: "engine_kpi_analytics", status: "active" as const },
 ];
 
-export function getPageTitleFromPath(pathname: string): string {
+export function getPageTitleFromPath(
+  pathname: string
+): CommonMessageKey {
   const item = mainNavItems.find((nav) => nav.href === pathname);
-  if (item) return item.title;
-  if (pathname.startsWith("/task/")) return "Task Intelligence";
-  return "BetavanX";
+  if (item) return item.labelKey;
+  if (pathname.startsWith("/dashboard/workforce")) {
+    return "page_workforce_extension";
+  }
+  if (pathname.startsWith("/task/")) {
+    return "page_task_intelligence";
+  }
+  return "app_name";
 }

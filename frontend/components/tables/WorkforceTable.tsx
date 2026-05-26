@@ -11,7 +11,7 @@ import TableRow from "./TableRow";
 import TableCell from "./TableCell";
 import EmptyState from "./EmptyState";
 
-import type { WorkforceWorker } from "@/types/workforce";
+import type { WorkforceWorker } from "@/modules/workforce";
 
 type Props = {
   workers: WorkforceWorker[];

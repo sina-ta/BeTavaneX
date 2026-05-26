@@ -28,15 +28,6 @@ export type {
   TaskKpiTrends,
 } from "./analytics";
 export type {
-  WorkforceWorker,
-  WorkforceWorkerDetail,
-  WorkforceCrew,
-  WorkforceAnalytics,
-  WorkerIntelligence,
-  WorkerScores,
-  EligibilitySummary,
-} from "./workforce";
-export type {
   TaskLifecycleState,
   ExecutionReadiness,
   TimelineEvent,

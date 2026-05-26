@@ -54,7 +54,7 @@ def build_dashboard():
                 kpis["risk_score"],
             )
 
-            workforce_count = sum(
+            manpower_count = sum(
                 report.manpower_count or 0
                 for report in related_reports
             )
@@ -65,7 +65,7 @@ def build_dashboard():
                 progress_percent=kpis["progress_percent"],
                 final_score=kpis["final_score"],
                 risk_score=kpis["risk_score"],
-                workforce_count=workforce_count,
+                manpower_count=manpower_count,
             )
 
             dashboard_data.append({

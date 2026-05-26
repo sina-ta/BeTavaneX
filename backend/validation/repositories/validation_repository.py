@@ -108,7 +108,7 @@ class ValidationRepository:
         self.session.refresh(result)
         return result
 
-    def update_workforce_reliability(
+    def update_reporter_reliability(
         self,
         reporter: str,
         delta: float,
@@ -151,6 +151,13 @@ class ValidationRepository:
         )
 
         self.session.commit()
+
+    def update_workforce_reliability(
+        self,
+        reporter: str,
+        delta: float,
+    ) -> None:
+        self.update_reporter_reliability(reporter, delta)
 
     def get_trusted_report_ids(self) -> set[int]:
         rows = (

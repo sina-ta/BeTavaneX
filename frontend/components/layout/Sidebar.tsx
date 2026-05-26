@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import EngineStatusPanel from "@/components/layout/EngineStatusPanel";
+import { useI18n } from "@/i18n/LanguageProvider";
 import { mainNavItems } from "@/lib/navigation";
 
 type Props = {
@@ -16,6 +17,7 @@ export default function Sidebar({
   setCollapsed,
 }: Props) {
   const pathname = usePathname();
+  const { direction, t } = useI18n();
 
   const mainItems = mainNavItems.filter(
     (item) => item.section === "main"
@@ -25,13 +27,15 @@ export default function Sidebar({
   );
 
   function renderNavGroup(
-    label: string,
+    labelKey: Parameters<typeof t>[0],
     items: typeof mainNavItems
   ) {
     return (
       <>
         {!collapsed && (
-          <div className="sidebar-section-label">{label}</div>
+          <div className="sidebar-section-label">
+            {t(labelKey)}
+          </div>
         )}
 
         {items.map((item) => {
@@ -54,14 +58,18 @@ export default function Sidebar({
                   ? "center"
                   : "space-between",
               }}
-              title={collapsed ? item.title : undefined}
+              title={collapsed ? t(item.labelKey) : undefined}
             >
               <div className="sidebar-link-left">
                 <span className="sidebar-nav-icon">{item.icon}</span>
-                {!collapsed && <span>{item.title}</span>}
+                {!collapsed && <span>{t(item.labelKey)}</span>}
               </div>
 
-              {!collapsed && <span className="sidebar-chevron">›</span>}
+              {!collapsed && (
+                <span className="sidebar-chevron">
+                  {direction === "rtl" ? "‹" : "›"}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -72,7 +80,7 @@ export default function Sidebar({
   return (
     <aside
       className={`
-        fixed top-0 left-0 h-screen z-50
+        sidebar-root fixed top-0 left-0 h-screen z-50
         bg-[#081121] border-r border-slate-800
         transition-all duration-300 overflow-hidden
         ${collapsed ? "w-[var(--sidebar-width-collapsed)]" : "w-[var(--sidebar-width)]"}
@@ -87,7 +95,7 @@ export default function Sidebar({
               <div>
                 <div className="logo-text">BetavanX</div>
                 <div className="logo-subtitle">
-                  Construction Intelligence
+                  {t("brand_subtitle")}
                 </div>
               </div>
             )}
@@ -97,15 +105,25 @@ export default function Sidebar({
             type="button"
             onClick={() => setCollapsed(!collapsed)}
             className="text-slate-400 hover:text-white text-xl"
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={
+              collapsed
+                ? t("sidebar_expand")
+                : t("sidebar_collapse")
+            }
           >
-            {collapsed ? "›" : "‹"}
+            {collapsed
+              ? direction === "rtl"
+                ? "‹"
+                : "›"
+              : direction === "rtl"
+                ? "›"
+                : "‹"}
           </button>
         </div>
 
         <nav className="sidebar-menu flex-1">
-          {renderNavGroup("Command", mainItems)}
-          {renderNavGroup("Operations", opsItems)}
+          {renderNavGroup("nav_command_group", mainItems)}
+          {renderNavGroup("nav_operations_group", opsItems)}
         </nav>
 
         <EngineStatusPanel collapsed={collapsed} />

@@ -15,13 +15,11 @@ import PageHeader from "@/components/ui/PageHeader";
 import CompactCard from "@/components/layout/primitives/CompactCard";
 import DashboardGrid from "@/components/layout/primitives/DashboardGrid";
 import SectionContainer from "@/components/layout/primitives/SectionContainer";
+import { useI18n } from "@/i18n/LanguageProvider";
 import type { DashboardData } from "@/types/dashboard";
 
-const PAGE_TITLE = "Project Overview";
-const PAGE_SUBTITLE =
-  "Real-time construction operational intelligence";
-
 export default function OverviewPage() {
+  const { t } = useI18n();
   const fetchDashboard = useCallback(
     () => getDashboardData(),
     []
@@ -35,8 +33,8 @@ export default function OverviewPage() {
       status={status}
       data={data}
       error={error}
-      loadingTitle={PAGE_TITLE}
-      loadingSubtitle={PAGE_SUBTITLE}
+      loadingTitle={t("overview_title")}
+      loadingSubtitle={t("overview_subtitle")}
       loadingMessage="Loading operational intelligence..."
       emptyTitle="No dashboard data available"
       onRetry={reload}
@@ -44,9 +42,9 @@ export default function OverviewPage() {
       {(dashboardData) => (
         <SectionContainer className="dashboard-command-center">
           <PageHeader
-            title={PAGE_TITLE}
-            subtitle={PAGE_SUBTITLE}
-            eyebrow="Command Center"
+            title={t("overview_title")}
+            subtitle={t("overview_subtitle")}
+            eyebrow={t("eyebrow_command_center")}
           />
 
           <KpiSection
@@ -64,20 +62,22 @@ export default function OverviewPage() {
             <TasksSection tasks={dashboardData.tasks} />
 
             <div className="dashboard-grid__stack-tight">
-              <CompactCard title="Schedule & Cost Trends">
+              <CompactCard
+                title={t("overview_schedule_cost_trends")}
+              >
                 <TrendsSection trends={dashboardData.trends} />
               </CompactCard>
 
-              <CompactCard title="4D BIM Viewer">
+              <CompactCard title={t("overview_bim_viewer")}>
                 <div className="panel-placeholder">
                   <span className="panel-placeholder-icon">🏗</span>
-                  <span>BIM model overlay — connect viewer</span>
+                  <span>{t("overview_bim_placeholder")}</span>
                 </div>
               </CompactCard>
             </div>
           </DashboardGrid>
 
-          <CompactCard title="Analytics Engines">
+          <CompactCard title={t("overview_analytics_engines")}>
             <AnalyticsSection summary={dashboardData.summary} />
           </CompactCard>
         </SectionContainer>

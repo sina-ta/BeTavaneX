@@ -3,10 +3,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.database import engine
-
+from backend.extensions.registry import (
+    include_enabled_extension_routers,
+    register_enabled_extension_models,
+)
 from backend.models.main_models import Base
 
-import backend.workforce.models  # noqa: F401
 import backend.validation.models  # noqa: F401
 import backend.lifecycle.models  # noqa: F401
 
@@ -30,10 +32,6 @@ from backend.routers.analytics_router import (
     router as analytics_router,
 )
 
-from backend.workforce.routers.workforce_router import (
-    router as workforce_router,
-)
-
 from backend.validation.routers.validation_router import (
     router as validation_router,
 )
@@ -44,6 +42,7 @@ from backend.lifecycle.routers.lifecycle_router import (
 
 app = FastAPI()
 
+register_enabled_extension_models()
 Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
@@ -59,6 +58,6 @@ app.include_router(work_order_router)
 app.include_router(report_router)
 app.include_router(task_detail_router)
 app.include_router(analytics_router)
-app.include_router(workforce_router)
 app.include_router(validation_router)
 app.include_router(lifecycle_router)
+include_enabled_extension_routers(app)

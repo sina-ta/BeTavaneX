@@ -115,3 +115,6 @@ class WorkforceReliability(Base):
     operational_consistency = Column(Float, default=50)
     attendance_trustworthiness = Column(Float, default=50)
     last_updated = Column(DateTime, default=datetime.utcnow)
+
+
+ReporterReliability = WorkforceReliability

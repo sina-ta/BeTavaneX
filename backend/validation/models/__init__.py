@@ -5,6 +5,7 @@ from backend.validation.models.entities import (
     OperationalAnomaly,
     TrustScore,
     ReportConsistency,
+    ReporterReliability,
     WorkforceReliability,
 )
 
@@ -15,5 +16,6 @@ __all__ = [
     "OperationalAnomaly",
     "TrustScore",
     "ReportConsistency",
+    "ReporterReliability",
     "WorkforceReliability",
 ]

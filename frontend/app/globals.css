@@ -5,6 +5,7 @@
 @import "../styles/design-system.css";
 @import "../styles/layout-primitives.css";
 @import "../styles/command-center.css";
+@import "../styles/planning-prototype.css";
 
 html,
 body {
@@ -19,4 +20,43 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+html[dir="rtl"],
+html[dir="rtl"] body {
+  direction: rtl;
+}
+
+html[dir="rtl"] body {
+  text-align: right;
+}
+
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+  text-align: right;
+}
+
+html[dir="rtl"] .page-header-block,
+html[dir="rtl"] .compact-card__header,
+html[dir="rtl"] .compact-card__body,
+html[dir="rtl"] .planning-summary-block,
+html[dir="rtl"] .planning-list-item,
+html[dir="rtl"] .planning-empty,
+html[dir="rtl"] .panel-placeholder {
+  text-align: right;
+}
+
+html[dir="rtl"] .planning-tree {
+  direction: rtl;
+}
+
+html[dir="rtl"] .planning-gantt {
+  direction: ltr;
+}
+
+html[dir="rtl"] .planning-gantt-row-label,
+html[dir="rtl"] .planning-gantt-title-cell {
+  direction: rtl;
+  text-align: right;
 }

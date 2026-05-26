@@ -1,7 +1,7 @@
 import KPIGrid from "@/components/layout/primitives/KPIGrid";
 import HealthIndicator from "@/components/ui/HealthIndicator";
 import RiskIndicator from "@/components/ui/RiskIndicator";
-import type { WorkforceAnalytics } from "@/types/workforce";
+import type { WorkforceAnalytics } from "@/modules/workforce";
 import type { TrendDirection } from "@/lib/operational/severity";
 
 type WorkforceIntelligenceSectionProps = {

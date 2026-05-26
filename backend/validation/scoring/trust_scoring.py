@@ -82,13 +82,20 @@ def resolve_validation_status(
     return ValidationStatus.WARNING
 
 
-def compute_workforce_reliability_delta(
+def compute_reporter_reliability_delta(
     findings: list[ValidationFinding],
 ) -> float:
-    """Operational reliability impact for reporter/workforce."""
+    """Operational reliability impact for a report author."""
     failed = len([f for f in findings if not f.passed])
 
     if failed == 0:
         return 2.0
 
     return round(max(-failed * 3, -15), 2)
+
+
+def compute_workforce_reliability_delta(
+    findings: list[ValidationFinding],
+) -> float:
+    """Backward-compatible alias for dormant workforce scoring hooks."""
+    return compute_reporter_reliability_delta(findings)

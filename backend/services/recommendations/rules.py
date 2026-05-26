@@ -9,7 +9,7 @@ class RecommendationContext:
     progress_percent: float = 0.0
     final_score: float = 0.0
     risk_score: float = 0.0
-    workforce_count: int = 0
+    manpower_count: int = 0
     budget_variance: float = 0.0
 
 
@@ -40,9 +40,9 @@ RECOMMENDATION_RULES: list[RecommendationRule] = [
     RecommendationRule(
         rule_id="critical_risk",
         title="Critical Risk",
-        action="Review workforce allocation and cost controls immediately",
+        action="Review manpower allocation and cost controls immediately",
         severity="critical",
-        factors=["schedule", "budget", "workforce"],
+        factors=["schedule", "budget", "manpower"],
         condition=lambda ctx: ctx.spi < 1 and ctx.cpi < 1,
         explanation=(
             "Both schedule and budget indicators are under pressure."
@@ -60,15 +60,15 @@ RECOMMENDATION_RULES: list[RecommendationRule] = [
         ),
     ),
     RecommendationRule(
-        rule_id="workforce_pressure",
-        title="Workforce Pressure",
+        rule_id="manpower_pressure",
+        title="Manpower Pressure",
         action="Rebalance crew assignments and monitor attendance",
         severity="warning",
-        factors=["workforce", "schedule"],
+        factors=["manpower", "schedule"],
         condition=lambda ctx: (
-            ctx.workforce_count > 0
+            ctx.manpower_count > 0
             and ctx.spi < 0.9
-            and ctx.workforce_count < 5
+            and ctx.manpower_count < 5
         ),
         explanation=(
             "Schedule delay detected with limited active manpower."

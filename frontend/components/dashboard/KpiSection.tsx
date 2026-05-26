@@ -1,5 +1,8 @@
+"use client";
+
 import KpiCard from "@/components/KpiCard";
 import KPIGrid from "@/components/layout/primitives/KPIGrid";
+import { useI18n } from "@/i18n/LanguageProvider";
 import {
   cpiToOperationalHealth,
   ratioToOperationalHealth,
@@ -18,6 +21,7 @@ export default function KpiSection({
   summary,
   trends,
 }: KpiSectionProps) {
+  const { t } = useI18n();
   const reportingHealth = ratioToOperationalHealth(
     summary.total_reports,
     summary.total_work_orders
@@ -34,25 +38,25 @@ export default function KpiSection({
   return (
     <KPIGrid>
       <KpiCard
-        title="Work Orders"
+        title={t("kpi_work_orders")}
         value={summary.total_work_orders}
         progress={reportingHealth.progress}
         progressSeverity={reportingHealth.severity}
-        operationalLabel={`${reportingHealth.progress.toFixed(0)}% reported`}
-        footer={`${summary.total_reports} reports`}
+        operationalLabel={`${reportingHealth.progress.toFixed(0)}% ${t("kpi_reported_suffix")}`}
+        footer={`${summary.total_reports} ${t("kpi_reports_word")}`}
       />
 
       <KpiCard
-        title="Daily Reports"
+        title={t("kpi_daily_reports")}
         value={summary.total_reports}
         progress={reportingHealth.progress}
         progressSeverity={reportingHealth.severity}
-        operationalLabel="Coverage"
-        footer="Field reporting"
+        operationalLabel={t("kpi_coverage")}
+        footer={t("kpi_field_reporting")}
       />
 
       <KpiCard
-        title="Budget (CPI)"
+        title={t("kpi_budget_cpi")}
         value={Number(summary.avg_cpi).toFixed(2)}
         trend={trends?.trends.cpi}
         progress={budgetHealth.progress}
@@ -62,7 +66,7 @@ export default function KpiSection({
       />
 
       <KpiCard
-        title="Schedule (SPI)"
+        title={t("kpi_schedule_spi")}
         value={Number(summary.avg_spi).toFixed(2)}
         trend={trends?.trends.spi}
         progress={scheduleHealth.progress}

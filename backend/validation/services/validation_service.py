@@ -50,9 +50,9 @@ def validate_and_persist_daily_report(
         )
 
         if report_payload.reported_by:
-            validation_repo.update_workforce_reliability(
+            validation_repo.update_reporter_reliability(
                 report_payload.reported_by,
-                pipeline_result["workforce_reliability_delta"],
+                pipeline_result["reporter_reliability_delta"],
             )
 
         return pipeline_result

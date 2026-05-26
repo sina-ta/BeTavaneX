@@ -5,7 +5,8 @@ import { useCallback } from "react";
 import {
   getWorkforceWorkers,
   getWorkforceAnalytics,
-} from "@/lib/api/workforce";
+  WORKFORCE_EXTENSION_ENABLED,
+} from "@/modules/workforce";
 import { useAsyncData } from "@/lib/hooks/useAsyncData";
 import AsyncPageContent from "@/components/ui/AsyncPageContent";
 import PageHeader from "@/components/ui/PageHeader";
@@ -17,7 +18,7 @@ import WorkforceIntelligenceSection from "@/components/dashboard/WorkforceIntell
 import type {
   WorkforceWorker,
   WorkforceAnalytics,
-} from "@/types/workforce";
+} from "@/modules/workforce";
 
 const PAGE_TITLE = "Workforce Intelligence";
 const PAGE_SUBTITLE =
@@ -29,6 +30,29 @@ type WorkforcePageData = {
 };
 
 export default function WorkforcePage() {
+  if (!WORKFORCE_EXTENSION_ENABLED) {
+    return (
+      <SectionContainer>
+        <PageHeader
+          title="Workforce Extension"
+          subtitle="Workforce is preserved as an optional extension and is not active in the core platform."
+          eyebrow="Optional Module"
+        />
+
+        <CompactCard title="Extension Disabled">
+          <p className="page-subtitle">
+            Core operational workflows remain available without
+            workforce enabled. Re-enable with{" "}
+            <code>
+              NEXT_PUBLIC_ENABLE_WORKFORCE_EXTENSION=true
+            </code>
+            .
+          </p>
+        </CompactCard>
+      </SectionContainer>
+    );
+  }
+
   const fetchPageData = useCallback(async () => {
     const [workers, analytics] = await Promise.all([
       getWorkforceWorkers(),

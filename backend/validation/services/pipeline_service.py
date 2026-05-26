@@ -10,7 +10,7 @@ from backend.validation.scoring.trust_scoring import (
     compute_trust_score,
     compute_consistency_score,
     resolve_validation_status,
-    compute_workforce_reliability_delta,
+    compute_reporter_reliability_delta,
 )
 
 
@@ -75,7 +75,7 @@ def run_daily_report_validation_pipeline(
             if failed_count
             else "Operational data passed validation"
         ),
-        "workforce_reliability_delta": (
-            compute_workforce_reliability_delta(findings)
+        "reporter_reliability_delta": (
+            compute_reporter_reliability_delta(findings)
         ),
     }

@@ -32,7 +32,7 @@ export default function Login() {
 
         <p style={{ color: "#94a3b8", fontSize: 17, lineHeight: 1.7, maxWidth: 400 }}>
           Enterprise construction intelligence command center for
-          daily operations, workforce, and project control.
+          daily operations, project control, and investor visibility.
         </p>
 
         <ul
@@ -49,7 +49,7 @@ export default function Login() {
         >
           <li>✓ Operational KPI monitoring</li>
           <li>✓ Daily reports & work orders</li>
-          <li>✓ Workforce intelligence</li>
+          <li>✓ Progress & delay visibility</li>
           <li>✓ Validation & lifecycle engines</li>
         </ul>
       </div>

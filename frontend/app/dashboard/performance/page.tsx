@@ -12,13 +12,11 @@ import AnalyticsSection from "@/components/dashboard/AnalyticsSection";
 import CompactCard from "@/components/layout/primitives/CompactCard";
 import DashboardGrid from "@/components/layout/primitives/DashboardGrid";
 import SectionContainer from "@/components/layout/primitives/SectionContainer";
+import { useI18n } from "@/i18n/LanguageProvider";
 import type { DashboardData } from "@/types/dashboard";
 
-const PAGE_TITLE = "Performance Analytics";
-const PAGE_SUBTITLE =
-  "KPI trends, cost performance, and schedule intelligence";
-
 export default function PerformancePage() {
+  const { t } = useI18n();
   const fetchDashboard = useCallback(
     () => getDashboardData(),
     []
@@ -32,8 +30,8 @@ export default function PerformancePage() {
       status={status}
       data={data}
       error={error}
-      loadingTitle={PAGE_TITLE}
-      loadingSubtitle={PAGE_SUBTITLE}
+      loadingTitle={t("performance_title")}
+      loadingSubtitle={t("performance_subtitle")}
       loadingMessage="Loading performance analytics..."
       emptyTitle="No performance data available"
       onRetry={reload}
@@ -41,9 +39,9 @@ export default function PerformancePage() {
       {(dashboardData) => (
         <SectionContainer>
           <PageHeader
-            title={PAGE_TITLE}
-            subtitle={PAGE_SUBTITLE}
-            eyebrow="Analytics"
+            title={t("performance_title")}
+            subtitle={t("performance_subtitle")}
+            eyebrow={t("eyebrow_analytics")}
           />
 
           <KpiSection
@@ -52,19 +50,19 @@ export default function PerformancePage() {
           />
 
           <DashboardGrid variant="split">
-            <CompactCard title="KPI Trends">
+            <CompactCard title={t("performance_kpi_trends")}>
               <TrendsSection trends={dashboardData.trends} />
             </CompactCard>
 
-            <CompactCard title="Risk Heatmap">
+            <CompactCard title={t("performance_risk_heatmap")}>
               <div className="panel-placeholder">
                 <span className="panel-placeholder-icon">🌡</span>
-                <span>Risk exposure map — connect risk engine</span>
+                <span>{t("performance_risk_placeholder")}</span>
               </div>
             </CompactCard>
           </DashboardGrid>
 
-          <CompactCard title="Engine Analytics">
+          <CompactCard title={t("performance_engine_analytics")}>
             <AnalyticsSection summary={dashboardData.summary} />
           </CompactCard>
         </SectionContainer>

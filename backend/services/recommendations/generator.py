@@ -13,7 +13,7 @@ def generate_recommendations(
     progress_percent: float = 0.0,
     final_score: float = 0.0,
     risk_score: float = 0.0,
-    workforce_count: int = 0,
+    manpower_count: int = 0,
 ) -> dict:
     context = RecommendationContext(
         cpi=cpi,
@@ -21,7 +21,7 @@ def generate_recommendations(
         progress_percent=progress_percent,
         final_score=final_score,
         risk_score=risk_score,
-        workforce_count=workforce_count,
+        manpower_count=manpower_count,
     )
 
     matched_rules = evaluate_rules(context)
