@@ -1,246 +1,271 @@
 # BetavanX — Strategic Vision & Market Entry
 
-## Core Vision
+**Status:** Current (business strategy — reconciled with Phase 1 product freeze)
 
-BetavanX is a Building Lifecycle Intelligence Platform.
+**Related documents:**
 
-Its mission is to help buildings be:
+- `docs/product/phase-1-product-definition.md` — Phase 1 scope freeze
+- `docs/business/go-to-market-hypothesis.md` — GTM hypothesis
+- `docs/business/business-status.md` — current business status summary
+- `docs/architecture/current-vs-target-architecture.md` — technical layer reality
 
-* designed better
-* constructed better
-* operated better
-* maintained better
-* improved over time
+---
 
-while increasing transparency, accountability, and building lifespan.
+## Document Layers
 
-The long-term vision is:
+This document explicitly separates three layers. Do not conflate them in sales,
+product, or engineering discussions.
+
+| Layer | Identity | Status |
+|-------|----------|--------|
+| **Long-Term Vision** | Building Lifecycle Intelligence Platform | Future Vision |
+| **Phase 1 Product** | Operational Construction Visibility Platform | Current product scope |
+| **Current Runtime MVP** | Daily work order + report visibility stack | Partial — implemented today |
+
+---
+
+## Long-Term Vision
+
+**Status:** Future Vision
+
+BetavanX long-term vision is a **Building Lifecycle Intelligence Platform**.
+
+Mission: help buildings be designed, constructed, operated, maintained, and
+improved over time — with transparency, accountability, and longer building lifespan.
 
 **Every Building Has A BetavanX.**
 
 Each building should possess a persistent digital identity throughout its lifecycle.
 
----
+### Phase 2+ Vision Concepts
 
-# The Problem
+These are **not available today**. They are long-term strategic direction only.
 
-Today building information is fragmented.
+| Concept | Description |
+|---------|-------------|
+| **Building Passport** | Persistent post-construction identity: warranties, inspections, maintenance, contractor history |
+| **Building Memory** | Continuously growing operational history for each building |
+| **Trust Network** | Market where buyers seek buildings with verified BetavanX records |
 
-Critical information is often lost after construction:
+**Strategic principle (long-term):**
 
-* execution history
-* inspections
-* test results
-* warranties
-* maintenance records
-* contractor information
-* repair history
-
-As a result:
-
-* owners lack visibility
-* investors lack transparency
-* buyers lack trust
-* operators lack historical knowledge
-
-BetavanX aims to solve this problem.
+BetavanX enters through construction → grows through transparency → scales through trust →
+ultimately becomes the lifecycle intelligence layer of buildings.
 
 ---
 
-# Long-Term Vision
+## The Problem
 
-BetavanX becomes the operational memory and intelligence layer of buildings.
+**Status:** Current
 
-Each building maintains:
+Today building information is fragmented. Critical information is often lost after construction:
 
-* construction history
-* project progress records
-* contractor records
-* inspection records
-* test records
-* warranties
-* insurance documents
-* maintenance records
-* repair history
-* renovation history
-* operational events
+- execution history
+- inspections and test results
+- warranties and maintenance records
+- contractor and repair history
 
-throughout its entire lifecycle.
+As a result: owners lack visibility, investors lack transparency, buyers lack trust,
+operators lack historical knowledge.
+
+BetavanX begins solving this during **construction** — where data originates and trust
+is first established.
 
 ---
 
-# Market Entry Strategy
+## Market Entry Strategy
 
-BetavanX does NOT enter the market through full lifecycle management.
+**Status:** Current
 
-Instead, it enters through the construction phase.
+BetavanX does **not** enter the market through full lifecycle management.
 
-Reason:
+Market entry begins in the **construction phase** because:
 
-Construction is where:
+- operational data is generated on site
+- visibility is most urgently needed
+- accountability and trust begin during execution
 
-* data originates
-* operational events occur
-* visibility is most needed
-* trust is first established
-
----
-
-# Phase 1 — Construction Visibility Platform
-
-Initial market entry focuses on:
-
-Operational Construction Visibility.
-
-Core capabilities:
-
-* Projects
-* WBS
-* Planning
-* Workflow-based execution
-* Daily Work Orders
-* Daily Reports
-* Progress Tracking
-* Dashboards
-* Investor Visibility
-
-Primary value:
-
-* execution visibility
-* operational transparency
-* stakeholder accountability
+Phase 1 product delivers construction visibility.
+Long-term lifecycle concepts are **Phase 2+ Vision** — not market-entry promises.
 
 ---
 
-# Customer Structure
+## Current Runtime MVP
 
-## Users
+**Status:** Partial (implemented today)
 
-Daily users of the platform:
+What BetavanX **runs in production today**:
 
-* Project Managers
-* Site Supervisors
-* Technical Office Teams
+```
+Project (lightweight project_id)
+    → Daily Work Orders
+        → Daily Reports
+            → Validation Engine
+            → Lifecycle Engine
+                → Dashboard Visibility
+                → KPI / Progress Tracking
+                → Recommendations (rule-based)
+```
 
----
+**Operational truth today:** Daily Reports on Daily Work Orders, enriched by validation
+and lifecycle, summarized on dashboards.
 
-## Buyers
+**Not live in runtime:**
 
-Organizations paying for the platform:
+- Operational Graph
+- Workflow Engine
+- Activity Instance execution backbone
+- Building Passport
+- Predictive forecasting
 
-* Developers
-* Project Owners
-* Construction Companies
-* Investors
-
----
-
-## Ultimate Beneficiaries
-
-People benefiting from the generated transparency:
-
-* Pre-buyers
-* Property Buyers
-* Building Owners
-* Building Operators
+See: `docs/architecture/current-vs-target-architecture.md`
 
 ---
 
-# Investor & Pre-Buyer Visibility
+## Phase 1 Product
 
-One of the key differentiators of BetavanX is project transparency.
+**Status:** Current (frozen scope)
 
-Through BetavanX:
+**Product identity:** **Operational Construction Visibility Platform**
 
-investors and pre-buyers can access:
+Phase 1 gives construction teams a daily operational command view — work orders, field
+reports, progress monitoring, and stakeholder-readable dashboards — without enterprise overhead.
 
-* project progress
-* progress trends
-* completion forecasts
-* milestone achievements
-* project updates
-* construction evidence
+### Phase 1 Core (Ship)
 
-This increases:
+| Capability | Scope |
+|------------|-------|
+| Daily Work Orders | Primary executable unit |
+| Daily Reports | Field operational truth input |
+| Validation | Report trust and reliability |
+| Lifecycle | Work-order state and blockers |
+| Progress Tracking | Progress %, CPI, SPI, KPI trends |
+| Dashboard | Operational command center |
+| Investor Visibility | Read-only progress and KPI summary (see below) |
+| Recommendations | Lightweight rule-based hints |
 
-* trust
-* transparency
-* confidence in pre-sales
+### Phase 1 Lightweight / Preview
 
-while helping developers market projects more effectively.
+| Capability | Boundary |
+|------------|----------|
+| Projects | Lightweight project context |
+| WBS | Taxonomy reference — not scheduling |
+| Baselines | Simple planned vs actual |
+| Schedule View | Gantt visualization only — preview acceptable |
 
----
+### Phase 1 Explicitly NOT
 
-# Building Passport
+- ERP, auto-scheduling, AI forecasting
+- Operational Graph runtime
+- Workflow Engine (operational)
+- Building Passport
+- BIM / Digital Twin
+- Workforce as core requirement
 
-After project completion:
-
-BetavanX evolves into a Building Passport.
-
-The Building Passport includes:
-
-* warranties
-* insurance records
-* equipment records
-* maintenance history
-* repair records
-* inspection history
-* contractor history
-
-The building now possesses a persistent operational identity.
-
----
-
-# Building Memory
-
-Over time BetavanX becomes:
-
-Building Memory.
-
-A continuously growing operational history for each building.
+Canonical scope: `docs/product/phase-1-product-definition.md`
 
 ---
 
-# Building Trust Network
+## Customer Structure
 
-Long-term objective:
+**Status:** Current
 
-Create a market where buyers actively seek buildings that possess verified BetavanX records.
+### Users (daily operators)
 
-Future purchasing decisions may include questions such as:
+- Project Managers
+- Site Supervisors
+- Technical Office Teams
 
-"Does this building have BetavanX?"
+Goal: improve execution visibility through daily work orders and reports.
 
-At this stage:
+### Buyers (organizations that pay)
 
-BetavanX becomes a trust layer for the building industry.
+**Primary anchor customer:**
+
+- **Developers relying on pre-sales** — transparency supports buyer and investor confidence
+
+**Secondary customers:**
+
+- **Small construction firms** — need lightweight operational visibility
+- **Project owners seeking visibility** — need accountability without ERP complexity
+
+Also relevant: construction companies, real estate investors (context-dependent).
+
+### Ultimate Beneficiaries
+
+- Pre-buyers and property buyers
+- Building owners and operators
+
+These groups benefit from transparency generated during construction.
+Building Passport benefits are **Phase 2+ Vision**.
 
 ---
 
-# Distribution Strategy
+## Investor & Pre-Buyer Visibility
 
-Market adoption begins with:
+**Status:** Partial (Phase 1 scope defined — not fully shipped as dedicated investor portal)
 
-Construction Visibility.
+One of BetavanX's key differentiators is **project transparency backed by validated field data**.
 
-Growth expands through:
+### Phase 1 Investor Visibility (In Scope)
 
-* project owners
-* investors
-* pre-buyers
-* completed buildings
-* operational building records
+Stakeholders can access:
 
-Each completed project generates new visibility and trust, creating a compounding network effect.
+- **project progress** — current progress % from operational data
+- **progress trends** — KPI trend direction (CPI, SPI)
+- **validated reporting** — reports processed through validation engine
+- **human-readable dashboard summary** — operational status without training
+
+### Phase 1 Investor Visibility (NOT In Scope)
+
+Do not imply these exist today:
+
+- ~~completion forecasts~~ → **Future Capability**
+- ~~predictive forecasting~~ → **Future Capability**
+- ~~construction evidence engine~~ → **Future Capability**
+- ~~milestone achievement engine~~ → **Future Capability** (manual milestones via work orders only)
+- ~~Building Passport access~~ → **Phase 2+ Vision**
+
+**Phase 1 value:** trusted visibility from daily operational data — not predictive analytics.
 
 ---
 
-# Strategic Principle
+## Distribution Strategy
 
-BetavanX enters through construction.
+**Status:** Current
 
-BetavanX grows through transparency.
+**Phase 1 adoption path:**
 
-BetavanX scales through trust.
+Construction Visibility (daily reporting + dashboard)
+→ stakeholder trust from validated progress data
+→ stronger pre-sales credibility for developers
+→ broader adoption among small teams and project owners
 
-BetavanX ultimately becomes the lifecycle intelligence layer of buildings.
+**Phase 2+ Vision expansion path:**
+
+More building records → Building Passport → Building Memory → Trust Network
+
+The long-term flywheel depends on Phase 1 data quality first.
+Poor field data destroys trust before any lifecycle vision can compound.
+
+---
+
+## Strategic Principles
+
+| Principle | Phase 1 expression | Long-term expression |
+|-----------|-------------------|---------------------|
+| Enter through construction | Daily work orders + reports | Construction history as building record seed |
+| Grow through transparency | Validated dashboards | Stakeholder and buyer trust |
+| Scale through trust | Reliable operational reporting | Building Passport and Trust Network |
+| Lifecycle intelligence | **Not Phase 1** | **Phase 2+ Vision** |
+
+---
+
+## Document Index
+
+| Document | Role |
+|----------|------|
+| This document | Strategic vision and market entry |
+| `go-to-market-hypothesis.md` | GTM hypothesis and flywheel |
+| `business-status.md` | Current business status summary |
+| `../product/phase-1-product-definition.md` | Phase 1 product freeze |
