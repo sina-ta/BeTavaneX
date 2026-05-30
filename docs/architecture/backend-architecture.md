@@ -1,5 +1,11 @@
 # BetavanX Backend Architecture
 
+**Status:** Partial (document outdated vs current implementation — pending rewrite)
+
+Canonical runtime reference: `current-vs-target-architecture.md`
+
+---
+
 ## Backend Stack
 
 - FastAPI

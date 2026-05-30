@@ -1,5 +1,11 @@
 # BetavanX Location System
 
+**Status:** Future (target architecture) — schema foundation exists
+
+See: `current-vs-target-architecture.md`, `glossary.md`
+
+---
+
 ## Purpose
 
 Construction execution is fundamentally location-based.

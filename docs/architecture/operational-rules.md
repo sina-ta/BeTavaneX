@@ -1,5 +1,11 @@
 # BetavanX — Operational Behavior Model
 
+**Status:** Partial (principles documented; full graph behavior is target)
+
+See: `glossary.md`, `current-vs-target-architecture.md`
+
+---
+
 # Core Principle
 
 BetavanX is NOT a static project scheduling system.

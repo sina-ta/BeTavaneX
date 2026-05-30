@@ -1,5 +1,11 @@
 # BetavanX Core Operational Model
 
+**Status:** Partial (schema foundation — not wired to runtime)
+
+See: `current-vs-target-architecture.md`, `glossary.md`
+
+---
+
 ## Purpose
 
 This document defines the foundational operational data model of

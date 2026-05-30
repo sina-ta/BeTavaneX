@@ -1,5 +1,11 @@
 # BetavanX Workflow Graph
 
+**Status:** Future (target architecture)
+
+See: `current-vs-target-architecture.md`, `glossary.md`
+
+---
+
 ## Purpose
 
 This document defines the workflow philosophy underneath BetavanX.

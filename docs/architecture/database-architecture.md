@@ -1,5 +1,11 @@
 # BetavanX Database Architecture
 
+**Status:** Partial (document outdated vs current schema — pending rewrite)
+
+Canonical runtime reference: `current-vs-target-architecture.md`
+
+---
+
 ## Database Engine
 
 Primary database:

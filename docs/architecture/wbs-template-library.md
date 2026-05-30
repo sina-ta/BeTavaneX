@@ -1,5 +1,16 @@
 # BetavanX WBS Template Library
 
+**Status:** Implemented (canonical WBS taxonomy)
+
+**Scope:** Construction deliverables only.
+
+Platform capabilities (analytics, dashboards, forecasting, workflow automation)
+belong in `operational-capability-model.md` — not in this WBS catalog.
+
+See also: `glossary.md`, `current-vs-target-architecture.md`
+
+---
+
 ## Purpose
 
 This library defines the BetavanX WBS Template structure as a
@@ -167,13 +178,22 @@ The actual executable work is created later as an Activity Instance:
 - NCR
 - Laboratory Reports
 
-## Phase 16 — Digital Construction & Data
+---
+
+## WBS Boundary — Platform Capabilities Excluded
+
+The following are **operational capabilities**, not construction deliverables.
+They were removed from this WBS catalog during documentation reconciliation.
+
+Relocated to `operational-capability-model.md` (Section 08):
 
 - Data Governance
 - KPI Dashboards
 - Workflow Automation
 - Operational Analytics
 - Forecasting
+
+Do not add platform intelligence behaviors to WBS phases.
 
 ---
 
@@ -261,7 +281,7 @@ those templates become executable work.
 This WBS Template Library gives BetavanX a reusable construction-native
 knowledge base.
 
-It supports future planning, scheduling, monitoring, and analytics
+It supports future planning and activity instantiation
 without forcing the platform into a simplistic:
 
 `WBS -> static schedule`

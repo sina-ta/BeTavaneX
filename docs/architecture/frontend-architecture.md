@@ -1,5 +1,11 @@
 # BetavanX Frontend Architecture
 
+**Status:** Partial (document outdated vs current frontend — pending rewrite)
+
+See: `current-vs-target-architecture.md` (Planning prototype = Prototype)
+
+---
+
 ## Frontend Stack
 
 - Next.js 16

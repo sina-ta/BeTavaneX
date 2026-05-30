@@ -1,5 +1,11 @@
 # BetavanX Scheduling Philosophy
 
+**Status:** Partial (philosophy implemented; Schedule View prototype only)
+
+See: `glossary.md` — Schedule, Gantt View
+
+---
+
 ## Purpose
 
 This document defines how scheduling should be understood in BetavanX.
