@@ -2788,3 +2788,313 @@ BetavanX creates value through trust.
 BetavanX scales through accumulated building intelligence.
 
 This became the clearest strategic definition of the platform to date.
+
+---
+
+# BetavanX LOG
+
+Date: 2026-05-31
+
+---
+
+# Runtime Architecture Clarification
+
+Completed major operational architecture clarification for Phase 1.
+
+The runtime model was refined from a WorkOrder-centric interpretation into a Construction Reality → Execution Reality model.
+
+---
+
+# Activity Instance Formalization
+
+Confirmed:
+
+Activity Instance is the canonical construction reality entity.
+
+Activity Instances are created during Planning.
+
+Creation Rule:
+
+# WBS  
++  
+Location  
++  
+Workflow Context
+
+Activity Instance
+
+Activity Instance exists independently from:
+
+- scheduling
+- resource assignment
+- work orders
+- reports
+
+Activity Instance represents real construction scope.
+
+Examples:
+
+- Concrete Column C5
+- Masonry Wall W12
+- HVAC Zone A-03
+
+---
+
+# Workflow Step Formalization
+
+Workflow Step promoted to a first-class operational entity.
+
+Confirmed:
+
+Workflow Step is not a label.
+
+Workflow Step owns:
+
+- execution status
+- progress
+- dependencies
+- readiness
+- blockers
+- inspections
+- approvals
+- quality history
+- work orders
+
+Examples:
+
+- Rebar
+- Formwork
+- Concrete
+
+Activity Instance  
+↓  
+Workflow Steps
+
+---
+
+# Lifecycle Clarification
+
+Workflow Step lifecycle finalized.
+
+Planned  
+↓  
+In Progress  
+↓  
+Completed  
+↓  
+Approval Pending
+
+Approval Pending  
+├── Approved  
+└── Inspection Failed  
+↓  
+Rework Required  
+↓  
+In Progress
+
+Completed and Approved were formally separated.
+
+Completed:
+
+Physical Work Finished
+
+Approved:
+
+Inspection + Approval Finished
+
+---
+
+# Readiness Model
+
+Readiness removed from lifecycle state machine.
+
+Confirmed:
+
+Readiness is a computed condition.
+
+Readiness factors:
+
+- Dependency Ready
+- Approval Ready
+- Material Ready
+- Crew Ready
+- Equipment Ready
+- Location Ready
+- Constraint Free
+
+Ready = Computed Result
+
+---
+
+# Dependency Model
+
+Defined five dependency categories:
+
+1. Workflow Dependency
+2. Activity Instance Dependency
+3. Approval Dependency
+4. Location Dependency
+5. External Dependency
+
+Dependencies affect readiness.
+
+Dependencies do not directly modify lifecycle state.
+
+---
+
+# Blocker Model
+
+Blockers promoted to independent operational entities.
+
+Examples:
+
+- Material Shortage
+- Equipment Failure
+- Permit Delay
+- Access Restriction
+- Weather Event
+
+Blockers affect execution independently of readiness.
+
+---
+
+# Inspection & Approval Model
+
+Inspection and Approval separated from Workflow execution.
+
+Inspection failures do not create new Workflow Steps.
+
+Instead:
+
+Inspection Failed  
+↓  
+Punch Items  
+↓  
+Rework  
+↓  
+Reinspection
+
+Execution history remains attached to the same Workflow Step.
+
+---
+
+# Execution Quality History
+
+Introduced permanent quality history concept.
+
+Workflow Steps preserve:
+
+- inspections
+- failed inspections
+- approvals
+- punch items
+- rework cycles
+- corrective actions
+
+This establishes the foundation for future:
+
+- contractor scoring
+- crew scoring
+- quality analytics
+- trust indicators
+
+---
+
+# Progress Model
+
+Confirmed:
+
+Canonical Progress = Physical Progress
+
+Formula:
+
+Executed Quantity  
+/  
+Planned Quantity
+
+Financial progress is a derived view, not runtime truth.
+
+---
+
+# Runtime Bridge Design
+
+Defined Planning → Runtime transition model.
+
+Planning  
+↓  
+Activity Instance  
+↓  
+Workflow Step  
+↓  
+Daily Work Order  
+↓  
+Daily Report  
+↓  
+Progress  
+↓  
+Dashboard
+
+---
+
+# Work Order Clarification
+
+Work Orders confirmed as:
+
+Daily Execution Instructions
+
+Work Orders are execution tools.
+
+Work Orders are not operational truth.
+
+A single Work Order may include work from multiple Workflow Steps.
+
+---
+
+# Planning Accountability Principle
+
+Introduced planning accountability concept.
+
+Planning creates commitments.
+
+Execution measures commitment quality.
+
+BetavanX will compare:
+
+Planned  
+vs  
+Actual
+
+for:
+
+- quantity
+- duration
+- start dates
+- finish dates
+
+This establishes future Planning Accuracy metrics.
+
+---
+
+# Architectural Outcome
+
+Phase 1 operational runtime model significantly matured.
+
+Completed:
+
+- Activity Instance Domain Model
+- Workflow Step Domain Model
+- Runtime Bridge Design v1
+
+Next Phase:
+
+Entity Modeling
+
+- ActivityInstance
+- WorkflowStep
+- WorkOrder
+- DailyReport
+- Inspection
+- Approval
+- Blocker
+
+before implementation and runtime migration.

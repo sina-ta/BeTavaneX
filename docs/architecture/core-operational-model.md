@@ -346,10 +346,10 @@ At a conceptual level:
 - a **Project** owns many **Locations**
 - a **Project** uses many **WBS Templates**
 - a **Workflow Graph** defines valid relationships between workflow
-  nodes
+nodes
 - a **Location Tree** defines execution geography
 - an **Activity Instance** is created from WBS + Location + Workflow
-  Context
+Context
 - an **Activity Instance** may have many **Dependencies**
 - an **Activity Instance** may have many **Assignments**
 - an **Activity Instance** may accumulate many **Progress Logs**
@@ -408,3 +408,252 @@ The foundation should remain:
 while being
 
 **structured enough for future intelligence**.
+
+---
+
+# Runtime Clarification
+
+## Activity Instance
+
+Activity Instance is the canonical operational entity of BetavanX.
+
+Activity Instances are created during Planning when a WBS item is instantiated at a specific location.
+
+Creation Rule:
+
+# WBS Template
+
+- 
+
+Location  
+
+- 
+
+Workflow Context
+
+Activity Instance
+
+Activity Instance represents construction reality.
+
+Examples:
+
+- Concrete Column C5
+- Masonry Wall W12
+- HVAC Zone A-03
+
+Activity Instance exists independently of:
+
+- scheduling
+- resource assignment
+- work orders
+- daily reports
+
+Activity Instance owns:
+
+- location
+- quantity
+- lifecycle state
+- execution history
+- workflow execution
+- overall progress
+
+Activity Instance is NOT:
+
+- Schedule
+- Workflow Step
+- Daily Work Order
+- Daily Report
+
+---
+
+## Workflow Step
+
+Workflow Steps are first-class operational entities.
+
+Workflow Steps belong to Activity Instances.
+
+Workflow Steps represent executable construction stages.
+
+Examples:
+
+Activity Instance:
+
+Concrete Column C5
+
+Workflow Steps:
+
+1. Rebar
+2. Formwork
+3. Concrete
+
+Workflow Steps are operational entities because they may own:
+
+- status
+- progress
+- approvals
+- blockers
+- readiness checks
+- dependencies
+- inspections
+- quality records
+- resource requirements
+- actual start date
+- actual finish date
+
+Workflow progression may depend on approval completion.
+
+Example:
+
+Rebar  
+↓ Approved  
+Formwork  
+↓ Approved  
+Concrete
+
+Workflow Step is NOT a Daily Work Order.
+
+A Workflow Step may span multiple days.
+
+---
+
+## Daily Work Order
+
+Daily Work Orders belong to Workflow Steps.
+
+Daily Work Orders are daily execution instructions.
+
+They define:
+
+- what should be executed today
+- who should execute it
+- what resources are allocated
+- what quantity is targeted
+
+A Workflow Step may generate multiple Daily Work Orders.
+
+Example:
+
+Workflow Step:
+
+Rebar
+
+Daily Work Orders:
+
+Day 1:  
+Install Rebar
+
+Day 2:  
+Continue Rebar
+
+Day 3:  
+Finish Rebar
+
+Daily Work Orders are operational instructions.
+
+They are not construction reality.
+
+They are not the canonical truth layer.
+
+---
+
+## Daily Report
+
+Daily Reports belong to Daily Work Orders.
+
+Daily Reports represent execution evidence.
+
+Daily Reports capture:
+
+- completed quantities
+- manpower
+- equipment usage
+- delays
+- issues
+- weather
+- approvals
+- notes
+- photos
+- attachments
+
+Daily Reports describe what actually happened in the field.
+
+---
+
+## Progress Aggregation
+
+Progress is derived from execution evidence.
+
+Aggregation path:
+
+Daily Reports  
+→ Workflow Step Progress  
+→ Activity Instance Progress
+
+Activity Instance Progress is the canonical progress representation.
+
+---
+
+## Runtime Hierarchy
+
+Activity Instance  
+1  
+↓  
+N
+
+Workflow Steps  
+1  
+↓  
+N
+
+Daily Work Orders  
+1  
+↓  
+N
+
+Daily Reports
+
+---
+
+## Runtime Meaning
+
+Activity Instance answers:
+
+"What exists in the building?"
+
+Workflow Step answers:
+
+"What execution stage are we currently in?"
+
+Daily Work Order answers:
+
+"What should be executed today?"
+
+Daily Report answers:
+
+"What actually happened today?"
+
+---
+
+## Building Memory Alignment
+
+Building Memory is built around Activity Instances.
+
+Workflow execution history is preserved through Workflow Steps.
+
+Daily Work Orders and Daily Reports provide execution evidence.
+
+Future lifecycle records may attach to:
+
+- Activity Instances
+- Workflow Steps
+
+Examples:
+
+- inspections
+- defects
+- warranties
+- maintenance history
+- repair history
+- renovation history
+
+The persistent construction identity is the Activity Instance.
