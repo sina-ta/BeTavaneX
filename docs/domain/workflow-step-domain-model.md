@@ -2,7 +2,7 @@
 
 Status: Approved
 
-Version: 1.0
+Version: 1.1
 
 ---
 
@@ -28,11 +28,11 @@ A WorkflowStep represents actual construction execution.
 
 Examples:
 
-- Rebar
-- Formwork
-- Concrete
-- Masonry
-- Waterproofing
+* Rebar
+* Formwork
+* Concrete
+* Masonry
+* Waterproofing
 
 ---
 
@@ -48,12 +48,12 @@ Execution Reality
 
 WorkflowStep is where:
 
-- execution occurs
-- progress is measured
-- inspections occur
-- approvals occur
-- blockers occur
-- work orders are generated
+* execution occurs
+* progress is measured
+* inspections occur
+* approvals occur
+* blockers occur
+* work orders are generated
 
 ---
 
@@ -77,10 +77,10 @@ WorkflowSteps do NOT maintain live references to templates.
 
 This preserves:
 
-- historical accuracy
-- auditability
-- building memory
-- legal traceability
+* historical accuracy
+* auditability
+* building memory
+* legal traceability
 
 ---
 
@@ -88,20 +88,20 @@ This preserves:
 
 WorkflowStepTemplates define:
 
-- execution method
-- training material
-- execution guides
-- safety requirements
-- inspection checklists
-- applicable standards
-- required permits
-- required documents
-- required trades
-- required tools
-- required equipment
-- BOQ mappings
-- productivity rules
-- typical drawings
+* execution method
+* training material
+* execution guides
+* safety requirements
+* inspection checklists
+* applicable standards
+* required permits
+* required documents
+* required trades
+* required tools
+* required equipment
+* BOQ mappings
+* productivity rules
+* typical drawings
 
 ---
 
@@ -109,18 +109,18 @@ WorkflowStepTemplates define:
 
 WorkflowStep owns:
 
-- execution state
-- progress
-- inspections
-- approvals
-- blockers
-- work orders
-- assigned resources
-- assigned crews
-- assigned contractors
-- assigned supervisors
-- execution requirements
-- BOQ mappings
+* execution state
+* progress
+* inspections
+* approvals
+* blockers
+* work orders
+* assigned resources
+* assigned crews
+* assigned contractors
+* assigned supervisors
+* execution requirements
+* BOQ mappings
 
 WorkflowStep is the primary operational entity of BetavanX.
 
@@ -130,12 +130,12 @@ WorkflowStep is the primary operational entity of BetavanX.
 
 WorkflowStep execution may require:
 
-- drawings
-- permits
-- approvals
-- materials
-- resources
-- documents
+* drawings
+* permits
+* approvals
+* materials
+* resources
+* documents
 
 Execution requirements are evaluated before execution begins.
 
@@ -165,13 +165,13 @@ Ready is not a lifecycle state.
 
 Ready may depend on:
 
-- required drawings available
-- required permits available
-- required approvals completed
-- required materials available
-- required resources assigned
-- required documents available
-- previous workflow approved
+* required drawings available
+* required permits available
+* required approvals completed
+* required materials available
+* required resources assigned
+* required documents available
+* previous workflow approved
 
 Example:
 
@@ -203,10 +203,10 @@ Required execution conditions are not satisfied.
 
 Examples:
 
-- missing permit
-- missing drawing
-- missing approval
-- missing resource assignment
+* missing permit
+* missing drawing
+* missing approval
+* missing resource assignment
 
 ---
 
@@ -218,12 +218,12 @@ Unexpected operational conditions prevent execution despite planning readiness.
 
 Examples:
 
-- weather
-- equipment failure
-- access restrictions
-- labor strike
-- material delivery failure
-- stop work order
+* weather
+* equipment failure
+* access restrictions
+* labor strike
+* material delivery failure
+* stop work order
 
 ---
 
@@ -275,11 +275,99 @@ Projects aggregate ActivityInstance progress.
 
 ---
 
+# Progress Model
+
+Phase 1 Progress is commitment-based.
+
+Workflow Progress is derived from completed WorkOrders.
+
+Progress does not rely on measured physical quantities.
+
+This decision is intentional to maximize field adoption and simplify operational reporting.
+
+---
+
+Workflow Progress
+
+=
+
+Σ Completed WorkOrder Weights
+
+/
+
+Total Workflow Weight
+
+---
+
+Example
+
+WO-1 = 33%
+
+WO-2 = 33%
+
+WO-3 = 34%
+
+---
+
+WO-1 Completed
+
+↓
+
+Workflow Progress = 33%
+
+---
+
+WO-2 Completed
+
+↓
+
+Workflow Progress = 66%
+
+---
+
+WO-3 Completed
+
+↓
+
+Workflow Progress = 100%
+
+---
+
+# Progress vs Approval
+
+Progress and Approval are independent concepts.
+
+Workflow Progress may reach 100% before approval.
+
+Examples:
+
+Workflow Progress = 100%
+
+Status = Inspection Pending
+
+or
+
+Status = Approval Pending
+
+Both situations are valid.
+
+Progress measures execution completion.
+
+Approval measures acceptance.
+
+Completed does not imply Approved.
+
+---
+
 # BOQ Relationship
 
 WorkflowStep owns BOQ mappings.
 
 WorkflowStep
+
+↓
+
+BOQ Mapping
 
 ↓
 
@@ -311,11 +399,11 @@ WorkflowStep owns resource assignments.
 
 Examples:
 
-- crews
-- contractors
-- supervisors
-- equipment
-- materials
+* crews
+* contractors
+* supervisors
+* equipment
+* materials
 
 Resource ownership belongs to WorkflowStep.
 
@@ -393,14 +481,14 @@ Approval
 
 Phase 1 uses a simplified approval model.
 
-A final approval confirms successful workflow completion.
+A single final approval confirms successful workflow completion.
 
 Future versions may support:
 
-- survey approval
-- consultant approval
-- client approval
-- authority approval
+* survey approval
+* consultant approval
+* client approval
+* authority approval
 
 ---
 
@@ -456,10 +544,10 @@ WorkflowStep is the center of operational execution inside BetavanX.
 
 WorkflowStep enables:
 
-- execution visibility
-- operational accountability
-- progress measurement
-- quality verification
-- building memory
+* execution visibility
+* operational accountability
+* progress measurement
+* quality verification
+* building memory
 
 WorkflowStep is the primary execution entity of BetavanX Phase 1.

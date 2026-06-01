@@ -2815,10 +2815,14 @@ Activity Instances are created during Planning.
 
 Creation Rule:
 
-# WBS  
-+  
+# WBS
+
+- 
+
 Location  
-+  
+
+- 
+
 Workflow Context
 
 Activity Instance
@@ -3098,3 +3102,132 @@ Entity Modeling
 - Blocker
 
 before implementation and runtime migration.
+
+---
+
+Date: 2026-06-01
+
+Major Architecture Consolidation
+
+---
+
+Runtime architecture finalized around:
+
+Construction Reality
+
+↓
+
+ActivityInstance
+
+Execution Reality
+
+↓
+
+WorkflowStep
+
+Execution Coordination
+
+↓
+
+WorkOrder
+
+Execution Evidence
+
+↓
+
+DailyReport
+
+---
+
+Major Decisions
+
+1. ActivityInstance defined as:
+
+Construction Scope
+
++
+
+Planning Commitment
+
+2. WorkflowStep defined as primary execution entity.
+
+3. WorkOrder defined as execution slice and coordination tool.
+
+4. WorkOrders do not own:
+
+   - Progress
+
+   - Resources
+
+   - Costs
+
+5. Progress model changed from quantity-based to commitment-based.
+
+Phase 1 Progress
+
+=
+
+Completed WorkOrder Weights
+
+6. BOQ ownership clarified.
+
+BOQ belongs to financial measurement reality.
+
+ActivityInstances do not own BOQ.
+
+WorkflowStep
+
+↓
+
+BOQMapping
+
+↓
+
+BOQItem
+
+7. Cost Intelligence separated from Runtime Core.
+
+8. Ready established as computed condition.
+
+Ready ≠ Status
+
+9. Blocked separated from Not Ready.
+
+10. WorkflowStepTemplate snapshot principle established.
+
+11. Inspection and Approval promoted to Runtime Core entities.
+
+12. Runtime Core entity model finalized.
+
+13. Architecture review completed.
+
+Major inconsistencies identified and resolved.
+
+---
+
+Result
+
+BetavanX architecture shifted from:
+
+WorkOrder-Centric Runtime
+
+to
+
+Construction Reality-Centric Runtime
+
+---
+
+Next Phase
+
+Database Specification Phase
+
+- Data Dictionary
+
+- Entity Attributes
+
+- Database Design
+
+- API Surface
+
+---
+

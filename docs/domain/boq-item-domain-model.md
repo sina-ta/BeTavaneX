@@ -2,7 +2,7 @@
 
 Status: Approved
 
-Version: 1.0
+Version: 1.1
 
 ---
 
@@ -10,7 +10,7 @@ Version: 1.0
 
 Define the BOQItem entity of BetavanX.
 
-BOQItem represents the financial measurement unit used for planning, valuation, progress calculation, and future cost intelligence.
+BOQItem represents the financial measurement unit used for planning, valuation, earned value calculation, financial visibility, and future cost intelligence.
 
 BOQItem is the bridge between execution reality and financial reality.
 
@@ -134,6 +134,8 @@ BOQItems do not own workflow states.
 
 BOQItems do not own inspections.
 
+BOQItems do not own approvals.
+
 ---
 
 # Relationships
@@ -154,13 +156,43 @@ A project contains many BOQItems.
 
 WorkflowStep
 
-N:N
+1:N
+
+BOQMapping
+
+---
 
 BOQItem
+
+1:N
+
+BOQMapping
+
+---
 
 A WorkflowStep may be linked to multiple BOQItems.
 
 A BOQItem may contribute to multiple WorkflowSteps.
+
+---
+
+# BOQMapping Purpose
+
+BOQMapping defines the relationship between:
+
+WorkflowStep
+
+and
+
+BOQItem
+
+BOQMapping may contain:
+
+* quantity allocation
+* valuation linkage
+* cost allocation
+
+BOQMapping is an associative entity.
 
 ---
 
@@ -170,7 +202,7 @@ WorkflowStep
 
 ↓
 
-BOQ Mapping
+BOQMapping
 
 ↓
 
@@ -185,6 +217,10 @@ Financial measurement is linked through BOQ mappings.
 WorkflowStep:
 
 Rebar @ C5
+
+↓
+
+BOQMapping
 
 ↓
 
@@ -244,19 +280,23 @@ Sum of ActivityInstance Costs
 
 # Progress Relationship
 
-Phase 1 progress is operationally measured through WorkOrder completion.
+Phase 1 operational progress is not calculated from BOQ quantities.
 
-However BOQItems provide the valuation basis behind progress.
+Phase 1 progress is derived from completed WorkOrder Weights.
+
+BOQItems provide the valuation basis for earned value calculations.
+
+Operational progress and financial valuation are intentionally separated.
 
 ---
 
-Example
+# Example
 
 WorkflowStep Cost:
 
 100,000
 
-Progress:
+Workflow Progress:
 
 33%
 
@@ -279,6 +319,18 @@ Workflow Progress
 ×
 
 Planned Cost
+
+---
+
+Phase 1 Workflow Progress is defined by:
+
+Completed WorkOrder Weights
+
+as described in:
+
+runtime-bridge-design.md
+
+BOQItems use workflow progress for valuation purposes only.
 
 ---
 
@@ -337,7 +389,7 @@ WorkflowStep
 
 ---
 
-Financial Reality
+Financial Measurement Reality
 
 ↓
 
@@ -361,9 +413,29 @@ Cost Intelligence
 
 BOQItems provide the financial foundation for:
 
-* progress valuation
 * earned value analysis
 * financial visibility
+* progress valuation
+* budget visibility
 * future cost intelligence
 
 BOQItem is the primary financial measurement entity of BetavanX.
+
+---
+
+# Architectural Principle
+
+Execution and financial measurement are intentionally separated.
+
+WorkflowSteps represent execution reality.
+
+BOQItems represent financial reality.
+
+BOQMappings connect the two domains.
+
+This separation enables:
+
+* operational simplicity
+* financial visibility
+* future cost intelligence
+* scalable architecture

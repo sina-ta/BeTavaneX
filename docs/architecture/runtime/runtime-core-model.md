@@ -2,7 +2,7 @@
 
 Status: Approved
 
-Version: 1.0
+Version: 1.1
 
 ---
 
@@ -18,16 +18,20 @@ The Runtime Core represents operational reality during project execution.
 
 # Core Principle
 
-BetavanX does not model execution through tasks.
+BetavanX does not model execution through generic tasks.
 
 BetavanX models execution through construction reality.
 
 The Runtime Core is organized around:
 
-Construction Reality  
-↓  
-Execution Reality  
-↓  
+Construction Reality
+
+↓
+
+Execution Reality
+
+↓
+
 Execution Evidence
 
 ---
@@ -42,9 +46,9 @@ ActivityInstance
 
 Examples:
 
-- Column C5
-- Wall W12
-- Slab S3
+* Column C5
+* Wall W12
+* Slab S3
 
 ActivityInstances represent actual scopes of construction work.
 
@@ -58,11 +62,13 @@ WorkflowStep
 
 Examples:
 
-- Rebar
-- Formwork
-- Concrete
+* Rebar
+* Formwork
+* Concrete
 
 WorkflowSteps represent measurable execution stages required to complete an ActivityInstance.
+
+WorkflowSteps are the primary operational entities of BetavanX.
 
 ---
 
@@ -74,11 +80,17 @@ WorkflowStepTemplate
 
 Examples:
 
-- Rebar Template
-- Formwork Template
-- Concrete Template
+* Rebar Template
+* Formwork Template
+* Concrete Template
 
 WorkflowStepTemplates define reusable execution knowledge.
+
+WorkflowSteps are instantiated from WorkflowStepTemplate snapshots.
+
+WorkflowSteps do not maintain live references to templates.
+
+Template changes do not affect existing WorkflowSteps.
 
 ---
 
@@ -92,7 +104,7 @@ WorkOrders define daily execution commitments.
 
 WorkOrders do not represent operational truth.
 
-WorkOrders are execution tools.
+WorkOrders are execution coordination tools.
 
 ---
 
@@ -103,6 +115,8 @@ Execution Evidence is represented by:
 DailyReport
 
 DailyReports record execution outcomes.
+
+DailyReports provide evidence of execution.
 
 ---
 
@@ -152,15 +166,25 @@ Blockers represent unexpected conditions preventing execution.
 
 The Runtime Core consists of:
 
-- ActivityInstance
-- WorkflowStepTemplate
-- WorkflowStep
-- WorkOrder
-- DailyReport
-- Inspection
-- PunchItem
-- Approval
-- Blocker
+* ActivityInstance
+* WorkflowStepTemplate
+* WorkflowStep
+* WorkOrder
+* DailyReport
+* Inspection
+* PunchItem
+* Approval
+* Blocker
+
+---
+
+# Supporting Runtime Entities
+
+The following entities support Runtime operations but are not considered Runtime Core:
+
+* BOQMapping
+
+BOQMapping provides the linkage between execution reality and financial measurement reality.
 
 ---
 
@@ -230,15 +254,30 @@ Blocker
 
 ---
 
+WorkflowStep
+
+1:N
+
+BOQMapping
+
+---
+
 # Runtime Truth Hierarchy
 
-ActivityInstance  
-↓  
-WorkflowStep  
-↓  
+ActivityInstance
+
+↓
+
+WorkflowStep
+
+↓
+
 DailyReport
 
-Operational truth originates from ActivityInstances and WorkflowSteps.
+Operational truth originates from:
+
+* ActivityInstances
+* WorkflowSteps
 
 DailyReports provide execution evidence.
 
@@ -248,115 +287,207 @@ WorkOrders do not create operational truth.
 
 # Ownership Principles
 
-ActivityInstance owns:
+## ActivityInstance Owns
 
-- construction scope
-- planning commitment
-
----
-
-WorkflowStep owns:
-
-- execution state
-- progress
-- inspections
-- approvals
-- blockers
-- assigned resources
-- assigned crews
-- assigned contractors
-- assigned supervisors
+* construction scope
+* planning commitment
+* aggregated progress
+* aggregated planned cost
 
 ---
 
-WorkOrder owns:
+## WorkflowStep Owns
 
-- daily execution commitment
-
-WorkOrders do not own resources.
-
-WorkOrders do not own progress.
-
-WorkOrders do not own costs.
-
----
-
-DailyReport owns:
-
-- execution evidence
+* execution state
+* progress
+* inspections
+* approvals
+* blockers
+* work orders
+* assigned resources
+* assigned crews
+* assigned contractors
+* assigned supervisors
+* BOQ mappings
 
 ---
 
-Inspection owns:
+## WorkOrder Owns
 
-- quality verification
+* daily execution commitment
 
----
+WorkOrders do not own:
 
-PunchItem owns:
-
-- quality deficiencies
-
----
-
-Approval owns:
-
-- final execution approval
+* progress
+* resources
+* costs
+* inspections
+* approvals
 
 ---
 
-Blocker owns:
+## DailyReport Owns
 
-- unexpected operational constraints
+* execution evidence
+
+---
+
+## Inspection Owns
+
+* quality verification
+
+---
+
+## PunchItem Owns
+
+* quality deficiencies
+
+---
+
+## Approval Owns
+
+* final execution approval
+
+---
+
+## Blocker Owns
+
+* unexpected operational constraints
 
 ---
 
 # Runtime Philosophy
 
-Construction Reality  
-↓  
+Construction Reality
+
+↓
+
 ActivityInstance
 
-Execution Reality  
-↓  
+---
+
+Execution Reality
+
+↓
+
 WorkflowStep
 
-Execution Coordination  
-↓  
+---
+
+Execution Coordination
+
+↓
+
 WorkOrder
 
-Execution Evidence  
-↓  
+---
+
+Execution Evidence
+
+↓
+
 DailyReport
 
-Quality Verification  
-↓  
+---
+
+Quality Verification
+
+↓
+
 Inspection
 
-Quality Findings  
-↓  
+↓
+
 PunchItem
 
-Operational Approval  
-↓  
+---
+
+Operational Approval
+
+↓
+
 Approval
 
-Operational Constraints  
-↓  
+---
+
+Operational Constraints
+
+↓
+
 Blocker
+
+---
+
+Financial Measurement Reality
+
+↓
+
+BOQItem
+
+↓
+
+BOQMapping
+
+↓
+
+WorkflowStep
+
+---
+
+# Runtime Principles
+
+## Progress Principle
+
+WorkflowSteps own progress.
+
+WorkOrders contribute to progress.
+
+WorkOrders do not own progress.
+
+---
+
+## Approval Principle
+
+Progress and Approval are independent concepts.
+
+A WorkflowStep may reach:
+
+Progress = 100%
+
+while remaining:
+
+Inspection Pending
+
+or
+
+Approval Pending
+
+---
+
+## Template Principle
+
+Templates define knowledge.
+
+WorkflowSteps preserve historical execution reality through snapshot creation.
 
 ---
 
 # Strategic Alignment
 
-This Runtime Core supports:
+The Runtime Core supports:
 
-Construction Visibility  
-↓  
-Operational Accountability  
-↓  
-Building Memory  
-↓  
+Construction Visibility
+
+↓
+
+Operational Accountability
+
+↓
+
+Building Memory
+
+↓
+
 Building Trust
 
-The Runtime Core forms the foundation of BetavanX Phase 1.
+The Runtime Core forms the operational foundation of BetavanX Phase 1.

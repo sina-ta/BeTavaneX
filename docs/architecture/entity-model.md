@@ -2,7 +2,7 @@
 
 Status: Approved
 
-Version: 1.0
+Version: 1.1
 
 Purpose:
 
@@ -86,6 +86,46 @@ ActivityInstance
 
 ---
 
+## ActivityInstance Creation Rule
+
+ActivityInstances are created from:
+
+WBS Item
+
+*
+
+Location
+
+↓
+
+ActivityInstance
+
+Example:
+
+Concrete Column
+
+*
+
+Floor 3 / Axis C5
+
+↓
+
+Column C5
+
+---
+
+## BOQ Position
+
+BOQItems belong to the financial measurement layer.
+
+BOQItems are scoped at the Project level.
+
+Execution linkage occurs through WorkflowStep mappings.
+
+ActivityInstances do not own BOQItems.
+
+---
+
 # Execution Knowledge Layer
 
 Entities:
@@ -102,6 +142,12 @@ WorkflowStepTemplate
 
 WorkflowStep
 
+WorkflowSteps are instantiated from WorkflowStepTemplate snapshots.
+
+WorkflowSteps do not maintain live references to templates.
+
+Template modifications do not affect existing WorkflowSteps.
+
 ---
 
 # Execution Layer
@@ -112,6 +158,7 @@ Entities:
 * WorkflowStep
 * WorkOrder
 * DailyReport
+* BOQMapping
 
 ---
 
@@ -138,6 +185,44 @@ WorkOrder
 1:N
 
 DailyReport
+
+---
+
+WorkflowStep
+
+1:N
+
+BOQMapping
+
+---
+
+BOQItem
+
+1:N
+
+BOQMapping
+
+---
+
+## BOQMapping Purpose
+
+BOQMapping defines the relationship between:
+
+WorkflowStep
+
+and
+
+BOQItem
+
+BOQMapping may contain:
+
+* quantity allocation
+* valuation linkage
+* cost allocation
+
+BOQMapping is an associative entity.
+
+BOQMapping is not part of Runtime Core.
 
 ---
 
@@ -310,6 +395,24 @@ WorkflowStepTemplate
 
 ↓
 
+WorkflowStep Snapshot
+
+---
+
+# Financial Hierarchy
+
+Project
+
+↓
+
+BOQItem
+
+↓
+
+BOQMapping
+
+↓
+
 WorkflowStep
 
 ---
@@ -410,6 +513,14 @@ Execution Knowledge
 ↓
 
 WorkflowStepTemplate
+
+---
+
+Financial Measurement Reality
+
+↓
+
+BOQItem
 
 ---
 

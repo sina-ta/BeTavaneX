@@ -2,7 +2,7 @@
 
 Status: Approved
 
-Version: 1.0
+Version: 1.1
 
 ---
 
@@ -24,7 +24,7 @@ ActivityInstance
 
 Construction Scope
 
-- 
+*
 
 Planning Commitment
 
@@ -34,11 +34,11 @@ Planning Commitment
 
 Examples of ActivityInstances:
 
-- Column C5
-- Column C6
-- Wall W12
-- Slab S3
-- Footing F8
+* Column C5
+* Column C6
+* Wall W12
+* Slab S3
+* Footing F8
 
 Each ActivityInstance represents a unique physical construction scope.
 
@@ -60,7 +60,7 @@ ActivityInstance is created when:
 
 WBS Item
 
-- 
+*
 
 Location
 
@@ -94,10 +94,10 @@ ActivityInstance owns planning commitments.
 
 Examples:
 
-- planned quantity
-- planned duration
-- planned start
-- planned finish
+* planned quantity
+* planned duration
+* planned start
+* planned finish
 
 ---
 
@@ -105,11 +105,11 @@ Examples:
 
 ActivityInstance owns:
 
-- construction scope definition
-- location assignment
-- planning commitment
-- aggregated execution progress
-- aggregated execution cost
+* construction scope definition
+* location assignment
+* planning commitment
+* aggregated execution progress
+* aggregated execution cost
 
 ---
 
@@ -193,11 +193,17 @@ Correct:
 
 ActivityInstance
 
-↓  
+↓
+
 WorkflowStep
 
-↓  
+↓
+
 BOQ Mapping
+
+↓
+
+BOQ Item
 
 ---
 
@@ -219,27 +225,53 @@ WorkflowSteps create progress.
 
 ActivityInstance aggregates progress from WorkflowSteps.
 
+---
+
+# ActivityInstance Progress
+
+Phase 1 uses Planning Weights.
+
+Each WorkflowStep receives a planning weight during planning.
+
 Example:
 
-Rebar = 100%
+Rebar = 20%
 
-Formwork = 0%
+Formwork = 30%
 
-Concrete = 0%
+Concrete = 50%
+
+---
+
+ActivityInstance Progress
+
+=
+
+Σ WorkflowStep Progress × WorkflowStep Weight
+
+---
+
+Example
+
+Rebar Progress = 100%
+
+Formwork Progress = 0%
+
+Concrete Progress = 0%
 
 ↓
 
-ActivityInstance Progress = 33%
+ActivityInstance Progress = 20%
 
 ---
 
 # Cost Aggregation
 
-ActivityInstance does not directly calculate cost.
+WorkflowStep planned cost originates from BOQ mappings.
 
-WorkflowSteps own BOQ mappings and planned costs.
+ActivityInstance aggregates planned costs from WorkflowSteps.
 
-ActivityInstance aggregates costs from WorkflowSteps.
+ActivityInstance does not directly own BOQItems.
 
 ---
 
@@ -247,18 +279,18 @@ ActivityInstance aggregates costs from WorkflowSteps.
 
 ActivityInstance is responsible for:
 
-- defining construction scope
-- defining planning commitments
-- aggregating execution progress
-- aggregating execution cost
-- aggregating execution status
+* defining construction scope
+* defining planning commitments
+* aggregating execution progress
+* aggregating execution cost
+* aggregating execution status
 
 ActivityInstance is NOT responsible for:
 
-- daily execution
-- inspections
-- approvals
-- blockers
+* daily execution
+* inspections
+* approvals
+* blockers
 
 These belong to WorkflowSteps.
 
@@ -288,16 +320,26 @@ ActivityInstances are never reused across locations.
 
 # Runtime Position
 
-Construction Reality  
-↓  
+Construction Reality
+
+↓
+
 ActivityInstance
 
-Execution Reality  
-↓  
+↓
+
+Execution Reality
+
+↓
+
 WorkflowStep
 
-Execution Evidence  
-↓  
+↓
+
+Execution Evidence
+
+↓
+
 DailyReport
 
 ActivityInstance is the bridge between Planning and Execution.
@@ -310,12 +352,18 @@ ActivityInstance represents the digital identity of a construction scope.
 
 Over time ActivityInstances contribute to:
 
-Construction Visibility  
-↓  
-Building Memory  
-↓  
-Building Intelligence  
-↓  
+Construction Visibility
+
+↓
+
+Building Memory
+
+↓
+
+Building Intelligence
+
+↓
+
 Building Trust
 
 ActivityInstance is the foundation of construction reality inside BetavanX.
