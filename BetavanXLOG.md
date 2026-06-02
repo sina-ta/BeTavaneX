@@ -3832,3 +3832,192 @@ BetavanX is no longer an architecture-only project.
 The backend core is now executable.
 
 The system is buildable.
+
+---
+
+# BetavanX LOG — Phase 1 Complete
+
+Date: 2026-06-02
+
+---
+
+# Summary
+
+Phase 1 of BetavanX has reached a fully executable backend core with verified runtime.
+
+This marks the transition from **Architecture Specification** to **Product Construction**.
+
+---
+
+# Stages Completed
+
+## Stage 0A — Initial Backend Structure
+
+- Folders and Python package structure created
+- 11 empty **[init**.py](http://init.py) files
+- Foundation for future code laid
+
+## Stage 0B — DB Configuration & Session
+
+- backend/[config.py](http://config.py) for environment
+- backend/db/[base.py](http://base.py) and [session.py](http://session.py) created
+- SessionLocal and get_db() prepared
+- No models or migrations yet
+
+## Stage 1 — Planning Models
+
+- ORM Models: Project, WBSItem, Location, BOQItem, ActivityInstance
+- Relationships aligned with DDL
+- Stage 1 complete
+
+## Stage 2 — Execution Models
+
+- ORM Models: WorkflowStepTemplate, WorkflowStep
+- Relationships to ActivityInstance and Template implemented
+- Stage 2 complete
+
+## Stage 3 — Execution Coordination Models
+
+- ORM Models: WorkOrder, WorkOrderWorkflowStep, DailyReport
+- Junction table mapping WorkOrder ↔ WorkflowStep
+- Stage 3 complete
+
+## Stage 4 — Execution Evidence & Quality
+
+- ORM Models: Inspection, PunchItem, Approval, Blocker, BOQMapping
+- WorkflowStep → Inspection/PunchItem/Approval/Blocker/BOQMapping relationships implemented
+- Stage 4 complete
+
+## Stage 5 — Repository Layer
+
+- BaseRepository and 5 core repositories implemented
+- CRUD operations, filters, list, get_by_id, optional get_by_code
+- Stage 5 complete
+
+## Stage 6 — ProgressService
+
+- WorkflowStep, ActivityInstance, Project progress calculations
+- Repository dependencies only
+- No business logic duplication
+- Stage 6 complete
+
+## Stage 7 — RuntimeQueryService
+
+- Provides read-only views: ActivityInstanceRuntimeView, WorkflowStepRuntimeView, WorkOrderRuntimeView, ProjectRuntimeSummary
+- Repositories + ProgressService dependencies
+- Stage 7 complete
+
+## Stage 8 — WorkflowExecutionService
+
+- Creates WorkOrderWorkflowStep assignments
+- Creates DailyReport rows
+- Links/Unlinks BOQMappings
+- No progress calculation
+- Stage 8 complete
+
+## Stage 9 — WorkflowGovernanceService
+
+- Handles WorkflowStep status transitions: Inspection pass/fail, Rework Required, Approval
+- Blocker lifecycle management
+- No progress/earned value/KPI calculations
+- Stage 9 complete
+
+## Stage 10 — Application Layer
+
+- RuntimeUseCases + PlanningUseCases orchestrating Services
+- Thin orchestration only
+- Stage 10 complete
+
+## Stage 11 — Backend Readiness Audit
+
+- Confirmed architecture, ORM, repository, service, application, dependency graph
+- Verified gaps before exposing API
+- Stage 11 complete
+
+## Stage 12 — Persistence Layer Completion
+
+- Added missing repositories: BOQItem, Inspection, PunchItem, Approval, Blocker, BOQMapping, WorkOrderWorkflowStep
+- get_db() transaction boundary enforced: commit/rollback/close
+- All services now use repositories; no raw Session access
+- Stage 12 complete
+
+## Stage 13 — Schema Layer
+
+- Pydantic v2 schemas for Read/Create/Update for all Phase 1 entities
+- from_attributes=True for ORM serialization
+- Stage 13 complete
+
+## Stage 13.5 — Dependency Injection Layer
+
+- Repository, Service, and Application dependency providers implemented
+- Single shared session per request verified
+- Stage 13.5 complete
+
+## Stage 14A — Runtime Verification
+
+- End-to-end Happy Path executed in ephemeral SQLite
+- Project → ActivityInstance → WorkflowStep → WorkOrder → DailyReport → Progress → Dashboard
+- Transaction boundary, DI graph verified
+- Stage 14A PASS
+
+## Stage 14A.1 — Planning Completion
+
+- WBSItemRepository and LocationRepository created
+- PlanningUseCases exposed for Project, ActivityInstance, WorkflowStep, WorkOrder creation
+- Dependency providers updated
+- Stage 14A.1 complete
+
+## Stage 14B — Use Case Routers
+
+- FastAPI routers: /planning and /runtime endpoints
+- Validates schemas and calls Use Cases only
+- OpenAPI schema builds with all endpoints
+- End-to-end HTTP happy path verified (POSTs/GETs 201/200; missing 404 handled)
+- Stage 14B complete
+
+---
+
+# Current Backend Core Status
+
+
+| Layer                      | Status |
+| -------------------------- | ------ |
+| Database Layer             | 100%   |
+| ORM Layer                  | 100%   |
+| Repository Layer           | 100%   |
+| Service Layer              | 90%    |
+| Application Layer          | 90%    |
+| Dependency Injection Layer | 100%   |
+| Schema Layer               | 100%   |
+| Use Case Routers           | 100%   |
+| Runtime Verification       | 100%   |
+| Backend Readiness          | ~95%   |
+| API Layer                  | 0%     |
+| Frontend Integration       | 0%     |
+
+
+---
+
+# Key Achievements
+
+- BetavanX Backend Core is **verified and executable**.
+- End-to-end Runtime Happy Path validated.
+- Transaction boundary, DI graph, and repository coverage verified.
+- Planning + Execution + Progress + Dashboard vertical slice exists.
+- No business logic or calculations added outside the Services.
+- Backend is ready for Stage 14B API expansion and MVP usage.
+
+---
+
+# Next Stage
+
+- Stage 15: Authentication / Authorization Layer + OpenAPI Enhancements
+- Stage 16: Frontend Integration
+- Stage 17: Internal MVP Pilot
+
+---
+
+# Note
+
+This log captures the complete Phase 1 backend progress from 0A → 14B.  
+It will serve as the baseline reference for all future stages.

@@ -10,8 +10,10 @@ from backend.phase1.repositories.boq_item_repository import BOQItemRepository
 from backend.phase1.repositories.boq_mapping_repository import BOQMappingRepository
 from backend.phase1.repositories.daily_report_repository import DailyReportRepository
 from backend.phase1.repositories.inspection_repository import InspectionRepository
+from backend.phase1.repositories.location_repository import LocationRepository
 from backend.phase1.repositories.project_repository import ProjectRepository
 from backend.phase1.repositories.punch_item_repository import PunchItemRepository
+from backend.phase1.repositories.wbs_item_repository import WBSItemRepository
 from backend.phase1.repositories.work_order_repository import WorkOrderRepository
 from backend.phase1.repositories.work_order_workflow_step_repository import (
     WorkOrderWorkflowStepRepository,
@@ -27,8 +29,10 @@ __all__ = [
     "BOQMappingRepository",
     "DailyReportRepository",
     "InspectionRepository",
+    "LocationRepository",
     "ProjectRepository",
     "PunchItemRepository",
+    "WBSItemRepository",
     "WorkOrderRepository",
     "WorkOrderWorkflowStepRepository",
     "WorkflowStepRepository",
