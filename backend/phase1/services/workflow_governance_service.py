@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from uuid import UUID
 
 from backend.phase1.models.approval import Approval
@@ -10,6 +10,7 @@ from backend.phase1.models.blocker import Blocker
 from backend.phase1.models.workflow_step import WorkflowStep
 from backend.phase1.repositories.approval_repository import ApprovalRepository
 from backend.phase1.repositories.blocker_repository import BlockerRepository
+from backend.phase1.auth.operational_alerts import alert_duplicate_approval
 from backend.phase1.repositories.workflow_step_repository import WorkflowStepRepository
 
 _STATUS_INSPECTION_PENDING = "INSPECTION_PENDING"
@@ -64,8 +65,24 @@ class WorkflowGovernanceService:
         approved_by: UUID | None = None,
         approval_date: date | None = None,
         approval_notes: str | None = None,
+        expected_workflow_step_updated_at: datetime | None = None,
     ) -> Approval:
         workflow_step = self._require_step(workflow_step_id)
+
+        for existing in self._approval_repository.list(workflow_step_id=workflow_step_id):
+            if (
+                existing.approval_type == approval_type
+                and existing.status == _APPROVAL_STATUS_APPROVED
+            ):
+                alert_duplicate_approval(
+                    workflow_step_id=workflow_step_id,
+                    approval_type=approval_type,
+                )
+                msg = (
+                    f"Duplicate approval: workflow step {workflow_step_id} already has "
+                    f"approved record of type {approval_type}"
+                )
+                raise ValueError(msg)
 
         approval = Approval(
             workflow_step_id=workflow_step_id,
@@ -78,7 +95,11 @@ class WorkflowGovernanceService:
         created = self._approval_repository.create(approval)
 
         workflow_step.status = _STATUS_APPROVED
-        self._workflow_step_repository.update(workflow_step)
+        self._workflow_step_repository.update(
+            workflow_step,
+            expected_updated_at=expected_workflow_step_updated_at,
+            resource_type="WorkflowStep",
+        )
 
         return created
 
@@ -127,7 +148,11 @@ class WorkflowGovernanceService:
         if resolution_notes is not None:
             blocker.resolution_notes = resolution_notes
 
-        return self._blocker_repository.update(blocker)
+        updated = self._blocker_repository.update(
+            blocker,
+            resource_type="Blocker",
+        )
+        return updated
 
     def _require_step(self, workflow_step_id: UUID) -> WorkflowStep:
         workflow_step = self._workflow_step_repository.get_by_id(workflow_step_id)

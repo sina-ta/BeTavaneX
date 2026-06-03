@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 
 import EngineStatusPanel from "@/components/layout/EngineStatusPanel";
 import { useI18n } from "@/i18n/LanguageProvider";
-import { mainNavItems } from "@/lib/navigation";
+import { getMainNavItemsForRole } from "@/lib/navigation";
+import { canAccessOperationalConsole } from "@/lib/auth/role-policy";
 
 type Props = {
   collapsed: boolean;
@@ -19,16 +20,14 @@ export default function Sidebar({
   const pathname = usePathname();
   const { direction, t } = useI18n();
 
-  const mainItems = mainNavItems.filter(
-    (item) => item.section === "main"
-  );
-  const opsItems = mainNavItems.filter(
-    (item) => item.section === "operations"
-  );
+  const navItems = getMainNavItemsForRole();
+  const mainItems = navItems.filter((item) => item.section === "main");
+  const opsItems = navItems.filter((item) => item.section === "operations");
+  const showConsole = canAccessOperationalConsole();
 
   function renderNavGroup(
     labelKey: Parameters<typeof t>[0],
-    items: typeof mainNavItems
+    items: typeof navItems
   ) {
     return (
       <>
@@ -124,6 +123,34 @@ export default function Sidebar({
         <nav className="sidebar-menu flex-1">
           {renderNavGroup("nav_command_group", mainItems)}
           {renderNavGroup("nav_operations_group", opsItems)}
+
+          {showConsole && (
+            <Link
+              href="/dashboard/console"
+              className="sidebar-link"
+              style={{
+                background: pathname.startsWith("/dashboard/console")
+                  ? "#111c31"
+                  : "transparent",
+                border: pathname.startsWith("/dashboard/console")
+                  ? "1px solid #1e293b"
+                  : "1px solid transparent",
+                justifyContent: collapsed ? "center" : "space-between",
+              }}
+              title={collapsed ? "Operational Console" : undefined}
+            >
+              <div className="sidebar-link-left">
+                <span className="sidebar-nav-icon">▶</span>
+                {!collapsed && <span>Operational Console</span>}
+              </div>
+
+              {!collapsed && (
+                <span className="sidebar-chevron">
+                  {direction === "rtl" ? "‹" : "›"}
+                </span>
+              )}
+            </Link>
+          )}
         </nav>
 
         <EngineStatusPanel collapsed={collapsed} />

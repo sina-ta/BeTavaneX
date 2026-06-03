@@ -9,6 +9,8 @@ from backend.phase1.models.daily_report import DailyReport
 from backend.phase1.models.inspection import Inspection
 from backend.phase1.models.location import Location
 from backend.phase1.models.project import Project
+from backend.phase1.models.platform_user import PlatformUser
+from backend.phase1.models.project_membership import ProjectMembership
 from backend.phase1.models.punch_item import PunchItem
 from backend.phase1.models.wbs_item import WBSItem
 from backend.phase1.models.work_order import WorkOrder
@@ -26,6 +28,8 @@ __all__ = [
     "Inspection",
     "Location",
     "Project",
+    "PlatformUser",
+    "ProjectMembership",
     "PunchItem",
     "WBSItem",
     "WorkOrder",

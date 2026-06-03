@@ -1,5 +1,12 @@
-import { redirect } from "next/navigation";
+"use client";
 
-export default function WorkersLegacyRedirect() {
-  redirect("/dashboard/workforce");
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+export default function LegacyWorkersRedirect() {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/dashboard/overview");
+  }, [router]);
+  return null;
 }

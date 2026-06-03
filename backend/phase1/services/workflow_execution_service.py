@@ -13,6 +13,8 @@ from backend.phase1.models.work_order_workflow_step import WorkOrderWorkflowStep
 from backend.phase1.repositories.boq_mapping_repository import BOQMappingRepository
 from backend.phase1.repositories.daily_report_repository import DailyReportRepository
 from backend.phase1.repositories.work_order_repository import WorkOrderRepository
+from backend.phase1.auth.operational_alerts import alert_duplicate_assignment
+from backend.phase1.repositories.optimistic import assert_unchanged
 from backend.phase1.repositories.work_order_workflow_step_repository import (
     WorkOrderWorkflowStepRepository,
 )
@@ -49,6 +51,21 @@ class WorkflowExecutionService:
             msg = f"WorkflowStep not found: {workflow_step_id}"
             raise ValueError(msg)
 
+        existing = self._work_order_workflow_step_repository.get_by_work_order_and_step(
+            work_order_id,
+            workflow_step_id,
+        )
+        if existing is not None:
+            alert_duplicate_assignment(
+                work_order_id=work_order_id,
+                workflow_step_id=workflow_step_id,
+            )
+            msg = (
+                f"Duplicate assignment: work order {work_order_id} is already "
+                f"linked to workflow step {workflow_step_id}"
+            )
+            raise ValueError(msg)
+
         assignment = WorkOrderWorkflowStep(
             work_order_id=work_order_id,
             workflow_step_id=workflow_step_id,
@@ -76,6 +93,7 @@ class WorkflowExecutionService:
         work_order_id: UUID,
         report_date: date,
         *,
+        expected_work_order_updated_at: datetime | None = None,
         status: str = "DRAFT",
         summary: str | None = None,
         execution_notes: str | None = None,
@@ -89,9 +107,17 @@ class WorkflowExecutionService:
         reported_equipment: int | None = None,
         reported_material_entries: int | None = None,
     ) -> DailyReport:
-        if self._work_order_repository.get_by_id(work_order_id) is None:
+        work_order = self._work_order_repository.get_by_id(work_order_id)
+        if work_order is None:
             msg = f"WorkOrder not found: {work_order_id}"
             raise ValueError(msg)
+
+        assert_unchanged(
+            resource_type="WorkOrder",
+            resource_id=work_order_id,
+            stored_updated_at=work_order.updated_at,
+            expected_updated_at=expected_work_order_updated_at,
+        )
 
         report = DailyReport(
             work_order_id=work_order_id,

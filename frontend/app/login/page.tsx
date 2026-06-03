@@ -4,12 +4,39 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { setSessionActive } from "@/lib/auth/session";
+import { signIn } from "@/lib/api/phase1/auth";
 
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(
+    e: React.FormEvent<HTMLFormElement>
+  ) {
+    e.preventDefault();
+
+    if (!email || !password || submitting) {
+      return;
+    }
+
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      await signIn(email, password);
+      router.push("/dashboard/overview");
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Sign in failed"
+      );
+      setSubmitting(false);
+    }
+  }
 
   return (
     <main className="auth-page">
@@ -61,23 +88,16 @@ export default function Login() {
 
           <form
             className="flex flex-col gap-5"
-            onSubmit={(e) => {
-              e.preventDefault();
-
-              if (email && password) {
-                setSessionActive(true);
-                router.push("/dashboard/overview");
-              }
-            }}
+            onSubmit={handleSubmit}
           >
             <div className="input-group">
               <label className="input-label" htmlFor="email">
-                Email
+                Username
               </label>
               <input
                 id="email"
-                type="email"
-                placeholder="operator@betavanx.com"
+                type="text"
+                placeholder="admin"
                 className="input-base"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -98,8 +118,18 @@ export default function Login() {
               />
             </div>
 
-            <button type="submit" className="button-primary w-full">
-              Enter Command Center
+            {error && (
+              <p style={{ color: "#f87171", fontSize: 14 }}>
+                {error}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="button-primary w-full"
+              disabled={submitting}
+            >
+              {submitting ? "Signing in…" : "Enter Command Center"}
             </button>
           </form>
 

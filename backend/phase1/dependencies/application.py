@@ -21,6 +21,8 @@ from backend.phase1.dependencies.repositories import (
     get_work_order_repository,
     get_workflow_step_repository,
 )
+from backend.phase1.dependencies.auth import get_project_access_service
+from backend.phase1.auth.project_access import ProjectAccessService
 from backend.phase1.dependencies.services import (
     get_progress_service,
     get_runtime_query_service,
@@ -52,12 +54,14 @@ def get_runtime_use_cases(
     workflow_governance_service: WorkflowGovernanceService = Depends(
         get_workflow_governance_service,
     ),
+    project_access_service: ProjectAccessService = Depends(get_project_access_service),
 ) -> RuntimeUseCases:
     return RuntimeUseCases(
         progress_service,
         runtime_query_service,
         workflow_execution_service,
         workflow_governance_service,
+        project_access_service,
     )
 
 

@@ -28,16 +28,16 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Auth skeleton — enable when JWT/cookie auth is implemented:
-  // const token =
-  //   request.cookies.get("auth_token")?.value ??
-  //   request.headers.get("authorization")?.replace("Bearer ", "");
-  //
-  // if (!token) {
-  //   return NextResponse.redirect(
-  //     new URL("/login", request.url)
-  //   );
-  // }
+  // Phase 1 auth: the access token is mirrored into the `auth_token` cookie by
+  // the client on sign-in. Middleware cannot read localStorage, so the cookie
+  // is the server-visible signal. Unauthenticated users are sent to /login.
+  const token = request.cookies.get("auth_token")?.value;
+
+  if (!token) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
 
   return NextResponse.next();
 }

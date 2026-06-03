@@ -1,4 +1,10 @@
 import type { CommonMessageKey } from "@/i18n/config";
+import {
+  canAccessOperationalConsole,
+  canPlan,
+  canSubmitDailyReports,
+  getPhase1Role,
+} from "@/lib/auth/role-policy";
 
 export type NavItem = {
   labelKey: CommonMessageKey;
@@ -12,7 +18,7 @@ type EngineStatusItem = {
   status: "active";
 };
 
-export const mainNavItems: NavItem[] = [
+const ALL_NAV_ITEMS: NavItem[] = [
   {
     labelKey: "nav_overview",
     href: "/dashboard/overview",
@@ -21,29 +27,66 @@ export const mainNavItems: NavItem[] = [
   },
   {
     labelKey: "nav_daily_reports",
-    href: "/dashboard/daily-reports",
+    href: "/dashboard/console/execution",
     icon: "📄",
     section: "operations",
   },
   {
     labelKey: "nav_planning",
-    href: "/dashboard/planning",
+    href: "/dashboard/console",
     icon: "▦",
     section: "operations",
   },
   {
     labelKey: "nav_work_orders",
-    href: "/dashboard/daily-work-orders",
+    href: "/dashboard/console/execution",
     icon: "📋",
     section: "operations",
   },
-  {
-    labelKey: "nav_performance",
-    href: "/dashboard/performance",
-    icon: "📈",
-    section: "operations",
-  },
 ];
+
+export function getMainNavItemsForRole(): NavItem[] {
+  const role = getPhase1Role();
+  const items: NavItem[] = [
+    {
+      labelKey: "nav_overview",
+      href: "/dashboard/overview",
+      icon: "◫",
+      section: "main",
+    },
+  ];
+
+  if (canAccessOperationalConsole(role)) {
+    if (canPlan(role)) {
+      items.push({
+        labelKey: "nav_planning",
+        href: "/dashboard/console",
+        icon: "▦",
+        section: "operations",
+      });
+    }
+    if (canSubmitDailyReports(role) && !canPlan(role)) {
+      items.push({
+        labelKey: "nav_field_reports",
+        href: "/dashboard/console/execution?focus=report",
+        icon: "📄",
+        section: "operations",
+      });
+    } else if (canPlan(role) || canSubmitDailyReports(role)) {
+      items.push({
+        labelKey: "nav_execution",
+        href: "/dashboard/console/execution",
+        icon: "⚡",
+        section: "operations",
+      });
+    }
+  }
+
+  return items;
+}
+
+/** @deprecated Use getMainNavItemsForRole — kept for type compatibility */
+export const mainNavItems = ALL_NAV_ITEMS;
 
 export const engineStatusItems: EngineStatusItem[] = [
   { nameKey: "engine_validation", status: "active" as const },
@@ -54,13 +97,14 @@ export const engineStatusItems: EngineStatusItem[] = [
 export function getPageTitleFromPath(
   pathname: string
 ): CommonMessageKey {
-  const item = mainNavItems.find((nav) => nav.href === pathname);
+  const roleItems = getMainNavItemsForRole();
+  const item = roleItems.find((nav) => nav.href === pathname);
   if (item) return item.labelKey;
-  if (pathname.startsWith("/dashboard/workforce")) {
-    return "page_workforce_extension";
+  if (pathname.startsWith("/dashboard/console")) {
+    return "nav_planning";
   }
-  if (pathname.startsWith("/task/")) {
-    return "page_task_intelligence";
+  if (pathname.startsWith("/dashboard/activity-instances")) {
+    return "nav_overview";
   }
   return "app_name";
 }

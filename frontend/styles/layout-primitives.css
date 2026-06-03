@@ -143,3 +143,44 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Stage 26 — field/mobile operational ergonomics */
+.operational-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.operational-quick-actions__btn {
+  flex: 1 1 auto;
+  min-width: min(100%, 12rem);
+  text-align: center;
+  justify-content: center;
+}
+
+.operational-focus-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+@media (max-width: 768px) {
+  .button-primary,
+  .button-ghost,
+  .form-input,
+  select,
+  textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .operational-quick-actions__btn {
+    width: 100%;
+  }
+
+  .operational-focus-nav .button-primary,
+  .operational-focus-nav .button-ghost {
+    flex: 1 1 100%;
+  }
+}

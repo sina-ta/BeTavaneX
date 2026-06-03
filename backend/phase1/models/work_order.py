@@ -42,6 +42,11 @@ class WorkOrder(Base):
         ),
         Index("idx_work_orders_project_id", "project_id"),
         Index("idx_work_orders_planned_date", "planned_date"),
+        Index(
+            "idx_work_orders_project_planned_date",
+            "project_id",
+            "planned_date",
+        ),
         Index("idx_work_orders_status", "status"),
     )
 

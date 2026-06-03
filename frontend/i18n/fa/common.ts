@@ -7,6 +7,8 @@ export const faCommon: CommonMessages = {
   nav_operations_group: "عملیات",
   nav_overview: "دید کلی",
   nav_daily_reports: "گزارش های روزانه",
+  nav_field_reports: "گزارش میدانی",
+  nav_execution: "اجرا و تأیید",
   nav_planning: "برنامه ریزی",
   nav_work_orders: "دستورکارها",
   nav_performance: "عملکرد",

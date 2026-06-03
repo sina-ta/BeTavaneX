@@ -1,0 +1,73 @@
+name: Stage 25 CI — Controlled Pilot
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  pilot-offline:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: .
+      SKIP_STARTUP_VALIDATION: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install backend dependencies
+        run: pip install -r requirements.txt
+
+      - name: Stage 25 deployment + role smoke
+        run: python backend/scripts/stage25_deployment_validation.py
+
+  pilot-postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: betavanx_app
+          POSTGRES_PASSWORD: ci_secret
+          POSTGRES_DB: betavanx_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U betavanx_app -d betavanx_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PYTHONPATH: .
+      DATABASE_URL: postgresql://betavanx_app:ci_secret@localhost:5432/betavanx_ci
+      SKIP_STARTUP_VALIDATION: "false"
+      REQUIRE_ALEMBIC_HEAD: "false"
+      STAGE25_METRICS_PATH: data/stage25_metrics.json
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install backend dependencies
+        run: pip install -r requirements.txt
+
+      - name: Bootstrap schema and seed
+        run: |
+          python backend/scripts/phase1_init_schema.py
+          alembic -c backend/alembic.ini upgrade head
+          python backend/scripts/seed_platform_users.py
+
+      - name: Stage 25 controlled pilot simulation
+        run: python backend/scripts/stage25_controlled_pilot_simulation.py
+
+      - name: Stage 25 metrics summary
+        run: python backend/scripts/stage25_pilot_metrics.py

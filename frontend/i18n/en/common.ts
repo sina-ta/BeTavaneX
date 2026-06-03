@@ -5,6 +5,8 @@ export const enCommon = {
   nav_operations_group: "Operations",
   nav_overview: "Overview",
   nav_daily_reports: "Daily Reports",
+  nav_field_reports: "Field Reports",
+  nav_execution: "Execution",
   nav_planning: "Planning",
   nav_work_orders: "Work Orders",
   nav_performance: "Performance",

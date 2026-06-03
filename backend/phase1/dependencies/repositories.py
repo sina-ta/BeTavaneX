@@ -23,6 +23,9 @@ from backend.phase1.repositories.boq_mapping_repository import BOQMappingReposit
 from backend.phase1.repositories.daily_report_repository import DailyReportRepository
 from backend.phase1.repositories.inspection_repository import InspectionRepository
 from backend.phase1.repositories.location_repository import LocationRepository
+from backend.phase1.repositories.project_membership_repository import (
+    ProjectMembershipRepository,
+)
 from backend.phase1.repositories.project_repository import ProjectRepository
 from backend.phase1.repositories.punch_item_repository import PunchItemRepository
 from backend.phase1.repositories.wbs_item_repository import WBSItemRepository
@@ -37,6 +40,12 @@ def get_project_repository(
     session: Session = Depends(get_db),
 ) -> ProjectRepository:
     return ProjectRepository(session)
+
+
+def get_project_membership_repository(
+    session: Session = Depends(get_db),
+) -> ProjectMembershipRepository:
+    return ProjectMembershipRepository(session)
 
 
 def get_wbs_item_repository(

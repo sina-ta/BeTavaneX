@@ -24,9 +24,11 @@ class DailyReportCreate(BaseModel):
     reported_manpower: int | None = 0
     reported_equipment: int | None = 0
     reported_material_entries: int | None = 0
+    expected_work_order_updated_at: datetime | None = None
 
 
 class DailyReportUpdate(BaseModel):
+    expected_updated_at: datetime | None = None
     work_order_id: UUID | None = None
     report_date: date | None = None
     status: str | None = None

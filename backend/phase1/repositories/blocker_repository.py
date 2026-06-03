@@ -29,3 +29,14 @@ class BlockerRepository(BaseRepository[Blocker]):
         if limit is not None:
             statement = statement.limit(limit)
         return list(self._session.scalars(statement).all())
+
+    def list_for_workflow_step_ids(
+        self,
+        workflow_step_ids: list[UUID],
+    ) -> list[Blocker]:
+        if not workflow_step_ids:
+            return []
+        statement = select(Blocker).where(
+            Blocker.workflow_step_id.in_(workflow_step_ids),
+        )
+        return list(self._session.scalars(statement).all())

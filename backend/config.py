@@ -6,6 +6,8 @@ import os
 from dataclasses import dataclass
 from functools import lru_cache
 
+_DEFAULT_AUTH_SECRET = "dev-secret-change-me"
+
 
 def _load_dotenv() -> None:
     try:
@@ -18,6 +20,10 @@ def _load_dotenv() -> None:
 def _env_bool(name: str, default: str = "false") -> bool:
     value = os.getenv(name, default)
     return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _parse_cors_origins(raw: str) -> list[str]:
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
 
 
 def _build_database_url() -> str:
@@ -48,6 +54,13 @@ class Settings:
     app_env: str
     legacy_api_enabled: bool
     workforce_extension_enabled: bool
+    auth_secret: str
+    cors_origins: tuple[str, ...]
+    log_level: str
+    log_json: bool
+    slow_query_ms: int
+    db_pool_size: int
+    db_max_overflow: int
 
 
 @lru_cache
@@ -57,10 +70,46 @@ def get_settings() -> Settings:
     return Settings(
         database_url=_build_database_url(),
         db_echo=_env_bool("DB_ECHO", "false"),
-        app_env=os.getenv("APP_ENV", "development").strip(),
+        app_env=os.getenv("APP_ENV", "development").strip().lower(),
         legacy_api_enabled=_env_bool("LEGACY_API_ENABLED", "false"),
         workforce_extension_enabled=_env_bool(
             "BETAVANX_ENABLE_WORKFORCE_EXTENSION",
             "false",
         ),
+        auth_secret=os.getenv("BETAVANX_AUTH_SECRET", _DEFAULT_AUTH_SECRET).strip(),
+        cors_origins=tuple(
+            _parse_cors_origins(
+                os.getenv("BETAVANX_CORS_ORIGINS", "http://localhost:3000"),
+            ),
+        ),
+        log_level=os.getenv("LOG_LEVEL", "INFO").strip(),
+        log_json=_env_bool("LOG_JSON", "false"),
+        slow_query_ms=int(os.getenv("SLOW_QUERY_MS", "500")),
+        db_pool_size=int(os.getenv("DB_POOL_SIZE", "5")),
+        db_max_overflow=int(os.getenv("DB_MAX_OVERFLOW", "10")),
     )
+
+
+def validate_environment_settings() -> None:
+    """Fail fast when staging/production secrets are unsafe."""
+    settings = get_settings()
+
+    if settings.app_env in {"production", "staging"}:
+        if settings.auth_secret == _DEFAULT_AUTH_SECRET:
+            msg = (
+                "BETAVANX_AUTH_SECRET must be set to a non-default value "
+                f"when APP_ENV={settings.app_env}"
+            )
+            raise RuntimeError(msg)
+
+        if "change_me" in settings.database_url.lower():
+            msg = (
+                "DATABASE_URL appears to use a placeholder password "
+                f"for APP_ENV={settings.app_env}"
+            )
+            raise RuntimeError(msg)
+
+    if settings.app_env == "production" and _env_bool("SKIP_STARTUP_VALIDATION"):
+        raise RuntimeError(
+            "SKIP_STARTUP_VALIDATION must not be enabled in production",
+        )

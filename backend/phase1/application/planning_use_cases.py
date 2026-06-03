@@ -46,6 +46,13 @@ class PlanningUseCases:
         self._workflow_step_repository = workflow_step_repository
         self._work_order_repository = work_order_repository
 
+    def get_activity_instance_project_id(
+        self,
+        activity_instance_id: UUID,
+    ) -> UUID | None:
+        activity = self._activity_instance_repository.get_by_id(activity_instance_id)
+        return activity.project_id if activity is not None else None
+
     def create_project(
         self,
         code: str,

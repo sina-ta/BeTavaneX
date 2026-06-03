@@ -64,6 +64,7 @@ def get_progress_service(
 
 
 def get_runtime_query_service(
+    project_repository: ProjectRepository = Depends(get_project_repository),
     activity_instance_repository: ActivityInstanceRepository = Depends(
         get_activity_instance_repository,
     ),
@@ -81,6 +82,7 @@ def get_runtime_query_service(
     progress_service: ProgressService = Depends(get_progress_service),
 ) -> RuntimeQueryService:
     return RuntimeQueryService(
+        project_repository,
         activity_instance_repository,
         workflow_step_repository,
         work_order_repository,

@@ -1,0 +1,12 @@
+**/.git
+**/.cursor
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+frontend/.next
+**/.pytest_cache
+agent-transcripts

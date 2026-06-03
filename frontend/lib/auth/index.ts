@@ -2,6 +2,10 @@ export {
   getAuthToken,
   setAuthToken,
   clearAuthToken,
+  getAuthRole,
+  setAuthRole,
+  getAuthUsername,
+  setAuthUsername,
   isAuthenticated,
   setSessionActive,
   clearSession,
@@ -20,3 +24,14 @@ export type {
   LoginCredentials,
   AuthTokens,
 } from "./auth-client";
+
+export {
+  getPhase1Role,
+  canPlan,
+  canAssignWorkOrders,
+  canApproveSteps,
+  canSubmitDailyReports,
+  isReadOnlyInvestor,
+  canAccessOperationalConsole,
+  canReadRuntime,
+} from "./role-policy";

@@ -13,6 +13,7 @@ class WorkflowStepApprovalCreate(BaseModel):
     approved_by: UUID | None = None
     approval_date: date | None = None
     approval_notes: str | None = None
+    expected_workflow_step_updated_at: datetime | None = None
 
 
 class ApprovalRead(BaseModel):

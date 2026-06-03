@@ -8,8 +8,14 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, status
 
+from backend.phase1.auth.auth import User
+from backend.phase1.auth.dependencies import get_current_active_user
+from backend.phase1.auth.operational_audit import log_operational_action
+from backend.phase1.auth.project_access import ProjectAccessService
+from backend.phase1.auth.role_policy import require_planning_actor
 from backend.phase1.application.planning_use_cases import PlanningUseCases
 from backend.phase1.dependencies.application import get_planning_use_cases
+from backend.phase1.dependencies.auth import get_project_access_service
 from backend.phase1.schemas.activity_instance_schema import (
     ActivityInstanceCreate,
     ActivityInstanceRead,
@@ -23,15 +29,21 @@ from backend.phase1.schemas.workflow_step_schema import (
     WorkflowStepRead,
 )
 
-router = APIRouter(prefix="/planning", tags=["planning"])
+router = APIRouter(
+    prefix="/planning",
+    tags=["planning"],
+    dependencies=[Depends(require_planning_actor)],
+)
 
 
 @router.post("/projects", response_model=ProjectRead, status_code=status.HTTP_201_CREATED)
 def create_project(
     payload: ProjectCreate,
     planning: PlanningUseCases = Depends(get_planning_use_cases),
+    current_user: User = Depends(get_current_active_user),
+    project_access: ProjectAccessService = Depends(get_project_access_service),
 ) -> ProjectRead:
-    return planning.create_project(
+    project = planning.create_project(
         code=payload.code,
         name=payload.name,
         description=payload.description,
@@ -39,14 +51,27 @@ def create_project(
         planned_start=payload.planned_start,
         planned_finish=payload.planned_finish,
     )
+    project_access.register_new_project(project.id, current_user)
+    log_operational_action(
+        current_user,
+        "create_project",
+        mutation_category="planning",
+        project_id=project.id,
+        resource_type="project",
+        resource_id=project.id,
+    )
+    return project
 
 
 @router.post("/wbs-items", response_model=WBSItemRead, status_code=status.HTTP_201_CREATED)
 def create_wbs_item(
     payload: WBSItemCreate,
     planning: PlanningUseCases = Depends(get_planning_use_cases),
+    current_user: User = Depends(get_current_active_user),
+    project_access: ProjectAccessService = Depends(get_project_access_service),
 ) -> WBSItemRead:
-    return planning.create_wbs_item(
+    project_access.ensure_project_access(current_user, payload.project_id)
+    item = planning.create_wbs_item(
         payload.project_id,
         code=payload.code,
         name=payload.name,
@@ -55,14 +80,26 @@ def create_wbs_item(
         description=payload.description,
         status=payload.status,
     )
+    log_operational_action(
+        current_user,
+        "create_wbs_item",
+        mutation_category="planning",
+        project_id=payload.project_id,
+        resource_type="wbs_item",
+        resource_id=item.id,
+    )
+    return item
 
 
 @router.post("/locations", response_model=LocationRead, status_code=status.HTTP_201_CREATED)
 def create_location(
     payload: LocationCreate,
     planning: PlanningUseCases = Depends(get_planning_use_cases),
+    current_user: User = Depends(get_current_active_user),
+    project_access: ProjectAccessService = Depends(get_project_access_service),
 ) -> LocationRead:
-    return planning.create_location(
+    project_access.ensure_project_access(current_user, payload.project_id)
+    location = planning.create_location(
         payload.project_id,
         code=payload.code,
         name=payload.name,
@@ -71,6 +108,15 @@ def create_location(
         description=payload.description,
         status=payload.status,
     )
+    log_operational_action(
+        current_user,
+        "create_location",
+        mutation_category="planning",
+        project_id=payload.project_id,
+        resource_type="location",
+        resource_id=location.id,
+    )
+    return location
 
 
 @router.post(
@@ -81,8 +127,11 @@ def create_location(
 def create_activity_instance(
     payload: ActivityInstanceCreate,
     planning: PlanningUseCases = Depends(get_planning_use_cases),
+    current_user: User = Depends(get_current_active_user),
+    project_access: ProjectAccessService = Depends(get_project_access_service),
 ) -> ActivityInstanceRead:
-    return planning.create_activity_instance(
+    project_access.ensure_project_access(current_user, payload.project_id)
+    instance = planning.create_activity_instance(
         payload.project_id,
         payload.wbs_item_id,
         payload.location_id,
@@ -93,6 +142,15 @@ def create_activity_instance(
         planned_duration_days=payload.planned_duration_days,
         status=payload.status,
     )
+    log_operational_action(
+        current_user,
+        "create_activity_instance",
+        mutation_category="planning",
+        project_id=payload.project_id,
+        resource_type="activity_instance",
+        resource_id=instance.id,
+    )
+    return instance
 
 
 @router.post(
@@ -103,8 +161,15 @@ def create_activity_instance(
 def create_workflow_step(
     payload: WorkflowStepCreate,
     planning: PlanningUseCases = Depends(get_planning_use_cases),
+    current_user: User = Depends(get_current_active_user),
+    project_access: ProjectAccessService = Depends(get_project_access_service),
 ) -> WorkflowStepRead:
-    return planning.create_workflow_step(
+    activity_project_id = planning.get_activity_instance_project_id(
+        payload.activity_instance_id,
+    )
+    if activity_project_id is not None:
+        project_access.ensure_project_access(current_user, activity_project_id)
+    step = planning.create_workflow_step(
         payload.activity_instance_id,
         code=payload.code,
         name=payload.name,
@@ -118,14 +183,26 @@ def create_workflow_step(
         actual_start=payload.actual_start,
         actual_finish=payload.actual_finish,
     )
+    log_operational_action(
+        current_user,
+        "create_workflow_step",
+        mutation_category="planning",
+        project_id=activity_project_id,
+        resource_type="workflow_step",
+        resource_id=step.id,
+    )
+    return step
 
 
 @router.post("/work-orders", response_model=WorkOrderRead, status_code=status.HTTP_201_CREATED)
 def create_work_order(
     payload: WorkOrderCreate,
     planning: PlanningUseCases = Depends(get_planning_use_cases),
+    current_user: User = Depends(get_current_active_user),
+    project_access: ProjectAccessService = Depends(get_project_access_service),
 ) -> WorkOrderRead:
-    return planning.create_work_order(
+    project_access.ensure_project_access(current_user, payload.project_id)
+    work_order = planning.create_work_order(
         payload.project_id,
         work_order_number=payload.work_order_number,
         title=payload.title,
@@ -134,3 +211,12 @@ def create_work_order(
         status=payload.status,
         created_by=payload.created_by,
     )
+    log_operational_action(
+        current_user,
+        "create_work_order",
+        mutation_category="planning",
+        project_id=payload.project_id,
+        resource_type="work_order",
+        resource_id=work_order.id,
+    )
+    return work_order

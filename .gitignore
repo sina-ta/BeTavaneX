@@ -1,0 +1,11 @@
+# Pilot operational capture (Stage 25)
+data/pilot_feedback.jsonl
+data/operational_usage.jsonl
+data/operational_audit.jsonl
+data/stage25_metrics.json
+
+# Python
+__pycache__/
+*.pyc
+.env
+.env.docker

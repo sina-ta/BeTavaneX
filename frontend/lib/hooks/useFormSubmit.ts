@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { ApiError } from "@/lib/api/client";
+import { formatOperationalApiError } from "@/lib/operational/api-errors";
 
 export type FormSubmitStatus =
   | "idle"
@@ -64,14 +64,7 @@ export function useFormSubmit<TInput, TResult>({
         setSuccessMessage(successText);
         onSuccess?.(result);
       } catch (error) {
-        const message =
-          error instanceof ApiError
-            ? error.message
-            : error instanceof Error
-              ? error.message
-              : "Submission failed";
-
-        setApiError(message);
+        setApiError(formatOperationalApiError(error));
         setStatus("error");
       }
     },
