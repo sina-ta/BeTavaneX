@@ -13,14 +13,14 @@ const MATURITY_STYLE: Record<string, string> = {
   DEVELOPING: "#3b82f6",
   EMERGING: "#eab308",
   STRAINED: "#ef4444",
-  UNKNOWN: "#94a3b8",
+  UNKNOWN: "var(--status-unknown)",
 };
 
 const CAPACITY_STYLE: Record<string, string> = {
   BALANCED: "#22c55e",
   PRESSURED: "#eab308",
   SATURATED: "#ef4444",
-  UNKNOWN: "#94a3b8",
+  UNKNOWN: "var(--status-unknown)",
 };
 
 export default function OrganizationalIntelligencePanel() {
@@ -58,7 +58,7 @@ function OrgBody({ data }: { data: OrganizationalIntelligence }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="page-subtitle">
-        <span style={{ color: matColor, fontWeight: 600, marginRight: 8 }}>
+        <span style={{ color: matColor, fontWeight: 600, marginInlineEnd: 8 }}>
           Maturity {data.maturity_band}
         </span>
         {data.maturity_score !== null && <> ({data.maturity_score}/100) · </>}
@@ -79,7 +79,7 @@ function OrgBody({ data }: { data: OrganizationalIntelligence }) {
 
       {data.organizational_attention.length > 0 && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Organizational attention</strong>
+          <strong className="text-emphasis">Organizational attention</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {data.organizational_attention.map((line) => (
               <li key={line} className="planning-list-item page-subtitle">

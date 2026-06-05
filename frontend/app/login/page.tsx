@@ -6,6 +6,17 @@ import { useRouter } from "next/navigation";
 
 import { signIn } from "@/lib/api/phase1/auth";
 
+function resolvePostLoginPath(): string {
+  if (typeof window === "undefined") {
+    return "/dashboard/overview";
+  }
+  const redirect = new URLSearchParams(window.location.search).get("redirect");
+  if (redirect && redirect.startsWith("/") && !redirect.startsWith("//")) {
+    return redirect;
+  }
+  return "/dashboard/overview";
+}
+
 export default function Login() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -27,7 +38,8 @@ export default function Login() {
 
     try {
       await signIn(email, password);
-      router.push("/dashboard/overview");
+      router.push(resolvePostLoginPath());
+      router.refresh();
     } catch (err) {
       setError(
         err instanceof Error
@@ -57,7 +69,7 @@ export default function Login() {
           BetavanX
         </h2>
 
-        <p style={{ color: "#94a3b8", fontSize: 17, lineHeight: 1.7, maxWidth: 400 }}>
+        <p className="page-subtitle" style={{ fontSize: 17, lineHeight: 1.7, maxWidth: 400 }}>
           Enterprise construction intelligence command center for
           daily operations, project control, and investor visibility.
         </p>
@@ -119,7 +131,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <p style={{ color: "#f87171", fontSize: 14 }}>
+              <p style={{ color: "var(--text-error)", fontSize: 14 }}>
                 {error}
               </p>
             )}
@@ -133,8 +145,8 @@ export default function Login() {
             </button>
           </form>
 
-          <p style={{ marginTop: 24, fontSize: 14, color: "#64748b" }}>
-            <Link href="/" className="text-blue-400 hover:underline">
+          <p className="page-subtitle" style={{ marginTop: 24, fontSize: 14 }}>
+            <Link href="/" className="text-link">
               ← Back to home
             </Link>
           </p>

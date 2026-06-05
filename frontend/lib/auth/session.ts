@@ -107,6 +107,7 @@ export function clearSession(): void {
   if (typeof window !== "undefined") {
     localStorage.removeItem(AUTH_ROLE_KEY);
     localStorage.removeItem(AUTH_USERNAME_KEY);
+    localStorage.removeItem("betavanx.active_role_override");
   }
 }
 

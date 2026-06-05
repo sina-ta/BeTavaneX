@@ -10,19 +10,7 @@ export default function FormError({
   }
 
   return (
-    <section
-      role="alert"
-      className="
-        rounded-xl
-        border
-        border-red-500/30
-        bg-red-500/10
-        px-4
-        py-3
-        text-sm
-        text-red-300
-      "
-    >
+    <section role="alert" className="form-alert form-alert--error">
       {message}
     </section>
   );

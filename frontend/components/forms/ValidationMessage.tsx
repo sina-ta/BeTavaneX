@@ -9,9 +9,5 @@ export default function ValidationMessage({
     return null;
   }
 
-  return (
-    <p className="mt-1 text-xs text-red-400">
-      {message}
-    </p>
-  );
+  return <p className="form-validation-message">{message}</p>;
 }

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from fastapi import Depends
 
+from backend.phase1.dependencies.events import get_event_recording_service
 from backend.phase1.dependencies.repositories import (
     get_activity_instance_repository,
     get_approval_repository,
@@ -18,11 +19,14 @@ from backend.phase1.dependencies.repositories import (
     get_boq_mapping_repository,
     get_daily_report_repository,
     get_inspection_repository,
+    get_operational_dependency_edge_repository,
+    get_operational_event_repository,
     get_project_repository,
     get_work_order_repository,
     get_work_order_workflow_step_repository,
     get_workflow_step_repository,
 )
+from backend.phase1.events.event_recording_service import EventRecordingService
 from backend.phase1.repositories.activity_instance_repository import (
     ActivityInstanceRepository,
 )
@@ -33,10 +37,20 @@ from backend.phase1.repositories.daily_report_repository import DailyReportRepos
 from backend.phase1.repositories.inspection_repository import InspectionRepository
 from backend.phase1.repositories.project_repository import ProjectRepository
 from backend.phase1.repositories.work_order_repository import WorkOrderRepository
+from backend.phase1.repositories.operational_dependency_edge_repository import (
+    OperationalDependencyEdgeRepository,
+)
+from backend.phase1.repositories.operational_event_repository import (
+    OperationalEventRepository,
+)
 from backend.phase1.repositories.work_order_workflow_step_repository import (
     WorkOrderWorkflowStepRepository,
 )
 from backend.phase1.repositories.workflow_step_repository import WorkflowStepRepository
+from backend.phase1.services.dependency_edge_service import DependencyEdgeService
+from backend.phase1.services.readiness_derivation_service import (
+    ReadinessDerivationService,
+)
 from backend.phase1.services.progress_service import ProgressService
 from backend.phase1.services.runtime_query_service import RuntimeQueryService
 from backend.phase1.services.workflow_execution_service import WorkflowExecutionService
@@ -117,15 +131,77 @@ def get_workflow_execution_service(
     )
 
 
+def get_readiness_derivation_service(
+    workflow_step_repository: WorkflowStepRepository = Depends(
+        get_workflow_step_repository,
+    ),
+    activity_instance_repository: ActivityInstanceRepository = Depends(
+        get_activity_instance_repository,
+    ),
+    blocker_repository: BlockerRepository = Depends(get_blocker_repository),
+    edge_repository: OperationalDependencyEdgeRepository = Depends(
+        get_operational_dependency_edge_repository,
+    ),
+    event_recorder: EventRecordingService = Depends(get_event_recording_service),
+    event_repository: OperationalEventRepository = Depends(
+        get_operational_event_repository,
+    ),
+) -> ReadinessDerivationService:
+    return ReadinessDerivationService(
+        workflow_step_repository,
+        activity_instance_repository,
+        blocker_repository,
+        edge_repository,
+        event_recorder,
+        event_repository,
+    )
+
+
 def get_workflow_governance_service(
     workflow_step_repository: WorkflowStepRepository = Depends(
         get_workflow_step_repository,
     ),
     approval_repository: ApprovalRepository = Depends(get_approval_repository),
     blocker_repository: BlockerRepository = Depends(get_blocker_repository),
+    event_recorder: EventRecordingService = Depends(get_event_recording_service),
+    readiness_service: ReadinessDerivationService = Depends(
+        get_readiness_derivation_service,
+    ),
 ) -> WorkflowGovernanceService:
     return WorkflowGovernanceService(
         workflow_step_repository,
         approval_repository,
         blocker_repository,
+        event_recorder,
+        readiness_service,
+    )
+
+
+def get_dependency_edge_service(
+    edge_repository: OperationalDependencyEdgeRepository = Depends(
+        get_operational_dependency_edge_repository,
+    ),
+    workflow_step_repository: WorkflowStepRepository = Depends(
+        get_workflow_step_repository,
+    ),
+    activity_instance_repository: ActivityInstanceRepository = Depends(
+        get_activity_instance_repository,
+    ),
+    work_order_repository: WorkOrderRepository = Depends(get_work_order_repository),
+    event_recorder: EventRecordingService = Depends(get_event_recording_service),
+    event_repository: OperationalEventRepository = Depends(
+        get_operational_event_repository,
+    ),
+    readiness_service: ReadinessDerivationService = Depends(
+        get_readiness_derivation_service,
+    ),
+) -> DependencyEdgeService:
+    return DependencyEdgeService(
+        edge_repository,
+        workflow_step_repository,
+        activity_instance_repository,
+        work_order_repository,
+        event_recorder,
+        event_repository,
+        readiness_service,
     )

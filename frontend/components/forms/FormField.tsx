@@ -12,10 +12,8 @@ export default function FormField({
   error,
 }: Props) {
   return (
-    <section className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-gray-400">
-        {label}
-      </label>
+    <section className="form-field">
+      <label className="input-label">{label}</label>
 
       {children}
 

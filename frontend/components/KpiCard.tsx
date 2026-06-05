@@ -7,6 +7,8 @@ import {
 } from "@/lib/operational/severity";
 import type { SeverityLevel } from "@/lib/operational/severity";
 
+type KpiIconTone = "purple" | "blue" | "green" | "orange";
+
 type Props = {
   title: string;
   value: string | number;
@@ -15,6 +17,8 @@ type Props = {
   progress?: number;
   progressSeverity?: string | SeverityLevel;
   operationalLabel?: string;
+  icon?: string;
+  iconTone?: KpiIconTone;
 };
 
 export default function KpiCard({
@@ -25,13 +29,22 @@ export default function KpiCard({
   progress,
   progressSeverity,
   operationalLabel,
+  icon,
+  iconTone = "blue",
 }: Props) {
   const showMeta =
     progressSeverity !== undefined || footer || trend;
 
   return (
     <section className="kpi-card">
-      <span className="kpi-title">{title}</span>
+      <div className="kpi-card-top">
+        <span className="kpi-title">{title}</span>
+        {icon && (
+          <span className={`kpi-icon kpi-icon--${iconTone}`} aria-hidden>
+            {icon}
+          </span>
+        )}
+      </div>
       <span className="kpi-value">{value}</span>
 
       {progress !== undefined && (

@@ -11,6 +11,7 @@ from backend.phase1.models.workflow_step import WorkflowStep
 from backend.phase1.repositories.approval_repository import ApprovalRepository
 from backend.phase1.repositories.blocker_repository import BlockerRepository
 from backend.phase1.auth.operational_alerts import alert_duplicate_approval
+from backend.phase1.events.event_recording_service import EventRecordingService
 from backend.phase1.repositories.workflow_step_repository import WorkflowStepRepository
 
 _STATUS_INSPECTION_PENDING = "INSPECTION_PENDING"
@@ -31,10 +32,16 @@ class WorkflowGovernanceService:
         workflow_step_repository: WorkflowStepRepository,
         approval_repository: ApprovalRepository,
         blocker_repository: BlockerRepository,
+        event_recorder: EventRecordingService | None = None,
+        readiness_service: object | None = None,
     ) -> None:
         self._workflow_step_repository = workflow_step_repository
         self._approval_repository = approval_repository
         self._blocker_repository = blocker_repository
+        # Optional: when wired, blocker lifecycle is mirrored to the event ledger
+        # in the same transaction. Absent (e.g. in unit tests) → no-op.
+        self._event_recorder = event_recorder
+        self._readiness_service = readiness_service
 
     def mark_inspection_passed(self, workflow_step_id: UUID) -> WorkflowStep:
         workflow_step = self._require_step(workflow_step_id)
@@ -129,7 +136,26 @@ class WorkflowGovernanceService:
             reported_by=reported_by,
             root_cause=root_cause,
         )
-        return self._blocker_repository.create(blocker)
+        created = self._blocker_repository.create(blocker)
+
+        event = None
+        if self._event_recorder is not None:
+            event = self._event_recorder.record_blocker_registered(
+                blocker_id=created.id,
+                workflow_step_id=workflow_step_id,
+                blocker_type=blocker_type,
+                severity=severity,
+                actor=str(reported_by) if reported_by is not None else None,
+            )
+
+        self._refresh_readiness(
+            workflow_step_id,
+            trigger="blocker_registered",
+            actor=str(reported_by) if reported_by is not None else None,
+            causality_reference=event.event_id if event is not None else None,
+        )
+
+        return created
 
     def resolve_blocker(
         self,
@@ -152,7 +178,43 @@ class WorkflowGovernanceService:
             blocker,
             resource_type="Blocker",
         )
+
+        event = None
+        if self._event_recorder is not None:
+            event = self._event_recorder.record_blocker_resolved(
+                blocker_id=updated.id,
+                workflow_step_id=updated.workflow_step_id,
+                actor=None,
+            )
+
+        self._refresh_readiness(
+            updated.workflow_step_id,
+            trigger="blocker_resolved",
+            actor=None,
+            causality_reference=event.event_id if event is not None else None,
+        )
+
         return updated
+
+    def _refresh_readiness(
+        self,
+        workflow_step_id: UUID,
+        *,
+        trigger: str,
+        actor: str | None,
+        causality_reference: UUID | None,
+    ) -> None:
+        if self._readiness_service is None:
+            return
+        refresh = getattr(self._readiness_service, "refresh_for_workflow_step", None)
+        if refresh is None:
+            return
+        refresh(
+            workflow_step_id,
+            actor=actor,
+            trigger=trigger,
+            causality_reference=causality_reference,
+        )
 
     def _require_step(self, workflow_step_id: UUID) -> WorkflowStep:
         workflow_step = self._workflow_step_repository.get_by_id(workflow_step_id)

@@ -32,13 +32,16 @@ print("[entrypoint] PostgreSQL wait timed out.", file=sys.stderr)
 sys.exit(1)
 PY
 
-if [[ "${RUN_SCHEMA_BOOTSTRAP:-true}" == "true" ]]; then
-  echo "[entrypoint] Ensuring Phase 1 schema..."
+# Schema: Alembic only (do not run phase1_init_schema.py here — it duplicates
+# tables already created by migration 20260603_0000 / 0001 / 0003).
+if [[ "${RUN_SCHEMA_BOOTSTRAP:-false}" == "true" ]]; then
+  echo "[entrypoint] WARNING: RUN_SCHEMA_BOOTSTRAP=true is deprecated in Docker."
+  echo "[entrypoint] Running manual create_all (phase1_init_schema.py)..."
   python backend/scripts/phase1_init_schema.py
 fi
 
 if [[ "${RUN_ALEMBIC_UPGRADE:-true}" == "true" ]]; then
-  echo "[entrypoint] Applying Alembic migrations..."
+  echo "[entrypoint] Applying Alembic migrations (single schema source)..."
   alembic -c backend/alembic.ini upgrade head
 fi
 

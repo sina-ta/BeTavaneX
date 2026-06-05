@@ -55,7 +55,7 @@ export default function ConsoleActivityPage() {
         <CompactCard title="No project selected">
           <p className="page-subtitle">
             Go to{" "}
-            <Link href="/dashboard/console" className="text-blue-400 hover:underline">
+            <Link href="/dashboard/console" className="text-link">
               Planning Bootstrap
             </Link>{" "}
             and select or create a project first.
@@ -76,7 +76,7 @@ export default function ConsoleActivityPage() {
             Next:{" "}
             <Link
               href="/dashboard/console/execution?focus=assign"
-              className="text-blue-400 hover:underline"
+              className="text-link"
             >
               Assign work orders & submit reports
             </Link>
@@ -393,7 +393,7 @@ function ActivityRegistry({ projectId }: { projectId: string }) {
                 </strong>
                 <Link
                   href={`/dashboard/activity-instances/${activity.id}`}
-                  className="text-blue-400 text-xs font-medium hover:underline"
+                  className="text-link text-xs font-medium"
                 >
                   Runtime view →
                 </Link>

@@ -30,9 +30,21 @@ def upgrade() -> None:
             nullable=False,
         ),
         sa.PrimaryKeyConstraint("username"),
+        if_not_exists=True,
     )
-    op.create_index("idx_platform_users_username", "platform_users", ["username"], unique=True)
-    op.create_index("idx_platform_users_role", "platform_users", ["role"])
+    op.create_index(
+        "idx_platform_users_username",
+        "platform_users",
+        ["username"],
+        unique=True,
+        if_not_exists=True,
+    )
+    op.create_index(
+        "idx_platform_users_role",
+        "platform_users",
+        ["role"],
+        if_not_exists=True,
+    )
 
 
 def downgrade() -> None:

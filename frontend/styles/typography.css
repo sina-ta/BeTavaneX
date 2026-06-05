@@ -1,46 +1,331 @@
-body {
+/**
+ * BetavanX typography — Persian-first, locale-aware.
+ * Vazirmatn (fa) · Geist (en). Spacing/colors unchanged.
+ */
 
-  color: var(--text-primary);
+/* ------------------------------------------------------------------ */
+/* Font stacks (loaded in app/layout.tsx)                               */
+/* ------------------------------------------------------------------ */
 
-  background: var(--bg-primary);
-
-  font-family:
-    Inter,
-    sans-serif;
+:root {
+  --font-sans-fa: var(--font-vazirmatn), "Vazirmatn", "IRANSansX", Tahoma, sans-serif;
+  --font-sans-en: var(--font-geist-sans), "Geist", "Segoe UI", system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-active: var(--font-sans-fa);
 }
+
+/* ------------------------------------------------------------------ */
+/* Persian-first defaults (defaultLocale = fa)                          */
+/* ------------------------------------------------------------------ */
+
+:root,
+html[data-locale="fa"] {
+  --font-active: var(--font-sans-fa);
+
+  /* Line rhythm */
+  --line-height-body: 1.8;
+  --line-height-compact: 1.6;
+  --line-height-tight: 1.45;
+  --line-height-metric: 1.35;
+
+  /* Weights — no ultra-thin Persian (minimum 500 for UI text) */
+  --font-weight-normal: 500;
+  --font-weight-medium: 600;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Scale — slightly larger for Persian readability in dense UI */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 21px;
+  --font-page-title: 23px;
+  --font-section-title: 15px;
+  --font-metric: 28px;
+  --font-metric-sm: 23px;
+
+  /* Tracking — avoid Latin-style tight/uppercase treatment */
+  --letter-spacing-label: 0.02em;
+  --letter-spacing-tight: 0;
+  --letter-spacing-uppercase: 0.02em;
+  --type-transform-label: none;
+
+  /* Persian script tuning */
+  --font-feature-body: "kern", "liga", "calt";
+  --font-feature-numeric: "tnum", "lnum";
+}
+
+/* ------------------------------------------------------------------ */
+/* English locale overrides                                             */
+/* ------------------------------------------------------------------ */
+
+html[data-locale="en"] {
+  --font-active: var(--font-sans-en);
+
+  --line-height-body: 1.55;
+  --line-height-compact: 1.45;
+  --line-height-tight: 1.3;
+  --line-height-metric: 1.15;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-md: 14px;
+  --font-size-lg: 15px;
+  --font-size-xl: 17px;
+  --font-size-2xl: 20px;
+  --font-page-title: 22px;
+  --font-section-title: 14px;
+  --font-metric: 28px;
+  --font-metric-sm: 22px;
+
+  --letter-spacing-label: 0.04em;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-uppercase: 0.06em;
+  --type-transform-label: uppercase;
+
+  --font-feature-body: "kern", "liga";
+  --font-feature-numeric: "tnum", "lnum";
+}
+
+/* ------------------------------------------------------------------ */
+/* Document baseline                                                    */
+/* ------------------------------------------------------------------ */
+
+html {
+  font-family: var(--font-active);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-body);
+  font-feature-settings: var(--font-feature-body);
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  font-feature-settings: inherit;
+}
+
+/* ------------------------------------------------------------------ */
+/* Dense operational UI (compact line-height)                           */
+/* ------------------------------------------------------------------ */
+
+.sidebar-root,
+.sidebar-link,
+.sidebar-section-label,
+.sidebar-footer,
+.engine-status-panel,
+.engine-status-row,
+.topbar,
+.topbar-breadcrumb,
+.topbar-title,
+.topbar-search,
+.topbar-chip,
+.topbar-user-name,
+.language-switcher-btn,
+.slice-nav__link,
+.compact-card,
+.compact-card__title,
+.compact-card__body,
+.section-card,
+.section-card-title,
+.kpi-card,
+.kpi-title,
+.kpi-card-meta,
+.table-base,
+.table-head-cell,
+.table-cell,
+.form-input,
+.input-base,
+.input-label,
+.button-primary,
+.button-ghost,
+.button-submit,
+.badge-base,
+.form-alert,
+.form-field label,
+.page-eyebrow,
+.section-title,
+.planning-template-card,
+.planning-list-item,
+.planning-summary-label,
+.engine-status-title {
+  line-height: var(--line-height-compact);
+}
+
+/* ------------------------------------------------------------------ */
+/* Prose / explanatory text (body line-height)                          */
+/* ------------------------------------------------------------------ */
+
+.page-subtitle,
+.page-header-block,
+.auth-card p,
+.landing-subtitle,
+.panel-placeholder,
+.planning-empty,
+.task-recommendation-detail,
+.task-recommendation-action,
+.task-recommendation-explanation,
+.ai-insight-panel p {
+  line-height: var(--line-height-body);
+  font-weight: var(--font-weight-normal);
+}
+
+/* ------------------------------------------------------------------ */
+/* Hierarchy                                                            */
+/* ------------------------------------------------------------------ */
 
 .page-title {
-
-  font-size: 42px;
-
-  font-weight: 800;
-
-  color: var(--text-primary);
+  font-size: var(--font-page-title);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
+.page-eyebrow,
+.kpi-title,
+.table-head-cell,
+.sidebar-section-label,
+.engine-status-title,
+.planning-summary-label,
+.planning-phase-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-uppercase);
+  text-transform: var(--type-transform-label);
+}
+
+.topbar-title {
+  font-weight: var(--font-weight-semibold);
+}
+
+.sidebar-link {
+  font-weight: var(--font-weight-medium);
+}
+
+.sidebar-link.is-active {
+  font-weight: var(--font-weight-bold);
+}
+
+.compact-card__title,
+.section-card-title,
 .section-title {
-
-  font-size: 28px;
-
-  font-weight: 700;
-
-  color: var(--text-primary);
+  font-size: var(--font-section-title);
+  font-weight: var(--font-weight-semibold);
 }
 
-.card-title {
+.kpi-value {
+  font-size: var(--font-metric);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-metric);
+}
 
-  font-size: 18px;
-
-  font-weight: 600;
-
+.input-label,
+.form-field label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   color: var(--text-secondary);
 }
 
-.card-value {
+/* ------------------------------------------------------------------ */
+/* Numerals (KPIs, tables, inputs)                                     */
+/* ------------------------------------------------------------------ */
 
-  font-size: 42px;
+.kpi-value,
+.table-cell,
+.table-head-cell,
+.progress-bar-label,
+.topbar-notification-badge,
+input,
+select,
+textarea,
+.type-numeric {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: var(--font-feature-numeric), var(--font-feature-body);
+}
 
-  font-weight: 800;
+/* ------------------------------------------------------------------ */
+/* Forms & validation panels                                            */
+/* ------------------------------------------------------------------ */
 
-  color: var(--text-primary);
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-field label {
+  display: block;
+}
+
+.form-alert {
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-compact);
+}
+
+.form-alert--error {
+  border: 1px solid #fecaca;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.form-alert--success {
+  border: 1px solid #bbf7d0;
+  background: #dcfce7;
+  color: #166534;
+}
+
+.form-validation-message {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-compact);
+  color: var(--text-error);
+}
+
+/* ------------------------------------------------------------------ */
+/* Badges & chips                                                       */
+/* ------------------------------------------------------------------ */
+
+.badge-base,
+.topbar-chip,
+.planning-chip {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-compact);
+}
+
+/* ------------------------------------------------------------------ */
+/* Modals / details (native disclosure panels)                          */
+/* ------------------------------------------------------------------ */
+
+details.compact-card summary,
+.task-recommendation-toggle {
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-compact);
+}
+
+/* ------------------------------------------------------------------ */
+/* English-only refinements                                             */
+/* ------------------------------------------------------------------ */
+
+html[data-locale="en"] .page-title {
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+html[data-locale="fa"] .topbar-search::placeholder,
+html[data-locale="fa"] .form-input::placeholder {
+  font-weight: var(--font-weight-normal);
+  opacity: 0.85;
 }

@@ -13,7 +13,7 @@ const PORTFOLIO_STYLE: Record<string, string> = {
   STABLE: "#3b82f6",
   CAUTION: "#eab308",
   CRITICAL: "#ef4444",
-  UNKNOWN: "#94a3b8",
+  UNKNOWN: "var(--status-unknown)",
 };
 
 const ATTENTION_STYLE: Record<string, string> = {
@@ -75,7 +75,7 @@ function ExecutiveBody({ data }: { data: ExecutiveVisibility }) {
 
       {data.strategic_attention.length > 0 && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Strategic attention</strong>
+          <strong className="text-emphasis">Strategic attention</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {data.strategic_attention.map((line) => (
               <li key={line} className="planning-list-item page-subtitle">
@@ -96,9 +96,9 @@ function ExecutiveBody({ data }: { data: ExecutiveVisibility }) {
               <li key={p.rank} className="planning-list-item page-subtitle">
                 <span
                   style={{
-                    color: ATTENTION_STYLE[p.attention_level] ?? "#94a3b8",
+                    color: ATTENTION_STYLE[p.attention_level] ?? "var(--status-unknown)",
                     fontWeight: 600,
-                    marginRight: 6,
+                    marginInlineEnd: 6,
                   }}
                 >
                   {p.attention_level}

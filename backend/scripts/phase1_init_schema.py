@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Create Phase 1 tables (including project_memberships) on the configured database."""
+"""Create Phase 1 tables on the configured database (manual / CI — not Docker entrypoint).
+
+Docker Compose uses ``alembic upgrade head`` only. See ``backend/docker-entrypoint.sh``.
+"""
 
 from __future__ import annotations
 

@@ -8,6 +8,8 @@ from backend.phase1.models.boq_mapping import BOQMapping
 from backend.phase1.models.daily_report import DailyReport
 from backend.phase1.models.inspection import Inspection
 from backend.phase1.models.location import Location
+from backend.phase1.models.operational_dependency_edge import OperationalDependencyEdge
+from backend.phase1.models.operational_event import OperationalEvent
 from backend.phase1.models.project import Project
 from backend.phase1.models.platform_user import PlatformUser
 from backend.phase1.models.project_membership import ProjectMembership
@@ -27,6 +29,8 @@ __all__ = [
     "DailyReport",
     "Inspection",
     "Location",
+    "OperationalDependencyEdge",
+    "OperationalEvent",
     "Project",
     "PlatformUser",
     "ProjectMembership",

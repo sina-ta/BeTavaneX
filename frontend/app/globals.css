@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 @import "../styles/theme.css";
-@import "../styles/typography.css";
 @import "../styles/design-system.css";
 @import "../styles/layout-primitives.css";
+@import "../styles/utilities.css";
 @import "../styles/command-center.css";
 @import "../styles/planning-prototype.css";
+@import "../styles/typography.css";
 
 html,
 body {
   margin: 0;
   padding: 0;
-
-  background: var(--bg-primary);
+  background: var(--bg-page);
   color: var(--text-primary);
-
-  font-family: Inter, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -37,6 +37,12 @@ html[dir="rtl"] select {
   text-align: right;
 }
 
+html[dir="ltr"] input,
+html[dir="ltr"] textarea,
+html[dir="ltr"] select {
+  text-align: left;
+}
+
 html[dir="rtl"] .page-header-block,
 html[dir="rtl"] .compact-card__header,
 html[dir="rtl"] .compact-card__body,
@@ -45,6 +51,22 @@ html[dir="rtl"] .planning-list-item,
 html[dir="rtl"] .planning-empty,
 html[dir="rtl"] .panel-placeholder {
   text-align: right;
+}
+
+html[dir="ltr"] .page-header-block,
+html[dir="ltr"] .compact-card__header,
+html[dir="ltr"] .compact-card__body {
+  text-align: left;
+}
+
+html[dir="rtl"] .table-head-cell,
+html[dir="rtl"] .table-cell {
+  text-align: end;
+}
+
+html[dir="ltr"] .table-head-cell,
+html[dir="ltr"] .table-cell {
+  text-align: start;
 }
 
 html[dir="rtl"] .planning-tree {
@@ -58,5 +80,5 @@ html[dir="rtl"] .planning-gantt {
 html[dir="rtl"] .planning-gantt-row-label,
 html[dir="rtl"] .planning-gantt-title-cell {
   direction: rtl;
-  text-align: right;
+  text-align: end;
 }

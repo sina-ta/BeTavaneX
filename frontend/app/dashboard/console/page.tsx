@@ -29,6 +29,7 @@ import CompactCard from "@/components/layout/primitives/CompactCard";
 import DashboardGrid from "@/components/layout/primitives/DashboardGrid";
 import KPIGrid from "@/components/layout/primitives/KPIGrid";
 import SectionContainer from "@/components/layout/primitives/SectionContainer";
+import { useI18n } from "@/i18n/LanguageProvider";
 
 const PROJECT_STATUSES = [
   "ACTIVE",
@@ -39,6 +40,7 @@ const PROJECT_STATUSES = [
 ];
 
 export default function OperationalConsolePage() {
+  const { t } = useI18n();
   const {
     selectedProjectId,
     setSelectedProjectId,
@@ -55,69 +57,82 @@ export default function OperationalConsolePage() {
   return (
     <SectionContainer>
       <PageHeader
-        title="Operational Console"
-        subtitle="Planning bootstrap — create the project, WBS, and locations that anchor the vertical slice."
-        eyebrow="Vertical Slice"
+        title={t("console_title")}
+        subtitle={t("console_subtitle")}
+        eyebrow={t("console_eyebrow")}
       />
 
       <SliceNav current="console" />
 
       <KPIGrid columns={4}>
-        <KpiCard title="WBS Items" value={workspace.wbsItems.length} />
-        <KpiCard title="Locations" value={workspace.locations.length} />
         <KpiCard
-          title="Activity Instances"
-          value={workspace.activityInstances.length}
+          title={t("console_kpi_wbs")}
+          value={workspace.wbsItems.length}
+          icon="▦"
+          iconTone="orange"
         />
         <KpiCard
-          title="Work Orders"
+          title={t("console_kpi_locations")}
+          value={workspace.locations.length}
+          icon="📍"
+          iconTone="green"
+        />
+        <KpiCard
+          title={t("console_kpi_activities")}
+          value={workspace.activityInstances.length}
+          icon="◎"
+          iconTone="blue"
+        />
+        <KpiCard
+          title={t("console_kpi_work_orders")}
           value={workspace.workOrders.length}
+          icon="📋"
+          iconTone="purple"
         />
       </KPIGrid>
 
-      <CompactCard title="Active Project">
-        {activeProject ? (
-          <p className="page-subtitle">
-            <strong style={{ color: "#e2e8f0" }}>
-              {activeProject.code} — {activeProject.name}
-            </strong>
-            <br />
-            id: {activeProject.id}
-          </p>
-        ) : (
-          <p className="page-subtitle">
-            No project selected. Create one below, or pick a session
-            project.
-          </p>
-        )}
-
-        {authorizedProjects.length > 0 && (
-          <div style={{ marginTop: 12, maxWidth: 480 }}>
-            <FormField label="Authorized Projects">
-              <EntitySelect
-                value={selectedProjectId ?? ""}
-                placeholder="Select a project…"
-                onChange={(event) =>
-                  setSelectedProjectId(event.target.value || null)
-                }
-                options={authorizedProjects.map((p) => ({
-                  value: p.id,
-                  label: `${p.code} — ${p.name}`,
-                }))}
-              />
-            </FormField>
-          </div>
-        )}
-      </CompactCard>
-
       <RoleGate allow="plan">
-        <CreateProjectForm
-          onCreated={async (project) => {
-            workspace.addProject(project);
-            setSelectedProjectId(project.id);
-            await refreshAuthorizedProjects();
-          }}
-        />
+        <DashboardGrid variant="split">
+          <CreateProjectForm
+            onCreated={async (project) => {
+              workspace.addProject(project);
+              setSelectedProjectId(project.id);
+              await refreshAuthorizedProjects();
+            }}
+          />
+
+          <CompactCard title={t("console_active_project")}>
+            {activeProject ? (
+              <p className="page-subtitle">
+                <strong className="text-emphasis">
+                  {activeProject.code} — {activeProject.name}
+                </strong>
+                <br />
+                <span className="text-muted-inline">id: {activeProject.id}</span>
+              </p>
+            ) : (
+              <p className="page-subtitle">{t("console_no_project")}</p>
+            )}
+
+            {authorizedProjects.length > 0 && (
+              <div className="stack-sm" style={{ maxWidth: 480 }}>
+                <FormField label={t("console_authorized_projects")}>
+                  <EntitySelect
+                    value={selectedProjectId ?? ""}
+                    placeholder={t("console_select_project")}
+                    onChange={(event) =>
+                      setSelectedProjectId(event.target.value || null)
+                    }
+                    options={authorizedProjects.map((p) => ({
+                      value: p.id,
+                      label: `${p.code} — ${p.name}`,
+                    }))}
+                  />
+                </FormField>
+              </div>
+            )}
+          </CompactCard>
+        </DashboardGrid>
 
         <DashboardGrid variant="split">
           <CreateWBSForm projectId={selectedProjectId} />
@@ -126,19 +141,13 @@ export default function OperationalConsolePage() {
 
         {selectedProjectId && (
           <p className="page-subtitle">
-            Next:{" "}
-            <Link
-              href="/dashboard/console/activity"
-              className="text-blue-400 hover:underline"
-            >
-              Activities & workflow steps
+            {t("console_next_activity")}{" "}
+            <Link href="/dashboard/console/activity" className="text-link">
+              {t("console_nav_activity")}
             </Link>{" "}
             →{" "}
-            <Link
-              href="/dashboard/console/execution"
-              className="text-blue-400 hover:underline"
-            >
-              Execution & approval
+            <Link href="/dashboard/console/execution" className="text-link">
+              {t("console_next_execution")}
             </Link>
           </p>
         )}
@@ -453,49 +462,50 @@ export function SliceNav({
 }: {
   current: "console" | "activity" | "execution" | "runtime";
 }) {
+  const { t } = useI18n();
+
   const links: { href: string; label: string; key: string }[] = [
     ...(canPlan()
       ? [
           {
             href: "/dashboard/console",
-            label: "1· Planning Bootstrap",
+            label: t("console_nav_bootstrap"),
             key: "console",
           },
           {
             href: "/dashboard/console/activity",
-            label: "2· Activities & Steps",
+            label: t("console_nav_activity"),
             key: "activity",
           },
         ]
       : []),
     {
       href: "/dashboard/console/execution",
-      label: canPlan() ? "3· Execution & Approval" : "Daily Reports",
+      label: canPlan()
+        ? t("console_nav_execution")
+        : t("nav_daily_reports"),
       key: "execution",
     },
-    { href: "/dashboard/overview", label: "Runtime Dashboard", key: "runtime" },
+    {
+      href: "/dashboard/overview",
+      label: t("console_nav_runtime"),
+      key: "runtime",
+    },
   ];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 8,
-        marginBottom: 4,
-      }}
-    >
+    <nav className="slice-nav" aria-label={t("console_title")}>
       {links.map((link) => (
         <Link
           key={link.key}
           href={link.href}
-          className={
-            current === link.key ? "button-primary" : "button-ghost"
-          }
+          className={`slice-nav__link ${
+            current === link.key ? "is-active" : ""
+          }`}
         >
           {link.label}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 }

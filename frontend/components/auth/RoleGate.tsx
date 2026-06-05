@@ -25,7 +25,7 @@ type Props = {
 };
 
 const DEFAULT_FALLBACK = (
-  <p className="page-subtitle" style={{ color: "#94a3b8" }}>
+  <p className="page-subtitle">
     Your role does not have permission for this action.
   </p>
 );

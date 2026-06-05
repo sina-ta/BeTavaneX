@@ -69,6 +69,7 @@ export function LanguageProvider({
     const direction = localeDirections[locale];
     document.documentElement.lang = locale;
     document.documentElement.dir = direction;
+    document.documentElement.dataset.locale = locale;
     document.body.dataset.locale = locale;
   }, [locale]);
 

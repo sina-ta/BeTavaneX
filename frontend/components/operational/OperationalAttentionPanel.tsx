@@ -22,14 +22,14 @@ const BAND_STYLE: Record<string, string> = {
   GOOD: "#22c55e",
   ATTENTION: "#eab308",
   AT_RISK: "#ef4444",
-  UNKNOWN: "#94a3b8",
+  UNKNOWN: "var(--status-unknown)",
 };
 
 const COORD_BAND_STYLE: Record<string, string> = {
   ALIGNED: "#22c55e",
   FRAGMENTED: "#eab308",
   STRESSED: "#ef4444",
-  UNKNOWN: "#94a3b8",
+  UNKNOWN: "var(--status-unknown)",
 };
 
 export default function OperationalAttentionPanel({ projectId }: Props) {
@@ -91,7 +91,7 @@ function AttentionBody({
           style={{
             color: bandColor,
             fontWeight: 600,
-            marginRight: 8,
+            marginInlineEnd: 8,
           }}
         >
           {data.health.band}
@@ -113,7 +113,7 @@ function AttentionBody({
 
       {ci && isWorker && ci.worker_relevance.length > 0 && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Your team coordination</strong>
+          <strong className="text-emphasis">Your team coordination</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {ci.worker_relevance.map((line) => (
               <li key={line} className="planning-list-item page-subtitle">
@@ -132,7 +132,7 @@ function AttentionBody({
                 color:
                   COORD_BAND_STYLE[ci.coordination_band] ?? COORD_BAND_STYLE.UNKNOWN,
                 fontWeight: 600,
-                marginRight: 8,
+                marginInlineEnd: 8,
               }}
             >
               Coordination {ci.coordination_band}
@@ -155,7 +155,7 @@ function AttentionBody({
 
       {ci && showCoordinationDetail && !isWorker && ci.coordination_attention.length > 0 && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Coordination attention</strong>
+          <strong className="text-emphasis">Coordination attention</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {(role === "investor"
               ? ci.coordination_attention.slice(0, 4)
@@ -169,7 +169,7 @@ function AttentionBody({
                         ? "#ef4444"
                         : item.severity === "warning"
                           ? "#eab308"
-                          : "#94a3b8",
+                          : "var(--status-unknown)",
                   }}
                 >
                   [{item.category}]
@@ -219,7 +219,7 @@ function AttentionBody({
 
       {ds && ds.recommendations.length > 0 && !isWorker && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>What to do next</strong>
+          <strong className="text-emphasis">What to do next</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {ds.recommendations.map((rec) => (
               <li
@@ -233,7 +233,7 @@ function AttentionBody({
                         ? "#ef4444"
                         : rec.severity === "warning"
                           ? "#eab308"
-                          : "#94a3b8",
+                          : "var(--status-unknown)",
                   }}
                 >
                   [{rec.severity}]
@@ -250,7 +250,7 @@ function AttentionBody({
 
       {ds && ds.supervisor_guidance.length > 0 && !isWorker && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>
+          <strong className="text-emphasis">
             {showSupervisorDetail ? "Supervisor guidance" : "Operational summary"}
           </strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
@@ -268,12 +268,12 @@ function AttentionBody({
 
       {ds && ds.priority_queue.length > 0 && !isWorker && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Priority order (explainable)</strong>
+          <strong className="text-emphasis">Priority order (explainable)</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {(showSupervisorDetail ? ds.priority_queue : ds.priority_queue.slice(0, 5))
               .map((item) => (
                 <li key={`${item.rank}-${item.title}`} className="planning-list-item">
-                  <span style={{ color: "#94a3b8", marginRight: 6 }}>
+                  <span style={{ color: "var(--status-unknown)", marginInlineEnd: 6 }}>
                     #{item.rank}
                   </span>
                   <strong>{item.title}</strong>
@@ -336,7 +336,7 @@ function AttentionBody({
 
       {data.predictions.length > 0 && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Forecasts (explainable)</strong>
+          <strong className="text-emphasis">Forecasts (explainable)</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {data.predictions.map((item) => (
               <li key={`${item.forecast}-${item.reason}`} className="planning-list-item">
@@ -358,7 +358,7 @@ function AttentionBody({
                       ? "#ef4444"
                       : item.severity === "warning"
                         ? "#eab308"
-                        : "#94a3b8",
+                        : "var(--status-unknown)",
                 }}
               >
                 [{item.severity}]
@@ -369,7 +369,7 @@ function AttentionBody({
                   {" "}
                   <Link
                     href={`/dashboard/activity-instances`}
-                    className="text-blue-400 hover:underline"
+                    className="text-link"
                     style={{ fontSize: "0.85em" }}
                   >
                     (review runtime)
@@ -412,7 +412,9 @@ function SignalGroup({
   }
   return (
     <div style={{ marginTop: 12 }}>
-      <strong style={{ color: "#cbd5e1", fontSize: "0.9em" }}>{title}</strong>
+      <strong className="text-emphasis" style={{ fontSize: "0.9em" }}>
+        {title}
+      </strong>
       <ul className="planning-list">
         {items.map((s) => (
           <li key={s.signal_type} className="planning-list-item page-subtitle">

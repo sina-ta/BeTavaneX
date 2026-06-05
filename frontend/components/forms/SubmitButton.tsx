@@ -13,20 +13,9 @@ export default function SubmitButton({
     <button
       type="submit"
       disabled={disabled || loading}
-      className="
-        rounded-2xl
-        bg-blue-600
-        px-6
-        py-4
-        font-semibold
-        text-white
-        transition
-        hover:bg-blue-700
-        disabled:cursor-not-allowed
-        disabled:opacity-60
-      "
+      className="button-submit"
     >
-      {loading ? "Submitting..." : title}
+      {loading ? "…" : title}
     </button>
   );
 }

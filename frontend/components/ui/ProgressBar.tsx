@@ -10,19 +10,16 @@ type ProgressBarProps = {
   label?: string;
 };
 
-const barColorBySeverity: Record<
-  SeverityLevel,
-  string
-> = {
-  stable: "bg-green-500",
-  good: "bg-green-500",
-  healthy: "bg-green-500",
-  warning: "bg-yellow-500",
-  over_budget: "bg-yellow-500",
-  pending: "bg-yellow-500",
-  critical: "bg-red-500",
-  delayed: "bg-red-500",
-  default: "bg-slate-500",
+const barColorBySeverity: Record<SeverityLevel, string> = {
+  stable: "progress-bar-fill--stable",
+  good: "progress-bar-fill--good",
+  healthy: "progress-bar-fill--healthy",
+  warning: "progress-bar-fill--warning",
+  over_budget: "progress-bar-fill--over_budget",
+  pending: "progress-bar-fill--pending",
+  critical: "progress-bar-fill--critical",
+  delayed: "progress-bar-fill--delayed",
+  default: "progress-bar-fill--default",
 };
 
 export default function ProgressBar({

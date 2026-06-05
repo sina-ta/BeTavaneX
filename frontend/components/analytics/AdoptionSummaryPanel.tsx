@@ -61,7 +61,7 @@ function AdoptionSummaryBody({ summary }: { summary: AdoptionSummary }) {
       )}
       {topPages.length > 0 && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Top pages</strong>
+          <strong className="text-emphasis">Top pages</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {topPages.map(([path, count]) => (
               <li key={path} className="planning-list-item">
@@ -73,7 +73,7 @@ function AdoptionSummaryBody({ summary }: { summary: AdoptionSummary }) {
       )}
       {hints.length > 0 && (
         <div>
-          <strong style={{ color: "#e2e8f0" }}>Bottleneck hints</strong>
+          <strong className="text-emphasis">Bottleneck hints</strong>
           <ul className="planning-list" style={{ marginTop: 8 }}>
             {hints.map((hint) => (
               <li key={hint} className="planning-list-item">

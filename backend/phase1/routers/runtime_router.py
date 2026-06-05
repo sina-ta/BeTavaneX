@@ -54,9 +54,13 @@ from backend.phase1.auth.role_policy import (
 
 from backend.phase1.application.runtime_use_cases import RuntimeUseCases
 
+from backend.phase1.events.event_recording_service import EventRecordingService
+
 from backend.phase1.dependencies.application import get_runtime_use_cases
 
 from backend.phase1.dependencies.auth import get_project_access_service
+
+from backend.phase1.dependencies.events import get_event_recording_service
 
 from backend.phase1.schemas.activity_instance_schema import ActivityInstanceRead
 
@@ -761,6 +765,8 @@ def assign_work_order(
 
     project_access: ProjectAccessService = Depends(get_project_access_service),
 
+    events: EventRecordingService = Depends(get_event_recording_service),
+
 ) -> WorkOrderWorkflowStepRead:
 
     work_order_project_id = runtime.get_work_order_project_id(work_order_id)
@@ -800,6 +806,22 @@ def assign_work_order(
             resource_id=work_order_id,
 
             detail={"workflow_step_id": str(payload.workflow_step_id)},
+
+        )
+
+        events.record_work_order_assigned(
+
+            work_order_id=work_order_id,
+
+            workflow_step_id=payload.workflow_step_id,
+
+            execution_weight=payload.execution_weight,
+
+            actor=current_user.username,
+
+            project_id=work_order_project_id,
+
+            metadata={"role": current_user.role},
 
         )
 
@@ -852,6 +874,8 @@ def submit_daily_report(
     current_user: User = Depends(get_current_active_user),
 
     project_access: ProjectAccessService = Depends(get_project_access_service),
+
+    events: EventRecordingService = Depends(get_event_recording_service),
 
 ) -> DailyReportRead:
 
@@ -923,6 +947,22 @@ def submit_daily_report(
 
         )
 
+        events.record_daily_report_submitted(
+
+            daily_report_id=report.id,
+
+            work_order_id=payload.work_order_id,
+
+            actor=current_user.username,
+
+            report_status=report.status,
+
+            project_id=work_order_project_id,
+
+            metadata={"role": current_user.role},
+
+        )
+
         return report
 
     except ConcurrencyConflictError as exc:
@@ -975,6 +1015,8 @@ def approve_workflow_step(
 
     project_access: ProjectAccessService = Depends(get_project_access_service),
 
+    events: EventRecordingService = Depends(get_event_recording_service),
+
 ) -> ApprovalRead:
 
     step_project_id = runtime.get_workflow_step_project_id(workflow_step_id)
@@ -1016,6 +1058,22 @@ def approve_workflow_step(
             resource_id=workflow_step_id,
 
             detail={"approval_type": payload.approval_type},
+
+        )
+
+        events.record_approval_completed(
+
+            workflow_step_id=workflow_step_id,
+
+            approval_id=approval.id,
+
+            approval_type=payload.approval_type,
+
+            actor=current_user.username,
+
+            project_id=step_project_id,
+
+            metadata={"role": current_user.role},
 
         )
 

@@ -21,6 +21,7 @@ def upgrade() -> None:
         "work_orders",
         ["project_id", "planned_date"],
         unique=False,
+        if_not_exists=True,
     )
 
 

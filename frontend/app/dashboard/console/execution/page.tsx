@@ -118,7 +118,7 @@ function ConsoleExecutionContent() {
         <CompactCard title="No project selected">
           <p className="page-subtitle">
             Go to{" "}
-            <Link href="/dashboard/console" className="text-blue-400 hover:underline">
+            <Link href="/dashboard/console" className="text-link">
               Planning Bootstrap
             </Link>{" "}
             and select or create a project first.

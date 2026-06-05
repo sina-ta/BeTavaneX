@@ -103,7 +103,7 @@ function ProjectSelector({
                 {" "}
                 <Link
                   href="/dashboard/console"
-                  className="text-blue-400 hover:underline"
+                  className="text-link"
                 >
                   Create one in the Operational Console
                 </Link>
@@ -276,7 +276,7 @@ function RuntimeProjectDashboard({
                       {" "}
                       <Link
                         href="/dashboard/console/activity"
-                        className="text-blue-400 hover:underline"
+                        className="text-link"
                       >
                         Create in Operational Console
                       </Link>

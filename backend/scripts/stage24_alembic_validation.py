@@ -15,7 +15,7 @@ os.environ.setdefault("SKIP_STARTUP_VALIDATION", "true")
 from backend.config import get_settings  # noqa: E402
 
 _ALEMBIC = ["alembic", "-c", "backend/alembic.ini"]
-_EXPECTED_HEAD = "20260603_0003"
+_EXPECTED_HEAD = "20260603_0005"
 
 
 def _run(args: list[str]) -> int:
@@ -33,8 +33,19 @@ def main() -> int:
         print(f"PostgreSQL unavailable: {exc}")
         return 1
 
+    heads = subprocess.run(
+        _ALEMBIC + ["heads"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if heads.returncode != 0 or _EXPECTED_HEAD not in (heads.stdout or ""):
+        print(f"Alembic heads check failed: {heads.stdout} {heads.stderr}")
+        return 1
+
     steps = [
         ("upgrade head", _ALEMBIC + ["upgrade", "head"]),
+        ("upgrade head (repeat)", _ALEMBIC + ["upgrade", "head"]),
         ("downgrade -1", _ALEMBIC + ["downgrade", "-1"]),
         ("upgrade head (repeat)", _ALEMBIC + ["upgrade", "head"]),
     ]

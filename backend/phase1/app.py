@@ -50,8 +50,10 @@ from backend.phase1.auth.dependencies import get_current_active_user
 
 from backend.phase1.routers import (
     analytics_router,
+    dependency_router,
     pilot_router,
     planning_router,
+    readiness_router,
     runtime_router,
 )
 
@@ -214,6 +216,14 @@ def create_app() -> FastAPI:
 
     app.include_router(
 
+        dependency_router,
+
+        dependencies=[Depends(get_current_active_user)],
+
+    )
+
+    app.include_router(
+
         pilot_router,
 
         dependencies=[Depends(get_current_active_user)],
@@ -223,6 +233,14 @@ def create_app() -> FastAPI:
     app.include_router(
 
         analytics_router,
+
+        dependencies=[Depends(get_current_active_user)],
+
+    )
+
+    app.include_router(
+
+        readiness_router,
 
         dependencies=[Depends(get_current_active_user)],
 

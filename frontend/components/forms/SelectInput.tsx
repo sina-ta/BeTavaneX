@@ -1,7 +1,7 @@
 import type { ComponentProps } from "react";
 
 type Props = ComponentProps<"select"> & {
-  options: string[];
+  options: readonly string[] | string[];
 };
 
 export default function SelectInput({
@@ -10,23 +10,7 @@ export default function SelectInput({
   ...props
 }: Props) {
   return (
-    <select
-      {...props}
-      className={`
-        w-full
-        rounded-2xl
-        border
-        border-slate-700
-        bg-slate-900
-        px-4
-        py-3
-        text-white
-        outline-none
-        transition
-        focus:border-blue-500
-        ${className}
-      `}
-    >
+    <select {...props} className={`form-input ${className}`.trim()}>
       {options.map((option) => (
         <option key={option} value={option}>
           {option}

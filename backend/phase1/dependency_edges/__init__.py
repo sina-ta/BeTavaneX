@@ -1,0 +1,21 @@
+"""Explicit operational dependency edge substrate (Runtime Hardening P1)."""
+
+from backend.phase1.dependency_edges.taxonomy import (
+    DEPENDENCY_EXECUTION,
+    DEPENDENCY_GOVERNANCE,
+    DEPENDENCY_READINESS,
+    DEPENDENCY_RESOURCE,
+    DEPENDENCY_SPATIAL,
+    SUPPORTED_DEPENDENCY_TYPES,
+    SUPPORTED_ENTITY_TYPES,
+)
+
+__all__ = [
+    "DEPENDENCY_EXECUTION",
+    "DEPENDENCY_GOVERNANCE",
+    "DEPENDENCY_READINESS",
+    "DEPENDENCY_RESOURCE",
+    "DEPENDENCY_SPATIAL",
+    "SUPPORTED_DEPENDENCY_TYPES",
+    "SUPPORTED_ENTITY_TYPES",
+]

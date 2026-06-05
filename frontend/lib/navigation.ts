@@ -59,9 +59,9 @@ export function getMainNavItemsForRole(): NavItem[] {
   if (canAccessOperationalConsole(role)) {
     if (canPlan(role)) {
       items.push({
-        labelKey: "nav_planning",
+        labelKey: "nav_operational_console",
         href: "/dashboard/console",
-        icon: "▦",
+        icon: "▶",
         section: "operations",
       });
     }
@@ -101,7 +101,7 @@ export function getPageTitleFromPath(
   const item = roleItems.find((nav) => nav.href === pathname);
   if (item) return item.labelKey;
   if (pathname.startsWith("/dashboard/console")) {
-    return "nav_planning";
+    return "page_console";
   }
   if (pathname.startsWith("/dashboard/activity-instances")) {
     return "nav_overview";

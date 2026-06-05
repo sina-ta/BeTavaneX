@@ -36,21 +36,7 @@ export default function EntitySelect({
         value={value}
         disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
-        className="
-          w-full
-          rounded-2xl
-          border
-          border-slate-700
-          bg-slate-900
-          px-4
-          py-3
-          text-white
-          outline-none
-          transition
-          focus:border-blue-500
-          disabled:cursor-not-allowed
-          disabled:opacity-60
-        "
+        className="form-input"
       >
         <option value="">{placeholder}</option>
         {options.map((option) => (

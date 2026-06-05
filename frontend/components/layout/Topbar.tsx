@@ -1,31 +1,42 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
+import ActiveRoleContextBar from "@/components/layout/ActiveRoleContextBar";
+import { initialsFromUsername } from "@/lib/auth/active-role-display";
+import { getAuthUsername } from "@/lib/auth/session";
 import { useI18n } from "@/i18n/LanguageProvider";
-import { getPageTitleFromPath } from "@/lib/navigation";
 
 export default function Topbar() {
-  const pathname = usePathname();
   const { locale, setLocale, t } = useI18n();
-  const pageTitleKey = getPageTitleFromPath(pathname);
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    setUsername(getAuthUsername());
+  }, []);
 
   return (
     <header className="topbar">
-      <div className="topbar-left">
-        <span className="topbar-breadcrumb">
-          {t("topbar_breadcrumb")}
-        </span>
-        <h1 className="topbar-title">{t(pageTitleKey)}</h1>
+      <div className="topbar-brand">
+        <div className="logo-circle">B</div>
+        <div>
+          <div className="topbar-brand-title">{t("app_name")}</div>
+          <div className="topbar-brand-subtitle">{t("brand_subtitle")}</div>
+        </div>
       </div>
 
       <div className="topbar-center">
-        <input
-          type="search"
-          className="topbar-search"
-          placeholder={t("topbar_search_placeholder")}
-          aria-label={t("topbar_search_placeholder")}
-        />
+        <div className="topbar-search-wrap">
+          <input
+            type="search"
+            className="topbar-search"
+            placeholder={t("topbar_search_placeholder")}
+            aria-label={t("topbar_search_placeholder")}
+          />
+          <span className="topbar-search-hint" aria-hidden>
+            {t("topbar_search_shortcut")}
+          </span>
+        </div>
       </div>
 
       <div className="topbar-right">
@@ -33,9 +44,7 @@ export default function Topbar() {
           <button
             type="button"
             className={`language-switcher-btn ${
-              locale === "en"
-                ? "language-switcher-btn--active"
-                : ""
+              locale === "en" ? "language-switcher-btn--active" : ""
             }`}
             onClick={() => setLocale("en")}
           >
@@ -44,31 +53,25 @@ export default function Topbar() {
           <button
             type="button"
             className={`language-switcher-btn ${
-              locale === "fa"
-                ? "language-switcher-btn--active"
-                : ""
+              locale === "fa" ? "language-switcher-btn--active" : ""
             }`}
             onClick={() => setLocale("fa")}
           >
             {t("language_fa")}
           </button>
         </div>
-        <span className="topbar-chip">
-          {t("topbar_project_label")}
-        </span>
-        <span className="topbar-chip">{t("topbar_today")}</span>
-        <button
-          type="button"
-          className="topbar-icon-btn"
-          aria-label={t("topbar_notifications")}
-        >
-          🔔
-        </button>
+
+        <ActiveRoleContextBar />
+
         <div
-          className="topbar-avatar"
-          title={t("topbar_operator")}
+          className="topbar-user"
+          title={`${username ?? t("topbar_operator_manager")} — ${t("profile_role_switch_placeholder")}`}
+          aria-label={`${username ?? t("topbar_operator_manager")}. ${t("profile_role_switch_placeholder")}`}
         >
-          OP
+          <div className="topbar-avatar">{initialsFromUsername(username)}</div>
+          <span className="topbar-user-name">
+            {username ?? t("topbar_operator_manager")}
+          </span>
         </div>
       </div>
     </header>

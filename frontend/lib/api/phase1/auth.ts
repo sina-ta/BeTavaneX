@@ -58,6 +58,7 @@ export async function requestAccessToken(
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
     },
     body,
   });

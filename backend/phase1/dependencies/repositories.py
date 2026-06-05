@@ -30,6 +30,12 @@ from backend.phase1.repositories.project_repository import ProjectRepository
 from backend.phase1.repositories.punch_item_repository import PunchItemRepository
 from backend.phase1.repositories.wbs_item_repository import WBSItemRepository
 from backend.phase1.repositories.work_order_repository import WorkOrderRepository
+from backend.phase1.repositories.operational_dependency_edge_repository import (
+    OperationalDependencyEdgeRepository,
+)
+from backend.phase1.repositories.operational_event_repository import (
+    OperationalEventRepository,
+)
 from backend.phase1.repositories.work_order_workflow_step_repository import (
     WorkOrderWorkflowStepRepository,
 )
@@ -124,3 +130,15 @@ def get_work_order_workflow_step_repository(
     session: Session = Depends(get_db),
 ) -> WorkOrderWorkflowStepRepository:
     return WorkOrderWorkflowStepRepository(session)
+
+
+def get_operational_dependency_edge_repository(
+    session: Session = Depends(get_db),
+) -> OperationalDependencyEdgeRepository:
+    return OperationalDependencyEdgeRepository(session)
+
+
+def get_operational_event_repository(
+    session: Session = Depends(get_db),
+) -> OperationalEventRepository:
+    return OperationalEventRepository(session)

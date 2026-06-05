@@ -140,10 +140,10 @@ export function getTrendClass(
 ): string {
   switch (trend) {
     case "improving":
-      return "text-green-400";
+      return "trend-improving";
     case "declining":
-      return "text-red-400";
+      return "trend-declining";
     default:
-      return "text-slate-400";
+      return "trend-stable";
   }
 }

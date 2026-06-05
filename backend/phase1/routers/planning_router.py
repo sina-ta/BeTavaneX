@@ -6,7 +6,7 @@ layer, and return Read schemas. No business logic, no repository access.
 
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from backend.phase1.auth.auth import User
 from backend.phase1.auth.dependencies import get_current_active_user
@@ -16,6 +16,14 @@ from backend.phase1.auth.role_policy import require_planning_actor
 from backend.phase1.application.planning_use_cases import PlanningUseCases
 from backend.phase1.dependencies.application import get_planning_use_cases
 from backend.phase1.dependencies.auth import get_project_access_service
+from backend.phase1.dependencies.services import get_readiness_derivation_service
+from backend.phase1.readiness.authority import (
+    ReadinessAuthorityError,
+    reject_direct_ready_mutation,
+)
+from backend.phase1.services.readiness_derivation_service import (
+    ReadinessDerivationService,
+)
 from backend.phase1.schemas.activity_instance_schema import (
     ActivityInstanceCreate,
     ActivityInstanceRead,
@@ -161,6 +169,7 @@ def create_activity_instance(
 def create_workflow_step(
     payload: WorkflowStepCreate,
     planning: PlanningUseCases = Depends(get_planning_use_cases),
+    readiness: ReadinessDerivationService = Depends(get_readiness_derivation_service),
     current_user: User = Depends(get_current_active_user),
     project_access: ProjectAccessService = Depends(get_project_access_service),
 ) -> WorkflowStepRead:
@@ -169,13 +178,21 @@ def create_workflow_step(
     )
     if activity_project_id is not None:
         project_access.ensure_project_access(current_user, activity_project_id)
+    try:
+        reject_direct_ready_mutation(payload.ready)
+    except ReadinessAuthorityError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=str(exc),
+        ) from exc
+
     step = planning.create_workflow_step(
         payload.activity_instance_id,
         code=payload.code,
         name=payload.name,
         status=payload.status,
         workflow_template_id=payload.workflow_template_id,
-        ready=payload.ready,
+        ready=False,
         progress_percent=payload.progress_percent,
         planned_weight=payload.planned_weight,
         planned_start=payload.planned_start,
@@ -183,6 +200,15 @@ def create_workflow_step(
         actual_start=payload.actual_start,
         actual_finish=payload.actual_finish,
     )
+    if activity_project_id is not None:
+        readiness.initialize_workflow_step(
+            step.id,
+            activity_project_id,
+            actor=current_user.username,
+            trigger="workflow_step_created",
+        )
+        step = planning.get_workflow_step(step.id) or step
+
     log_operational_action(
         current_user,
         "create_workflow_step",
